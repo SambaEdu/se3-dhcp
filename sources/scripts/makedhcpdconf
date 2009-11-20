@@ -1,0 +1,453 @@
+#!/usr/bin/perl
+# This script makedhcpdconf
+#
+# $Id$ 
+
+
+
+################################
+# INIT 			       #
+################################
+
+use Sys::Syslog qw(:DEFAULT setlogsock);
+# use strict;
+use DBI;
+require '/etc/SeConfig.ph';
+
+my $connexion_db = DBI->connect("DBI:mysql:$connexionDb@$mysqlServerIp", $mysqlServerUsername, $mysqlServerPw);
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_iface';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $IFACE=$row[0];
+$requete->finish;
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_on_boot';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $ONBOOT=$row[0];
+$requete->finish;
+my $requete = $connexion_db->prepare("SELECT corresp.valeur FROM corresp,restrictions where corresp.chemin like '%AutoConfigURL%' and corresp.cleID=restrictions.cleID and restrictions.groupe='base';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $WPAD=$row[0];
+
+my $action = $ARGV[0];
+########################################
+##### If ARG is "status" ###############
+if ($action eq "state") {
+	my $status=`ps aux | grep dhcpd3 | grep -v grep`;
+	if ($status eq "") {print "0";} else {print "1";};
+	exit 0;
+}
+########################################
+##### If ARG is "stop" ###############
+if ($action eq "stop") {
+	`/etc/init.d/dhcp3-server stop`;
+	exit 0;
+}
+
+########################################
+##### STATE on BOOT ###############
+if ($ONBOOT eq "1") {
+	`update-rc.d -f  dhcp3-server defaults`;
+}
+else {
+	`update-rc.d -f  dhcp3-server remove`;
+}
+
+######################################
+# # # Decimal to Binary   #######
+sub DecToBin {
+my $DEC= $_[0];
+my $BITS = $_[1];
+my $i;
+my @BITCHARS;
+my $BIN;
+for( $i = ($BITS-1) ; $i >= 0 ; $i -- ) {
+$BITCHARS[$i] = $DEC % 2;
+$DEC = $DEC / 2;
+}
+$BIN = join( "", @BITCHARS );
+$BIN;
+}
+########################################
+# Subroutine: IpMaskToLan( Ip, Mask )return LAN IP ------
+# # # Caclul LAN IP with @IP and LAN Mask.................
+sub IpMaskToLan {
+      	my @ip = (split /\./ , $_[0]);
+        my @mask = (split /\./ , $_[1]);
+        my $i = 0;
+        my $j = 0;
+        my @IPSTREAM;
+        my @MASKSTREAM;
+        my @RESO;
+        my @nouvip;
+        my @nouvdecimal;
+        for ($i=0; $i<=3; $i++)
+          {
+          @{$IPSTREAM[$i]}= split // ,DecToBin( $ip[$i], 8);
+          @{$MASKSTREAM[$i]} = split // ,DecToBin( $mask[$i], 8);
+          }
+        for ($i=0; $i<=3; $i++)
+                {
+                for ($j=0; $j<=7; $j++)
+                        {
+                        $RESO[$i][$j]=$IPSTREAM[$i][$j] && $MASKSTREAM[$i][$j];
+                        }
+                }
+        for ($i=0; $i<=3; $i++)
+                {
+                $nouvip[$i]= join('',$RESO[$i][0],$RESO[$i][1],$RESO[$i][2],$RESO[$i][3],$RESO[$i][4],$RESO[$i][5],$RESO[$i][6],$RESO[$i][7]);
+                $nouvdecimal[$i]= ord(pack('B8', $nouvip[$i]));
+                }
+
+        return join('.',$nouvdecimal[0],$nouvdecimal[1],$nouvdecimal[2],$nouvdecimal[3]);
+        }
+##        /  Sub function end           ##
+###########################################
+
+
+
+# Open syslog########################
+setlogsock('unix');
+openlog("SE3-DHCP",'pid');
+####################################################
+########  First : make /etc/default/dhcp3-server for interface listening for dhcpd 
+######## 														#######
+
+syslog('INFO','Erasing /etc/default/dhcp3-server with SE3 config :  listening '.$IFACE);
+open (FILE,">/etc/default/dhcp3-server");
+print FILE "INTERFACES=\"$IFACE\"\n";
+close FILE;
+
+
+
+#########################
+####  LOAD OPTIONS FOR dhcpd.conf
+#####  GATEWAY  
+
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_gateway';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $GATEWAY=$row[0];
+$requete->finish;
+
+
+#####   DNS server 
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_dns_server_prim';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $SERVEUR_DNS_PRIMARY=$row[0];
+$requete->finish;
+
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_dns_server_sec';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $SERVEUR_DNS_SECONDARY=$row[0];
+$requete->finish;
+
+#####   wins server
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_wins';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $SERVEUR_WINS=$row[0];
+$requete->finish;
+
+
+#####   NTP server  
+
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_ntp';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $SERVEUR_NTP=$row[0];
+$requete->finish;
+
+
+#####   NORMAL_BAIL 
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_default_lease';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $NORMAL_BAIL=$row[0];
+$requete->finish;
+
+#####   MAX_BAIL 
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_max_lease';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $MAX_BAIL=$row[0];
+$requete->finish;
+
+#####  BEGIN_RANGE  
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_begin_range';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $BEGIN_RANGE=$row[0];
+$requete->finish;
+
+##### END_RANGE 
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_end_range';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $END_RANGE=$row[0];
+$requete->finish;
+
+# DOMAIN NAME from "se3_dhcp" table ########
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_domain_name';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $DOMAIN_NAME=$row[0];
+$requete->finish;
+
+#########      RECUPERE IP / MASK / NETWORK on internal device #######################
+my $NETWORK_INTERNAL_IP = `/sbin/ifconfig $IFACE |/bin/grep inet' ' |/usr/bin/cut -d\: -f2 |/usr/bin/cut -d\ ' ' -f1`;
+my $NETMASK_INTERNAL = `/sbin/ifconfig $IFACE |/bin/grep inet' ' |/usr/bin/cut -d\: -f4 |/usr/bin/cut -d\ ' '  -f1`;
+chomp $NETWORK_INTERNAL_IP ;
+chomp $NETMASK_INTERNAL;
+my $INTERNAL_NETWORK=&IpMaskToLan ($NETWORK_INTERNAL_IP,$NETMASK_INTERNAL);
+
+# FTP SERVER  ########
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_tftp_server';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $tftp_server=$row[0];
+$requete->finish;
+# UNATTENDED ########
+#my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_unatt_server';");
+#$requete->execute();
+#my @row = $requete->fetchrow_array();
+#my $unatt_server=$row[0];
+#$requete->finish;
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_unatt_login';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $unatt_login=$row[0];
+$requete->finish;
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_unatt_pass';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $unatt_pass=$row[0];
+$requete->finish;
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_unatt_filename';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $unatt_filename=$row[0];
+$requete->finish;
+
+
+# VLAN  ########
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_vlan';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $VLAN=$row[0];
+$requete->finish;
+
+
+##################################################################
+###########  Make dhcp.conf ############################################
+
+syslog('INFO','WAIT : Making /etc/dhcp3/dhcp.conf SE3 config  who  listening '.$IFACE);
+open (FILE,">/etc/dhcp3/dhcpd.conf");
+print FILE "################################################################################\n";
+print FILE "# This File is automagically created by SE3 interface\n\n";
+print FILE "##       GENERAL OPTIONS          ##############################################\n";
+print FILE "allow booting;\n";
+print FILE "allow bootp;\n";
+print FILE "authoritative;\n";
+
+if (! $DOMAIN_NAME=="")
+{
+	print FILE "option domain-name \"$DOMAIN_NAME\";  \n";
+}
+if (! $SERVEUR_DNS_PRIMARY=="")
+{
+    if (! $SERVEUR_DNS_SECONDARY=="")
+    {
+	print FILE "option domain-name-servers $SERVEUR_DNS_PRIMARY,$SERVEUR_DNS_SECONDARY;\n";
+    }
+    else 
+    {
+	print FILE "option domain-name-servers $SERVEUR_DNS_PRIMARY;\n";
+    }
+}
+
+
+if (! $MAX_BAIL =="")
+{
+	print FILE "max-lease-time $MAX_BAIL;\n";
+}
+
+if (! $WPAD == "")
+{
+	print FILE "option wpad-url code 252 = string;\n";
+	print FILE "option wpad-url \"$WPAD\\n\";\n";
+}
+
+if (! $NORMAL_BAIL =="")
+{
+	print FILE "default-lease-time $NORMAL_BAIL;\n";
+}
+
+if (! $SERVEUR_WINS =="")
+{
+	print FILE "option netbios-name-servers $SERVEUR_WINS;\n";
+}
+
+if (! $tftp_server =="")
+{
+	print FILE "next-server  $tftp_server;\n";
+   
+}
+if (! $unatt_filename =="")
+{
+	print FILE "filename \"$unatt_filename\";\n";
+}
+
+
+
+if (! $unatt_login =="")
+{
+	
+	print FILE "option unattended-options code 233 = string;\n";
+	print FILE "option unattended-options \"z_user=$unatt_login z_pass=$unatt_pass z_path=//$tftp_server/install\";\n";
+}
+
+
+if ($VLAN > "0")
+{
+	my $i=1;
+	print FILE "\n\n";
+	while ($i <= $VLAN)
+	{
+		my $GATEWAY="";
+		my $RESEAU="";
+		my $MASQUE="";
+		my $BEGIN_RANGE="";
+		my $END_RANGE="";
+		
+		# Subnet vlan   ########
+		my $dhcp_reseau="dhcp_reseau_".$i;
+		my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='$dhcp_reseau';");
+		$requete->execute();
+		my @row = $requete->fetchrow_array();
+		my $RESEAU=$row[0];
+		$requete->finish;
+
+
+		# Masque vlan   ########
+		my $dhcp_masque="dhcp_masque_".$i;
+		my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='$dhcp_masque';");
+		$requete->execute();
+		my @row = $requete->fetchrow_array();
+		my $MASQUE=$row[0];
+		$requete->finish;
+
+		
+		# Range begin  vlan   ########
+		my $dhcp_begin_range="dhcp_begin_range_".$i;
+		my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='$dhcp_begin_range';");
+		$requete->execute();
+		my @row = $requete->fetchrow_array();
+		my $BEGIN_RANGE=$row[0];
+		$requete->finish;
+
+		
+		# Range end  vlan   ########
+		my $dhcp_end_range="dhcp_end_range_".$i;
+		my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='$dhcp_end_range';");
+		$requete->execute();
+		my @row = $requete->fetchrow_array();
+		my $END_RANGE=$row[0];
+		$requete->finish;
+
+
+		# Gateway  vlan   ########
+		my $dhcp_gateway="dhcp_gateway_".$i;
+		my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='$dhcp_gateway';");
+		$requete->execute();
+		my @row = $requete->fetchrow_array();
+		my $GATEWAY=$row[0];
+		$requete->finish;
+
+		if (! (($BEGIN_RANGE=="") || ($END_RANGE=="") || ($RESEAU=="") || ($MASQUE=="") || ($GATEWAY=="")))
+		{
+			print FILE "\n";
+			print FILE "#####  SUBNETS DECLARATION #########\n";
+			print FILE "subnet $RESEAU netmask $MASQUE {\n";
+			print FILE "	range $BEGIN_RANGE $END_RANGE;\n";
+			print FILE "	option routers $GATEWAY;\n";
+			print FILE "}\n";
+		}
+
+		$i++;
+	}	
+} else { 
+
+	if (! $GATEWAY=="")
+	{
+		print FILE "option routers $GATEWAY;\n";
+	}
+	
+	print FILE "\n\n";
+
+	if (! (($BEGIN_RANGE=="") || ($END_RANGE=="")))
+	{
+		print FILE "#####  SUBNETS DECLARATION #########\n";
+		print FILE "subnet $INTERNAL_NETWORK netmask $NETMASK_INTERNAL {\n";
+		print FILE "range $BEGIN_RANGE $END_RANGE;\n";
+		print FILE "}\n";
+	}
+}
+
+
+print FILE "\n\n";
+
+#####################################################################
+###  HOSTS enregistrés dans la base  #############################################
+#
+print FILE "################################################################################\n";
+print FILE "# HOSTS recorded on the base\n\n";
+
+my $requete = $connexion_db->prepare("SELECT name,ip,mac FROM se3_dhcp ORDER BY ip;");
+$requete->execute();
+
+
+
+while (@result = $requete->fetchrow_array())
+{
+	print FILE "\n";
+	print FILE "\n";
+	
+	print FILE "host $result[0]\n";
+	print FILE "{\n";
+	print FILE "\thardware ethernet $result[2] ;\n";
+	print FILE "\tfixed-address $result[1] ;\n";
+	print FILE "}\n";
+}
+
+close FILE;
+
+print "restart dhcpd-server\n";
+system("/etc/init.d/dhcp3-server restart");
+
+
+$proxy = `grep \"http_proxy=\" /etc/profile | cut -d\\\" -f2 | cut -d/ -f3`;
+chomp($proxy);
+if ($proxy) {
+	open (FILE,">/var/www/se3.pac");
+	print FILE "function FindProxyForURL(url, host)\n";
+	print FILE "{\n";
+	print FILE "\tif (isPlainHostName(host) ||\n";
+	print FILE "\tdnsDomainIs(host, \"\.$DOMAIN_NAME\") ||\n";
+	print FILE "\tisInNet(host, \"$INTERNAL_NETWORK\", \"$NETMASK_INTERNAL\") ||\n";
+	print FILE "\tisInNet(host, \"127.0.0.0\", \"255.0.0.0\") ) {\n";
+	print FILE "\t\treturn  \"DIRECT\";\n";
+	print FILE "\t}\n";
+	print FILE "\telse {\n";
+	print FILE "\t\treturn \"PROXY $proxy; DIRECT\";\n";
+	print FILE "\t}\n";
+	print FILE "}\n";
+	close FILE;
+	
+	if (!-e "/var/www/wpad.dat") {
+	system("ln -s /var/www/se3.pac /var/www/wpad.dat");
+	}
+}

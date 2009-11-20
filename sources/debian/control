@@ -1,0 +1,13 @@
+Source: se3-dhcp
+Section: misc
+Priority: optional
+Maintainer: Eric Mercier <eric.mercier@crdp.ac-versailles.fr>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1
+
+Package: se3-dhcp
+Architecture: all
+Depends: se3, dhcp3-server
+Description: A dhcp interface for se3 server
+ This package add an se3 interface administration for dhcp3-server
+ Administration interface can manage dhcp reservation
