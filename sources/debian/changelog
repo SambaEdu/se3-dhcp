@@ -1,3 +1,9 @@
+se3-dhcp (0.21) unstable; urgency=low
+
+  * modif pour integration directe des postes clients
+
+ -- root <root@localhost.localdomain>  Wed,  2 Dec 2009 14:05:46 +0100
+
 se3-dhcp (0.20) unstable; urgency=low
 
   * Fix but preg_match ()
