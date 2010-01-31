@@ -55,7 +55,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 	$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("R&#233;initialiser")."\">\n";	
 	$content .= "</form>\n";
 	$content .= "</td><td>";
-	$content .= "<u onmouseover=\"return escape".gettext("('Permet de purger les baux.<br>A n\'utiliser que lorsque des baux ne sont pas purg&#233;s.')")."\"><IMG style=\"border: 0px solid ;\" src=\"../elements/images/system-help.png \"></u>\n";
+	$content .= "<u onmouseover=\"return escape".gettext("('Permet de purger les baux.<br>A n\'utiliser que lorsque des baux ne sont pas purg&#233;s.')")."\"><IMG style=\"border: 0px solid ;\" src=\"../elements/images/help-info.gif \"></u>\n";
 	$content .= "</td></tr></table>\n";
 
 	// Prepare HTML code
@@ -63,9 +63,11 @@ if (is_admin("system_is_admin",$login)=="Y")
 	case '' :
 	case 'index' :
 		$file="/var/lib/dhcp3/dhcpd.leases";
-		$parser=parse_dhcpd_lease($file);
+		//$parser=parse_dhcpd_lease($file);
+		$parser=my_parse_dhcpd_lease($file);
 		if ($parser != "" ) {
-			$content .= dhcp_form_lease($parser);
+			//$content .= dhcp_form_lease($parser);
+			$content .= my_dhcp_form_lease($parser);
 		}
 		else {
 		$content .= gettext("Aucun bail actif pour le moment.");
@@ -77,15 +79,21 @@ if (is_admin("system_is_admin",$login)=="Y")
 		$mac=$_POST['mac'];
 		$reservation=$_POST['reservation'];
 		$name=$_POST['name'];
-		$parc=$_POST['parc'];
+		$parc=$_POST['parc'];	    
+	        $localadminname=$_POST['localadminname'];
+	        $localadminpasswd=$_POST['localadminpasswd'];
+	        $integre=$_POST['integre'];	    
 		foreach ($ip as $keys=>$value) {
 			if ($reservation[$keys]) { $content .= "<FONT color='red'>".add_reservation($ip[$keys],$mac[$keys],$name[$keys])."</FONT>";}
+			if ($integre[$keys]) { $content .= "<FONT color='red'>".integre_domaine($ip[$keys],$mac[$keys],$name[$keys],$localadminname[$keys],$localadminpasswd[$keys])."</FONT>";}
 			if (($parc[$keys] != "none")&&($parc[$keys] != "")) { $content .= add_parc($ip[$keys],$mac[$keys],$name[$keys],$parc[$keys]);}
 		}
 		$file="/var/lib/dhcp3/dhcpd.leases";
-		$parser=parse_dhcpd_lease($file);
+		//$parser=parse_dhcpd_lease($file);
+		$parser=my_parse_dhcpd_lease($file);
 		if ($parser != "" ) {
-			$content .= dhcp_form_lease($parser);
+			//$content .= dhcp_form_lease($parser);
+			$content .= my_dhcp_form_lease($parser);
 		}
 		else {
 		$content .= gettext("Aucun bail actif pour le moment.");

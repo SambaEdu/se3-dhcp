@@ -106,7 +106,7 @@ if ($idconnexionldap) {
 	echo "Recherche des machines dans la branche 'computers': \n";
 	//echo "<br />\n";
 
-	$rechercheldap=ldap_search($idconnexionldap,$dn['computers'], "macaddress=*");
+	$rechercheldap=ldap_search($idconnexionldap,$dn['computers'], "(&(macaddress=*)(!(macaddress=--)))");
 	//echo "Le nombre d'entr&#233;es retourn&#233;es est: ".ldap_count_entries($idconnexionldap,$rechercheldap)."\n";
 	echo ldap_count_entries($idconnexionldap,$rechercheldap)." machines trouv&#233;es\n";
 	echo "</p>\n";
