@@ -503,7 +503,6 @@ require_once("includes/ldap.inc.php");
 $lease=file($file);
 $compteur_clients=0;
 $client["macaddr"][$compteur_clients]="";
-$client["macaddr"][$compteur_clients]="";
 $client["hostname"][$compteur_clients]="";
 // $client["ip"][$compteur_clients]=$ip[0];
 foreach ($lease as $compteur => $ligne)
@@ -513,8 +512,10 @@ foreach ($lease as $compteur => $ligne)
 		preg_match ("/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/",$ligne,$ip);   // take IP
 		$macaddr[0]=gettext("unresolved");
 		$clienthostname[0]=gettext("unresolved");
+		$etat=0;
 		while (! preg_match("/^}/",$lease[$compteur]))
 		{
+			if (preg_match("/binding state active/",$lease[$compteur])) $etat=1; // lease state
 			if (preg_match("/hardware ethernet/",$lease[$compteur])) // take mac addr
 			{
 				preg_match ("/[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}/",$lease[$compteur],$macaddr);
@@ -526,7 +527,7 @@ foreach ($lease as $compteur => $ligne)
 			}
 			$compteur=$compteur+1;
 		}
-		if ((! in_array($macaddr[0],$client["macaddr"]))&&($macaddr[0] != gettext("unresolved") )&&(! registred($macaddr[0]))) {
+		if ($etat&&((! in_array($macaddr[0],$client["macaddr"]))&&($macaddr[0] != gettext("unresolved") )&&(! registred($macaddr[0])))) {
 			$client["macaddr"][$compteur_clients]=$macaddr[0];
 			$client["hostname"][$compteur_clients]=$clienthostname[0];
 
@@ -552,6 +553,369 @@ foreach ($lease as $compteur => $ligne)
 	}
 	else {$client="";}
 return $client;
+}
+
+
+
+
+
+function my_parse_dhcpd_lease ($file) {
+	$mode_debug="n";
+	$mode_fich_debug="n";
+
+	require_once("includes/ldap.inc.php");
+	$lease=file($file);
+	$compteur_clients=0;
+
+	/*
+	$client["macaddr"][$compteur_clients]="";
+	$client["hostname"][$compteur_clients]="";
+	// $client["ip"][$compteur_clients]=$ip[0];
+	*/
+
+	$client["macaddr"]=array();
+	$client["ip"]=array();
+	$client["hostname"]=array();
+	$client["parc"]=array();
+
+	$tab_recherche_ldap_faite=array();
+	$liste_noms_en_lease=array();
+	$liste_noms_ldap=array();
+	$liste_autres_ip=array();
+
+	if($mode_fich_debug=="y") {$fich=fopen('/tmp/parse_dhcpd_lease.txt','a+');}
+
+	foreach ($lease as $compteur => $ligne) {
+		// for each "lease" we take IP / Mac Addr / hostname
+		if (preg_match("/^lease/",$ligne)) {
+			preg_match ("/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/",$ligne,$ip);   // take IP
+
+			// Initialisation pour le cas ou les infos dans cette section du dhcpd.leases ne sont pas exmploitables
+			$macaddr[0]=gettext("unresolved");
+			$clienthostname[0]=gettext("unresolved");
+			$etat=0;
+
+			// On lit le fichier jusqu'a l'accolade fermante suivante
+			while (! preg_match("/^}/",$lease[$compteur]))
+			{
+				if (preg_match("/binding state active/",$lease[$compteur])) {$etat=1;} // lease state
+
+				if (preg_match("/hardware ethernet/",$lease[$compteur])) // take mac addr
+				{
+					preg_match ("/[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}/",$lease[$compteur],$macaddr);
+				}
+
+				if (preg_match("/client-hostname/",$lease[$compteur])) // take name
+				{
+					preg_match ("/\"(.*)\"/",$lease[$compteur],$clienthostname);
+					$clienthostname[0]=preg_replace("/\"/","",$clienthostname[0]);
+				}
+
+				$compteur=$compteur+1;
+			}
+
+			if($mode_fich_debug=="y") {
+				fwrite($fich,"\n");
+				fwrite($fich,"\$ip[0]=".$ip[0]."\n");
+				fwrite($fich,"\$macaddr[0]=".$macaddr[0]."\n");
+				fwrite($fich,"\$clienthostname[0]=".$clienthostname[0]."\n");
+			}
+
+			if ($etat=="1") {
+				// On a bien 'binding state active' pour cette IP... malheureusement on peut avoir deux ip avec ca pour une meme adresse MAC
+
+				if ((!registred($macaddr[0]))&&
+					($macaddr[0] != gettext("unresolved"))) {
+					// Adresse MAC trouvee dans le leases et pas deja enregistree dans la table se3_dhcp
+	
+					if(!isset($liste_noms_en_lease["$macaddr[0]"])) {$liste_noms_en_lease["$macaddr[0]"]=array();}
+					if(($mode_debug=='y')||
+						((strtolower($clienthostname[0])!='unresolved')&&
+						(!in_array(strtolower($list_computer[$loop]['cn']),$liste_noms_en_lease["$macaddr[0]"])))) {
+						$liste_noms_en_lease["$macaddr[0]"][]=strtolower($clienthostname[0]);
+	
+						if($mode_fich_debug=="y") {fwrite($fich,"\$liste_noms_en_lease[\"$macaddr[0]\"][]=".strtolower($clienthostname[0])."\n");}
+					}
+	
+					if ((!in_array($macaddr[0],$client["macaddr"]))) {
+						if($mode_fich_debug=="y") {fwrite($fich,"Adresse Mac non encore traitee.\n");}
+
+						$client["macaddr"][$compteur_clients]=$macaddr[0];
+						$client["hostname"][$compteur_clients]=$clienthostname[0];
+
+						$liste_noms_ldap["$macaddr[0]"]=array();
+	
+						if($mode_fich_debug=="y") {fwrite($fich,"\$client[\"hostname\"][$compteur_clients]=".$client["hostname"][$compteur_clients]."\n");}
+
+						if ($client["hostname"][$compteur_clients]==gettext("unresolved")) {
+							// Le nom n'a pas ete trouve dans le dhcpd.leases pour cette section
+
+							if($mode_fich_debug=="y") {fwrite($fich,"\$client[\"hostname\"][$compteur_clients] est à unresolved.\n");}
+
+							//$list_computer=search_machines("(&(cn=*)(ipHostNumber=$ip[0]))","computers");
+							$list_computer=search_machines("(&(cn=*)(macAddress=$macaddr[0]))","computers");
+							if ( count($list_computer)>1) {
+								$resolutiondunom="doublon_ldap";
+								$client["hostname"][$compteur_clients]=$resolutiondunom;
+
+								if($mode_fich_debug=="y") {fwrite($fich,"\$client[\"hostname\"][$compteur_clients]=".$resolutiondunom."\n");}			
+							}
+							elseif ( count($list_computer)>0) {
+								$resolutiondunom=$list_computer[0]['cn'];
+								$client["hostname"][$compteur_clients]=$resolutiondunom;
+
+								if($mode_fich_debug=="y") {fwrite($fich,"\$client[\"hostname\"][$compteur_clients]=".$resolutiondunom."\n");}
+							}
+							elseif($mode_fich_debug=="y") {
+								fwrite($fich,"Adresse Mac non trouvee dans le LDAP.\n");
+							}
+
+							$tab_recherche_ldap_faite[]=$macaddr[0];
+
+							for($loop=0;$loop<count($list_computer);$loop++) {
+								//echo " ".$list_computer[$loop]['cn'];
+								if(($mode_debug=='y')||
+									(!in_array(strtolower($list_computer[$loop]['cn']),$liste_noms_ldap["$macaddr[0]"]))) {
+									$liste_noms_ldap["$macaddr[0]"][]=strtolower($list_computer[$loop]['cn']);
+	
+									if($mode_fich_debug=="y") {fwrite($fich,"\$liste_noms_ldap[\"$macaddr[0]\"][]=".strtolower($list_computer[$loop]['cn'])."\n");}
+	
+								}
+							}
+
+						}
+						else {
+							// Il y a un hostname dans le lease
+							if(!in_array($macaddr[0],$tab_recherche_ldap_faite)) {
+								// On controle quand meme si il y a d'autres noms dans le LDAP (pour affichage)
+								$list_computer=search_machines("(&(cn=*)(macAddress=$macaddr[0]))","computers");
+		
+								if(count($list_computer)>0) {
+									for($loop=0;$loop<count($list_computer);$loop++) {
+										//echo " ".$list_computer[$loop]['cn'];
+										if(($mode_debug=='y')||
+											(!in_array(strtolower($list_computer[$loop]['cn']),$liste_noms_ldap["$macaddr[0]"]))) {
+											$liste_noms_ldap["$macaddr[0]"][]=strtolower($list_computer[$loop]['cn']);
+		
+											if($mode_fich_debug=="y") {fwrite($fich,"\$liste_noms_ldap[\"$macaddr[0]\"][]=".strtolower($list_computer[$loop]['cn'])."\n");}
+		
+										}
+									}
+								}
+								elseif($mode_fich_debug=="y") {
+									fwrite($fich,"Adresse Mac non trouvee dans le LDAP.\n");
+								}
+							}	
+
+						}
+						$client["ip"][$compteur_clients]=$ip[0];
+						$client["parc"][$compteur_clients]=search_parcs($clienthostname[0]);
+						$compteur_clients++;
+					}
+					else {
+						// On controle quand meme si il y a d'autres noms dans le LDAP (pour affichage)
+						if(!in_array($macaddr[0],$tab_recherche_ldap_faite)) {
+							$list_computer=search_machines("(&(cn=*)(macAddress=$macaddr[0]))","computers");
+	
+							if(count($list_computer)>0) {
+								for($loop=0;$loop<count($list_computer);$loop++) {
+									//echo " ".$list_computer[$loop]['cn'];
+									if(($mode_debug=='y')||
+										(!in_array(strtolower($list_computer[$loop]['cn']),$liste_noms_ldap["$macaddr[0]"]))) {
+										$liste_noms_ldap["$macaddr[0]"][]=strtolower($list_computer[$loop]['cn']);
+	
+										if($mode_fich_debug=="y") {fwrite($fich,"\$liste_noms_ldap[\"$macaddr[0]\"][]=".strtolower($list_computer[$loop]['cn'])."\n");}
+	
+									}
+								}
+							}
+							elseif($mode_fich_debug=="y") {
+								fwrite($fich,"Adresse Mac non trouvee dans le LDAP.\n");
+							}
+						}
+
+						if(($mode_debug=='y')||
+							((strtolower($clienthostname[0])!='unresolved')&&
+							(!in_array(strtolower($clienthostname[0]),$liste_noms_en_lease["$macaddr[0]"])))) {
+							$liste_noms_en_lease["$macaddr[0]"][]=strtolower($clienthostname[0]);
+		
+							if($mode_fich_debug=="y") {fwrite($fich,"\$liste_noms_en_lease[\"$macaddr[0]\"][]=".strtolower($clienthostname[0])."\n");}
+						}
+
+						// Et on met a jour l'IP en supposant que la derniere IP recue est la bonne
+						$tmp_tab=array();
+						$tmp_tab=$client["macaddr"];
+						$tmp_tab=array_flip($tmp_tab);
+						$indice=$tmp_tab[$macaddr[0]];
+
+						$liste_autres_ip[$macaddr[0]][]=$client['ip'][$indice];
+						$client['ip'][$indice]=$ip[0];
+
+					}
+				}
+			}
+		}
+	}
+
+	if (is_array($client["ip"])) {
+		array_multisort($client["hostname"],SORT_ASC,$client["ip"],SORT_ASC,$client["macaddr"],SORT_ASC,$client["parc"]);
+
+		$client['liste_noms_en_lease']=$liste_noms_en_lease;
+		$client['liste_noms_ldap']=$liste_noms_ldap;
+		$client['liste_autres_ip']=$liste_autres_ip;
+	}
+	else {$client="";}
+
+	if($mode_fich_debug=="y") {
+		fwrite($fich,"=============================================\n");
+		fclose($fich);
+	}
+
+	return $client;
+}
+
+
+function my_dhcp_form_lease($parser) {
+	$mode_debug="n"; // Si on passe cette variable a 'y', passer la meme variable a 'y' dans my_parse_dhcpd_lease()
+
+	require_once("includes/ldap.inc.php");
+
+	$content .= "<script type='text/javascript'>
+function checkAll_baux(){
+	champs_input=document.getElementsByTagName('input');
+	for(i=0;i<champs_input.length;i++){
+		type=champs_input[i].getAttribute('type');
+		if(type==\"checkbox\"){
+			champs_input[i].checked=true;
+		}
+	}
+}
+function UncheckAll_baux(){
+	champs_input=document.getElementsByTagName('input');
+	for(i=0;i<champs_input.length;i++){
+		type=champs_input[i].getAttribute('type');
+		if(type==\"checkbox\"){
+			champs_input[i].checked=false;
+		}
+	}
+}
+</script>\n";
+
+	$content .= "<form name=\"lease_form\" method=post action=\"baux.php\">\n";
+	$content .= "<table border=\"1\" width=\"80%\">\n";
+	$content .="<tr class=\"menuheader\">\n";
+	$content .="<td align=\"center\"><b>\n".gettext("Adresse IP");
+	$content .= "</b></td>\n";
+	$content .="<td align=\"center\"><b>\n".gettext("Adresse MAC");
+	$content .="</b></td>\n";
+	$content .="<td align=\"center\"><b>\n".gettext("Nom NETBIOS");
+	$content .="</b></td>\n";
+	$content .="<td align=\"center\"><b>\n".gettext("Parc(s)");
+	$content .="</b></td>\n";
+	$content .="<td align=\"center\"><b>\n".gettext("R&#233;server");
+	//$content .= "</b></td></tr>\n";
+	$content .= "</b><br />\n";
+    $content .= "<a href='javascript: checkAll_baux();'><img src='../elements/images/enabled.gif' width='20' height='20' border='0' alt='Tout cocher' /></a> / <a href='javascript:UncheckAll_baux();'><img src='../elements/images/disabled.gif' width='20' height='20' border='0' alt='Tout d&#233;cocher' /></a>\n";
+	$content .= "</td>\n";
+	$content .="</tr>\n";
+	foreach ($parser["ip"] as $keys=>$value) {
+		if (! is_recorded_in_dhcp_database($parser["ip"][$keys],$parser["macaddr"][$keys],$parser["hostname"][$keys])) {
+			$content .= "<tr>\n";
+
+			$content .="<td>\n";
+			$content .= "<input type=\"text\" maxlength=\"15\" size=\"15\" value=\"".$parser["ip"][$keys]."\"  name=\"ip[$keys]\" />\n";
+			if(($mode_debug=='y')&&(count($parser['liste_autres_ip'][$parser["macaddr"][$keys]])>0)) {
+				for($loop=0;$loop<count($parser['liste_autres_ip'][$parser["macaddr"][$keys]]);$loop++) {
+					$content .="<br />\n".$parser['liste_autres_ip'][$parser["macaddr"][$keys]][$loop];
+				}
+			}
+
+			$content .= "</td>\n";
+
+			$content .="<td align='center'>\n";
+			$content .= "<input type=\"hidden\" maxlength=\"17\" size=\"17\" value=\"".$parser["macaddr"][$keys]."\"  name=\"mac[$keys]\" />\n";;
+			$content .= $parser["macaddr"][$keys];
+			$content .= "</td>\n";
+
+			$content .="<td>\n";
+			$content .= "<input type=\"text\" maxlength=\"20\" size=\"20\" value=\"".$parser["hostname"][$keys]."\"  name=\"name[$keys]\" />\n";
+
+			if((count($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]])>1)||
+			(count($parser['liste_noms_ldap'][$parser["macaddr"][$keys]])>1)||
+			((isset($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]][0]))&&(strtolower($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]][0])!=strtolower($parser["hostname"][$keys])))||
+			((isset($parser['liste_noms_ldap'][$parser["macaddr"][$keys]][0]))&&(strtolower($parser['liste_noms_ldap'][$parser["macaddr"][$keys]][0])!=strtolower($parser["hostname"][$keys])))
+			) {
+				$content .="<br />\n";
+				$content .="<table border='0'>\n";
+
+				if(($mode_debug=='y')||
+				(count($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]])>1)||
+				((isset($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]][0]))&&(strtolower($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]][0])!=strtolower($parser["hostname"][$keys])))) {
+					$content .="<tr>\n";
+					$content .="<th valign='top'>Leases:</th>\n";
+					$content .="<td>\n";
+					for($loop=0;$loop<count($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]]);$loop++) {
+						$content .=$parser['liste_noms_en_lease'][$parser["macaddr"][$keys]][$loop]."<br />\n";
+					}
+					$content .="</td>\n";
+					$content .="</tr>\n";
+				}
+
+				if(($mode_debug=='y')||
+				(count($parser['liste_noms_ldap'][$parser["macaddr"][$keys]])>1)||
+				((isset($parser['liste_noms_ldap'][$parser["macaddr"][$keys]][0]))&&(strtolower($parser['liste_noms_ldap'][$parser["macaddr"][$keys]][0])!=strtolower($parser["hostname"][$keys])))) {
+					$content .="<tr>\n";
+					$content .="<th valign='top'>Ldap:</th>\n";
+					$content .="<td>\n";
+					for($loop=0;$loop<count($parser['liste_noms_ldap'][$parser["macaddr"][$keys]]);$loop++) {
+						$content .=$parser['liste_noms_ldap'][$parser["macaddr"][$keys]][$loop]."<br />\n";
+					}
+					$content .="</td>\n";
+					$content .="</tr>\n";
+				}
+
+				$content .="</table>\n";
+			}
+
+			$content .="</td>\n";
+
+			$content .="<td align=\"left\">\n";
+			// Est-ce que cette machine est integree ?
+			if (is_array(search_machines("(cn=".$parser["hostname"][$keys].")", "computers"))) {
+				if (isset($parser["parc"][$keys])) {
+					foreach($parser["parc"][$keys] as $keys2=>$value2) {
+						$content.="<a href=../parcs/show_parc.php?parc=".$parser["parc"][$keys][$keys2]["cn"].">".$parser["parc"][$keys][$keys2]["cn"]."</a><br />\n";
+					}
+				}
+				// ajouter a un parc dans lequel la machine n'est  pas ?
+				$content .= add_to_parc($parser["parc"][$keys],$keys);
+			}
+			else { // this computer is not recorded on the domain
+                $content.="<label for='integre_$keys' style='cursor: pointer;'>\n";
+                $content.="<font color='red'>".gettext("Int&#233;grer au domaine")."</font>\n";
+                $content .="<input type=checkbox id='integre_$keys' name=\"integre[$keys]\" />\n";
+                $content.="</label>\n";
+                $content.="<br />\n";
+                $content .= "<table summary='Compte d integration'>\n";
+                $content .= "<tr><td>Admin local&nbsp;:</td><td><input type=\"text\" maxlength=\"20\" size=\"15\" value=\"administrateur\"  name=\"localadminname[$keys]\" /></td></tr>\n";
+                $content .= "<tr><td>Mot de passe&nbsp;:</td><td><input type=\"text\" maxlength=\"20\" size=\"8\" value=\"\"  name=\"localadminpasswd[$keys]\" /></td></tr>\n";
+                $content .= "</table>\n";
+			}
+			//
+			$content .="</td>\n";
+			$content .="<td align=\"center\">\n";
+			$content .="<input type=checkbox name=\"reservation[$keys]\" />\n";
+			$content .="</td>\n";
+			$content .="</tr>\n";
+		}
+	}
+	$content .= "</table>\n";
+
+	$content .= "<input type='hidden' name='action' value='valid' />\n";
+	//$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("valider")."\">\n";
+	$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("Valider les r&#233;servations")."\" />\n";
+	$content .= "</form>\n";
+return $content;
 }
 
 
@@ -599,7 +963,7 @@ function UncheckAll_baux(){
 	$content .="</b></td><td align=\"center\"><b>\n".gettext("R&#233;server");
 	//$content .= "</b></td></tr>\n";
 	$content .= "</b><br />\n";
-	$content .= "<a href='javascript: checkAll_baux();'><img src='../elements/images/enabled.png' width='20' height='20' border='0' alt='Tout cocher' /></a> / <a href='javascript:UncheckAll_baux();'><img src='../elements/images/disabled.png' width='20' height='20' border='0' alt='Tout d&#233;cocher' /></a>\n";
+    $content .= "<a href='javascript: checkAll_baux();'><img src='../elements/images/enabled.gif' width='20' height='20' border='0' alt='Tout cocher' /></a> / <a href='javascript:UncheckAll_baux();'><img src='../elements/images/disabled.gif' width='20' height='20' border='0' alt='Tout d&#233;cocher' /></a>\n";
 	$content .= "</td></tr>\n";
 	foreach ($parser["ip"] as $keys=>$value) {
 		if (! is_recorded_in_dhcp_database($parser["ip"][$keys],$parser["macaddr"][$keys],$parser["hostname"][$keys])) {
@@ -622,7 +986,10 @@ function UncheckAll_baux(){
 				$content .= add_to_parc($parser["parc"][$keys],$keys);
 			}
 			else { // this computer is not recorded on the domain
-			$content.="<FONT color='red'>".gettext("Non int&#233;gr&#233;e au domaine")."</FONT>\n";
+                $content.="<FONT color='red'>".gettext("Int&#233;grer au domaine")."</FONT>\n";
+                $content .="<input type=checkbox name=\"integre[$keys]\"><br>\n";
+                $content .= "Admin local : <input type=\"text\" maxlength=\"20\" SIZE=\"15\" value=\"administrateur\"  name=\"localadminname[$keys]\" ><br>\n";
+                $content .= "Mot de passe : <input type=\"text\" maxlength=\"20\" SIZE=\"8\" value=\"\"  name=\"localadminpasswd[$keys]\" ><br>\n";
 			}
 			//
 			$content .="</td><td align=\"center\">\n";
@@ -692,49 +1059,47 @@ function UncheckAll_reservations(){
 	$content .="</b></td><td align=\"center\"><b>\n<a href=\"reservations.php?order=name\">".gettext("Nom NETBIOS")."</a>";
 	$content .="</b></td><td align=\"center\"><b>\n".gettext("Parc(s)");
 	$content .="</b></td><td align=\"center\"><b>\n".gettext("Supprimer");
+    $content .= "<a href='javascript: checkAll_reservations();'><img src='../elements/images/enabled.gif' width='20' height='20' border='0' alt='Tout cocher' /></a> / <a href='javascript:UncheckAll_reservations();'><img src='../elements/images/disabled.gif' width='20' height='20' border='0' alt='Tout d&#233;cocher' /></a>\n";
+    $content .="</b></td><td align=\"center\"><b>\n".gettext("Renommer");
 	$content .= "</b><br />\n";
-	$content .= "<a href='javascript: checkAll_reservations();'><img src='../elements/images/enabled.png' width='20' height='20' border='0' alt='Tout cocher' /></a> / <a href='javascript:UncheckAll_reservations();'><img src='../elements/images/disabled.png' width='20' height='20' border='0' alt='Tout d&#233;cocher' /></a>\n";
 	$content .= "</td></tr>\n";
-
-	while ($row = mysql_fetch_assoc($result)) {
-			$content .= "<tr><td align=\"center\">\n";
-			//$content .= "<input type=\"text\" maxlength=\"15\" SIZE=\"15\" value=\"".$row["ip"]."\"  name=\"ip[$clef]\" readonly>\n";
-			$content .= "<input type=\"hidden\" maxlength=\"15\" SIZE=\"15\" value=\"".$row["ip"]."\"  name=\"ip[$clef]\" readonly>\n";
-			$content .= $row["ip"]."\n";
-			$content .= "</td><td align=\"center\">\n";
-			//$content .= "<input type=\"text\" maxlength=\"17\" SIZE=\"17\" value=\"".$row["mac"]."\"  name=\"mac[$clef]\" readonly>\n";;
-			$content .= "<input type=\"hidden\" maxlength=\"17\" SIZE=\"17\" value=\"".$row["mac"]."\"  name=\"mac[$clef]\" readonly>\n";;
-			$content .= $row["mac"]."\n";
-			$content .= "</td><td align=\"center\">\n";
-			//$content .= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"".$row["name"]."\"  name=\"name[$clef]\" readonly>\n";
-			$content .= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"".$row["name"]."\"  name=\"name[$clef]\" readonly>\n";
-			$content .= $row["name"]."\n";
-			$content .="</td><td align=\"center\">\n";
-			// Est-ce que cette machine est integree ?
-			$parc[$clef]=search_parcs ($row["name"]);
-			if (is_array(search_machines("(cn=".$row["name"].")", "computers"))) {
-				if (isset($parc[$clef])) {
-					foreach($parc[$clef] as $keys2=>$value2) {
-						$content.="<a href=../parcs/show_parc.php?parc=".$parc[$clef][$keys2]["cn"].">".$parc[$clef][$keys2]["cn"]."</a><br>\n";
-					}
+    while ($row = mysql_fetch_assoc($result)) {
+        $content .= "<tr><td>\n";
+        $content .= "<input type=\"text\" maxlength=\"15\" SIZE=\"15\" value=\"".$row["ip"]."\"  name=\"ip[$clef]\" readonly>\n";
+        $content .= "</td><td>\n";
+        $content .= "<input type=\"text\" maxlength=\"17\" SIZE=\"17\" value=\"".$row["mac"]."\"  name=\"mac[$clef]\" readonly>\n";;
+        $content .= "</td><td>\n";
+        $content .= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"".$row["name"]."\"  name=\"name[$clef]\"\n";
+        $content .="</td><td>\n";
+		// Est-ce que cette machine est integree ?
+		$parc[$clef]=search_parcs ($row["name"]);
+		if (is_array(search_machines("(cn=".$row["name"].")", "computers"))) {
+			if (isset($parc[$clef])) {
+				foreach($parc[$clef] as $keys2=>$value2) {
+					$content.="<a href=../parcs/show_parc.php?parc=".$parc[$clef][$keys2]["cn"].">".$parc[$clef][$keys2]["cn"]."</a><br>\n";
 				}
-				// ajouter a un parc dans lequel la machine n'est  pas ?
-				$content .= add_to_parc($parc[$clef],$clef);
 			}
-			else { // this computer is not recorded on the domain
-			$content.="<FONT color='red'>".gettext("Non int&#233;gr&#233;e au domaine")."</FONT>\n";
-			}
-			$content .="</td><td align=\"center\">\n";
-			$content .="<input type=checkbox name=\"supprimer[$clef]\">\n";
-			$content .="</td></tr>\n";
+			// ajouter a un parc dans lequel la machine n'est  pas ?
+			$content .= add_to_parc($parc[$clef],$clef);
+		}
+		else { // this computer is not recorded on the domain
+            $content.="<FONT color='red'>".gettext("Int&#233;grer au domaine")."</FONT>\n";
+            $content .="<input type=checkbox name=\"integre[$keys]\"><br>\n";
+            $content .= "Admin local : <input type=\"text\" maxlength=\"20\" SIZE=\"15\" value=\"administrateur\"  name=\"localadminname[$keys]\" ><br>\n";
+            $content .= "Mot de passe : <input type=\"text\" maxlength=\"20\" SIZE=\"8\" value=\"\"  name=\"localadminpasswd[$keys]\" ><br>\n";
+		}
+		$content .="</td><td align=\"center\">\n";
+		$content .="<input type=checkbox name=\"supprimer[$clef]\">\n";
+		$content .="</td>\n";
+        $content .="<td align=\"center\">\n";
+        $content .="<input type=checkbox name=\"renommer[$clef]\">\n";
+		$content .="</td></tr>\n";
 		$clef++;
 	}
 	$content .= "</table>\n";
 	$content .= "<input type='hidden' name='action' value='valid'>\n";
-	//$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("valider")."\">\n";
-	//$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("Supprimer les r&#233;servations coch&#233;es")."\">\n";
-	$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("Valider les ajouts &#224; des parcs / Supprimer les r&#233;servations coch&#233;es")."\"> \n";
-	$content .= "</form>";
+    $content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("Valider les modifications")."\">\n";
+    $content .= "</form>";
 
 return $content;
 }
@@ -888,6 +1253,23 @@ function suppr_reservation($ip,$mac,$name)
 return $error;
 }
 
+/**
+* renomme une reservation
+
+* @Parametres $ip : Ip de la machine - $mac : Adresse mac de la machine - $name : Nom de la machine
+
+* @Return Message d'erreur SQL en cas de d'echec de l'update
+
+*/
+
+function renomme_reservation($ip,$mac,$name)
+{
+	require_once ("ihm.inc.php");
+	$error="Renommage de l'entr&#233;e pour $ip<br>";
+	$update_query = "UPDATE se3_dhcp SET name='$name'  where `ip` = '$ip' AND `mac` = '$mac'";
+	mysql_query($update_query);
+return $error;
+}
 
 /**
 * Ajoute une machine dans un parc
@@ -1340,4 +1722,28 @@ function dhcp_vlan_champ($nom_champ)
 
 }
 
+// rename domain client
+
+/**
+* rename domain client
+
+* @Parametres $ip - $mac - $name 
+
+* @Return $error
+
+*/
+function renomme_domaine($ip,$oldname,$name,$admin,$adminpasswd)
+{
+    require_once ("ihm.inc.php");
+    // nettoyer la base ldap avant ?
+    system( "/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh renomme $name $ip $oldname $admin $adminpasswd");
+
+}
+
+function integre_domaine($ip,$mac,$name,$admin,$adminpasswd)
+{
+    require_once ("ihm.inc.php"); 
+    //doit-on faire verifier l'existence dans le ldap ?
+    system( "/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh rejoint $name $ip $mac $admin $adminpasswd");
+}
 ?>
