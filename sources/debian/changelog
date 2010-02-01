@@ -1,3 +1,10 @@
+se3-dhcp (0.22) unstable; urgency=low
+
+  * ameliorations corrections resolution nomns clients nouvo renommage a
+    distance
+
+ -- root <root@localhost.localdomain>  Mon,  1 Feb 2010 00:51:49 +0100
+
 se3-dhcp (0.21) unstable; urgency=low
 
   * modif pour integration directe des postes clients
