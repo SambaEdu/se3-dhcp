@@ -39,7 +39,7 @@
 		header('Content-Type: text/x-csv');
 		header('Expires: ' . $now);
 		// lem9 & loic1: IE need specific headers
-		if(preg('/MSIE/', $_SERVER['HTTP_USER_AGENT'])) {
+		if(preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT'])) {
 			header('Content-Disposition: inline; filename="'.$nom_fic.'"');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');

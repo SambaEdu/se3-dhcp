@@ -27,6 +27,7 @@
 include "entete.inc.php";
 include "ldap.inc.php";
 include "ihm.inc.php";
+require_once "fonc_parc.inc.php";
 
 
 $action=$_POST['action'];

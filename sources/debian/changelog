@@ -1,3 +1,73 @@
+se3-dhcp (0.33) stable; urgency=low
+
+  * ajout option reintegrer page resa
+
+ -- dbo <denis.bonnenfant@diderot.org>  Sun,  23 Jan 2011 00:53:27 +0100
+
+se3-dhcp (0.32) stable; urgency=low
+
+  * ajout test lors renommage via page resa
+
+ -- root <root@localhost.localdomain>  Thu,  6 Jan 2011 00:53:27 +0100
+
+se3-dhcp (0.31) stable; urgency=low
+
+  * correction nb caracteres table params champs descritopn a 100 -
+    correctif nettoyage doublons crob
+
+ -- root <root@localhost.localdomain>  Mon, 13 Dec 2010 01:46:32 +0100
+
+se3-dhcp (0.30) stable; urgency=low
+
+  * correctif bug vlan
+
+ -- root <root@localhost.localdomain>  Wed,  1 Dec 2010 23:28:45 +0100
+
+se3-dhcp (0.29) stable; urgency=low
+
+  * correction extra option : maintenant c'est un include d'un fichier
+
+  * ajout champ de debut de plage de reservation
+
+ -- denis bonnenfant <denis@bureau>  Mon, 22 Nov 2010 15:05:22 +0100
+
+se3-dhcp (0.28) stable; urgency=low
+
+  * correction import csv
+
+ -- denis bonnenfant <denis@bureau>  Mon, 23 Sep 2010 23:16:41 +0200
+
+se3-dhcp (0.27) stable; urgency=low
+
+  * corrections affichage et supperssion choix integration dans page baux
+
+ -- denis bonnenfant <denis@bureau>  Mon, 05 Jul 2010 10:08:41 +0200
+
+se3-dhcp (0.26) unstable; urgency=low
+
+  * correction bug page baux : intégration directe et renommage
+
+ -- denis bonnenfant <denis@bureau>  Tue, 25 May 2010 10:40:40 +0200
+
+se3-dhcp (0.25) unstable; urgency=low
+
+  * ajout possibilité de changer l'ip direct dans la page reservations
+    s
+
+ -- root <root@localhost.localdomain>  Fri,  7 May 2010 10:29:25 +0200
+
+se3-dhcp (0.24) unstable; urgency=low
+
+  * correction bug version testing
+
+ -- root <root@localhost.localdomain>  Sun, 18 Apr 2010 02:24:40 +0200
+
+se3-dhcp (0.23) unstable; urgency=low
+
+  * modifs reservations et optimisations vlans
+
+ -- root <root@localhost.localdomain>  Mon, 12 Apr 2010 01:37:24 +0200
+
 se3-dhcp (0.22) unstable; urgency=low
 
   * ameliorations corrections resolution nomns clients nouvo renommage a

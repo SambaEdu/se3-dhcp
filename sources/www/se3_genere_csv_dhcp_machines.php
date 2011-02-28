@@ -85,6 +85,12 @@ if(isset($_POST['suppr_doublons_ldap'])) {
 				echo "Erreur lors de la suppression de l'entr&#233;e $suppr[$i]<br />\n";
 			}
 		}
+
+		if(get_tab_attribut("computers","uid=$suppr[$i]$",$tab_attr_recherche)) {
+			if(!del_entry("uid=$suppr[$i]$","computers")) {
+				echo "Erreur lors de la suppression de l'entr&#233;e uid=$suppr[$i]$<br />\n";
+			}
+		}
 	}
 
 	// Faut-il aussi supprimer les uid=$suppr[$i]$ ?

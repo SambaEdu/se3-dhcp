@@ -29,6 +29,7 @@
 include "entete.inc.php";
 include "ldap.inc.php";
 include "ihm.inc.php";
+require_once "fonc_parc.inc.php";
 require_once "dhcpd.inc.php";
 
 
@@ -77,16 +78,26 @@ if (is_admin("system_is_admin",$login)=="Y")
 	case 'valid' :
 		$ip=$_POST['ip'];
 		$mac=$_POST['mac'];
-		$reservation=$_POST['reservation'];
+		$action_res=$_POST['action_res'];
 		$name=$_POST['name'];
+		$oldname=$_POST['name'];
 		$parc=$_POST['parc'];	    
-	        $localadminname=$_POST['localadminname'];
-	        $localadminpasswd=$_POST['localadminpasswd'];
-	        $integre=$_POST['integre'];	    
+        $localadminname=$_POST['localadminname'];
+        $localadminpasswd=$_POST['localadminpasswd'];
 		foreach ($ip as $keys=>$value) {
-			if ($reservation[$keys]) { $content .= "<FONT color='red'>".add_reservation($ip[$keys],$mac[$keys],$name[$keys])."</FONT>";}
-			if ($integre[$keys]) { $content .= "<FONT color='red'>".integre_domaine($ip[$keys],$mac[$keys],$name[$keys],$localadminname[$keys],$localadminpasswd[$keys])."</FONT>";}
-			if (($parc[$keys] != "none")&&($parc[$keys] != "")) { $content .= add_parc($ip[$keys],$mac[$keys],$name[$keys],$parc[$keys]);}
+			if ($action_res[$keys]=="reserver") { 
+			    $content .= "<FONT color='red'>".add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]))."</FONT>";
+			}
+			elseif ($action_res[$keys]=="integrer") { 
+//			    $content .= "<FONT color='red'>".add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]))."</FONT>";
+			    if ($localadminpasswd[$keys] == "") { $localadminpasswd[$keys]="xxx"; }
+			    $content .= "<FONT color='red'>".integre_domaine($ip[$keys],$mac[$keys],strtolower($name[$keys]),$localadminname[$keys],$localadminpasswd[$keys])."</FONT>";
+			}
+			elseif ($action_res[$keys]=="renommer") {
+//			    $content .= add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]));
+		        $content .= renomme_domaine($ip[$keys],strtolower($oldname[$keys]),strtolower($name[$keys]));
+		    }
+			if (($parc[$keys] != "none")&&($parc[$keys] != "")) { $content .= add_machine_parc(strtolower($name[$keys]),$parc[$keys]);}
 		}
 		$file="/var/lib/dhcp3/dhcpd.leases";
 		//$parser=parse_dhcpd_lease($file);

@@ -190,6 +190,13 @@ my @row = $requete->fetchrow_array();
 my $END_RANGE=$row[0];
 $requete->finish;
 
+##### EXTRA_OPTION 
+my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_extra_option';");
+$requete->execute();
+my @row = $requete->fetchrow_array();
+my $EXTRA_OPTION=$row[0];
+$requete->finish;
+
 # DOMAIN NAME from "se3_dhcp" table ########
 my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='dhcp_domain_name';");
 $requete->execute();
@@ -278,7 +285,8 @@ if (! $MAX_BAIL =="")
 if (! $WPAD == "")
 {
 	print FILE "option wpad-url code 252 = string;\n";
-	print FILE "option wpad-url \"$WPAD\\n\";\n";
+	#print FILE "option wpad-url \"$WPAD\\n\";\n";
+	print FILE "option wpad-url \"$WPAD\";\n";
 }
 
 if (! $NORMAL_BAIL =="")
@@ -309,7 +317,11 @@ if (! $unatt_login =="")
 	print FILE "option unattended-options code 233 = string;\n";
 	print FILE "option unattended-options \"z_user=$unatt_login z_pass=$unatt_pass z_path=//$tftp_server/install\";\n";
 }
-
+if (! $EXTRA_OPTION =="")
+{
+	
+	print FILE "include \"$EXTRA_OPTION\";\n";
+}
 
 if ($VLAN > "0")
 {
@@ -322,6 +334,7 @@ if ($VLAN > "0")
 		my $MASQUE="";
 		my $BEGIN_RANGE="";
 		my $END_RANGE="";
+        my $EXTRA_OPTION="";
 		
 		# Subnet vlan   ########
 		my $dhcp_reseau="dhcp_reseau_".$i;
@@ -367,6 +380,15 @@ if ($VLAN > "0")
 		my $GATEWAY=$row[0];
 		$requete->finish;
 
+		# Extra option  vlan   ########
+		my $dhcp_extra_option="dhcp_extra_option_".$i;
+		my $requete = $connexion_db->prepare("SELECT value FROM params WHERE name='$dhcp_extra_option';");
+		$requete->execute();
+		my @row = $requete->fetchrow_array();
+		my $EXTRA_OPTION=$row[0];
+		$requete->finish;
+
+
 		if (! (($BEGIN_RANGE=="") || ($END_RANGE=="") || ($RESEAU=="") || ($MASQUE=="") || ($GATEWAY=="")))
 		{
 			print FILE "\n";
@@ -374,6 +396,9 @@ if ($VLAN > "0")
 			print FILE "subnet $RESEAU netmask $MASQUE {\n";
 			print FILE "	range $BEGIN_RANGE $END_RANGE;\n";
 			print FILE "	option routers $GATEWAY;\n";
+			if (! ($EXTRA_OPTION=="")) {
+			        print FILE "    include \"$EXTRA_OPTION\";\n";
+			}
 			print FILE "}\n";
 		}
 
@@ -401,7 +426,7 @@ if ($VLAN > "0")
 print FILE "\n\n";
 
 #####################################################################
-###  HOSTS enregistrés dans la base  #############################################
+###  HOSTS enregistrÃ©s dans la base  #############################################
 #
 print FILE "################################################################################\n";
 print FILE "# HOSTS recorded on the base\n\n";
