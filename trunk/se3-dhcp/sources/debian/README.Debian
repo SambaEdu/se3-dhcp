@@ -1,0 +1,9 @@
+se3-dhcp for Debian
+-------------------
+This package is part of the SambaEdu3 project, which is aimed at creating a file server for schools.
+More precision can be found at http://crdp.ac-caen.fr/se3/
+This project is licensed under the GNU GPL v2 or later
+
+This package gives an GUI for administrating the dhcpd3-server.
+
+ -- Eric Mercier <eric.mercier@crdp.ac-versailles.fr>, Mon, 15 May 2006 11:48:24 +0200
