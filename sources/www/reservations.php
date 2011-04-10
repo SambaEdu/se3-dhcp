@@ -24,6 +24,11 @@ include "ldap.inc.php";
 include "ihm.inc.php";
 require_once "fonc_parc.inc.php";
 require_once "dhcpd.inc.php";
+?>
+
+<script type="text/javascript" src="/elements/js/wz_tooltip_new.js"></script>
+
+<?php
 
 $action = $_POST['action'];
 if (is_admin("system_is_admin", $login) == "Y") {
@@ -33,10 +38,34 @@ if (is_admin("system_is_admin", $login) == "Y") {
 
 
     $content .= "<h1>" . gettext("R&#233;servations existantes") . "</h1>";
+
+// Permet de vider les resa
+	$content .= "<table><tr><td>";
+	$content .= "<form name=\"lease_form\" method=post action=\"reservations.php\">\n";
+	$content .= "<input type='hidden' name='action' value='cleanresa'>\n";	
+	$content .= "<input type=\"submit\" name=\"button\" value=\"".gettext("Supprimer toutes les r&#233;servations ")."\" onclick=\"if (window.confirm('supression de toutes les r&#233;servations ?')) {return true;} else {return false;}\">\n";	
+	$content .= "</form>\n";
+	$content .= "</td><td>";
+	$content .= "<u onmouseover=\"return escape".gettext("('Permet de supprimer toutes les r&#233;servations de la base. Utile par exemple en cas de changement de plan d\'adressage.')")."\"><IMG style=\"border: 0px solid ;\" src=\"../elements/images/help-info.gif \"></u>\n";
+	$content .= "</td></tr></table>\n";
+
+
+/*
+
+echo "<form action=\"reservations.php\" method=\"post\">\n";
+echo "<input  type=\"submit\" value=\"Supprimer toutes les réservations existantes\" onclick=\"if (window.confirm('supression de toutes les réservations ?')) {return true;} else {return false;}\"/>";
+echo "</form>";*/
+
     // Prepare HTML code
     switch ($action) {
         case '' :
         case 'index' :
+            $content.=form_existing_reservation();
+            break;
+	case 'cleanresa' :
+	    $query="TRUNCATE se3_dhcp";
+	    mysql_query($query);
+	    dhcpd_restart();
             $content.=form_existing_reservation();
             break;
 
@@ -92,6 +121,8 @@ if (is_admin("system_is_admin", $login) == "Y") {
 
 
     print "$content\n";
+
+
 } else {
     print (gettext("Vous n'avez pas les droits n&#233;cessaires pour ouvrir cette page..."));
 }
