@@ -956,7 +956,7 @@ function UncheckAll_baux(){
             $showid = 0;
             $listaction = "";
             // Est-ce que cette machine est integree ?
-            if (is_array(search_machines("(cn=" . $parser["hostname"][$keys] . ")", "computers"))) {
+            if (count(search_machines("(cn=" . $parser["hostname"][$keys] . ")", "computers")) > 0) {
                 if (isset($parser["parc"][$keys])) {
                     foreach ($parser["parc"][$keys] as $keys2 => $value2) {
 
@@ -966,7 +966,7 @@ function UncheckAll_baux(){
                 // ajouter a un parc dans lequel la machine n'est  pas ?
                 $content .= add_to_parc($parser["parc"][$keys], $keys);
                 // est ce que la machine est integree au domaine ?
-                if (is_array(search_machines("(uid=" . $parser["hostname"][$keys] . "$)", "computers"))) {
+                if (count(search_machines("(uid=" . $parser["hostname"][$keys] . "$)", "computers")) > 0) {
 //                    $listaction .="<OPTION value=\"renommer\">Renommer\n"; 
                 } else { // this computer is not recorded on the domain
                     $content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n";
@@ -1063,7 +1063,7 @@ function UncheckAll_baux(){
             $showid = 0;
             $listaction = "";
             // Est-ce que cette machine est integree ?
-            if (is_array(search_machines("(cn=" . $parser["hostname"][$keys] . ")", "computers"))) {
+            if (count(search_machines("(cn=" . $parser["hostname"][$keys] . ")", "computers")) > 0) {
                 if (isset($parser["parc"][$keys])) {
                     foreach ($parser["parc"][$keys] as $keys2 => $value2) {
 
@@ -1073,7 +1073,7 @@ function UncheckAll_baux(){
                 // ajouter a un parc dans lequel la machine n'est  pas ?
                 $content .= add_to_parc($parser["parc"][$keys], $keys);
                 // est ce que la machine est integree au domaine ?
-                if (is_array(search_machines("(uid=" . $parser["hostname"][$keys] . "$)", "computers"))) {
+                if (count(search_machines("(uid=" . $parser["hostname"][$keys] . "$)", "computers")) > 0) {
                     $listaction .="<OPTION value=\"renommer\">Renommer\n";
                 } else { // this computer is not recorded on the domain
                     $content.="<FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n";
@@ -1182,7 +1182,7 @@ function UncheckAll_reservations(){
         $listaction = "";
         // Est-ce que cette machine est enregistree ?
         $parc[$clef] = search_parcs($row["name"]);
-        if ((is_array(search_machines("(cn=" . $row["name"] . ")", "computers")))) {
+        if ((count(search_machines("(cn=" . $row["name"] . ")", "computers"))) > 0) {
             if (isset($parc[$clef])) {
                 foreach ($parc[$clef] as $keys2 => $value2) {
                     $content.="<a href=../parcs/show_parc.php?parc=" . $parc[$clef][$keys2]["cn"] . ">" . $parc[$clef][$keys2]["cn"] . "</a><br>\n";
@@ -1191,7 +1191,7 @@ function UncheckAll_reservations(){
             // ajouter a un parc dans lequel la machine n'est  pas ?
             $content .= add_to_parc($parc[$clef], $clef);
             // est ce que la machine est integree au domaine ?
-            if (is_array(search_machines("(uid=" . $row["name"] . "$)", "computers"))) {
+            if (count(search_machines("(uid=" . $row["name"] . "$)", "computers")) > 0) {
                 $listaction .="<OPTION value=\"renommer\">Renommer\n";
                 $listaction .="<OPTION value=\"reintegrer\">R&#233;int&#233;grer\n";
             } else { // this computer is not recorded on the domain
@@ -1252,7 +1252,7 @@ function UncheckAll_reservations(){
 function add_to_parc($parcs, $keys) {
     require_once("includes/ldap.inc.php");
     $liste_parcs = search_machines("objectclass=groupOfNames", "parcs");
-    if (is_array($liste_parcs)) {
+    if (count($liste_parcs)>0) {
         $ret .="<SELECT  name=\"parc[$keys]\">";
         $ret .="<OPTION value=\"none\">" . gettext("Ajouter &#224; un parc...");
         foreach ($liste_parcs as $keys => $value) {
