@@ -7,7 +7,7 @@
 
  * @Projet LCS / SambaEdu
 
- * @auteurs � GrosQuicK �  eric.mercier@crdp.ac-versailles.fr
+ * @auteurs  GrosQuicK   eric.mercier@crdp.ac-versailles.fr
 
  * @note
 
@@ -22,6 +22,7 @@
 include "entete.inc.php";
 include "ldap.inc.php";
 include "ihm.inc.php";
+include("crob_ldap_functions.php");
 require_once "fonc_parc.inc.php";
 require_once "dhcpd.inc.php";
 ?>
@@ -87,18 +88,42 @@ echo "</form>";*/
                 } elseif ($action_res[$keys] == "actualiser") {
                     $content .= renomme_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
                 } elseif ($action_res[$keys] == "newip") {
+                    
                     $content .= change_ip_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
+                    //$content .= "<FONT color='red'>" . "Attention";
+                   
+                    
                 } elseif ($action_res[$keys] == "reintegrer") {
-                    $content .= renomme_domaine($ip[$keys], $mac[$keys], strtolower($name[$keys]));
-                } elseif ($action_res[$keys] == "renommer") {
+
+                    exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
+                    if ($return_value == "1") {
+                        $content .= gettext("<p style='color:red;'>Attention  : R&#233;int&#233;gration de $oldname[$keys] impossible. La machine est injoignable ou proteg&#233;e par un parre feu  :  </p>\n " );
+                    }
+
+                    else {
+                        $content .= renomme_domaine($ip[$keys], $oldname[$keys], strtolower($name[$keys]));
+                    }
+
+               } elseif ($action_res[$keys] == "renommer") {
                     $ret = already_exist("ipbidon", strtolower($name[$keys]), "macbidon");
                     if ($ret == "") {
-                        $content .= renomme_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
-                        $content .= renomme_domaine($ip[$keys], $oldname[$keys], strtolower($name[$keys]));
-                        $content .= renomme_machine_parcs(strtolower($oldname[$keys]), strtolower($name[$keys]));
-                    } else {
-                        $ret = gettext("Le nom n'est pas valide ou existe d&#233;j&#224; : " . $name[$keys]);
-                        echo $ret;
+                        exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
+                        if ($return_value == "1") {
+                             $content .= gettext("<p style='color:red;'>Attention : Renommage de $oldname[$keys] impossible. La machine est injoignable ou proteg&#233;e par un parre feu  :  </p>\n " );
+                            
+                            
+                        }
+                        else {
+                            $content .= renomme_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
+                            $content .= renomme_domaine($ip[$keys], $oldname[$keys], strtolower($name[$keys]));
+                            $content .= renomme_machine_parcs(strtolower($oldname[$keys]), strtolower($name[$keys]));
+//                            $content .= "parti";
+                            $content .= system("/usr/bin/sudo /usr/share/se3/scripts/italc_generate.sh");
+                            } 
+                    }
+                    else {
+                        $content .= gettext("<p style='color:red;'>Attention : Le nom $name[$keys] n'est pas valide ou existe d&#233;j&#224;");
+                        
                     }
                 } elseif ($action_res[$keys] == "supprimer") {
                     $content .= suppr_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
@@ -112,17 +137,40 @@ echo "</form>";*/
             break;
 
         default :
-            // anti  hacking
+            // anti  hackingprot
             $title = '';
             $content = '';
             return;
     }
-
-
+//$content .= search_doublons_mac();
+// $content .= affiche_doublons_csv();
 
     print "$content\n";
+    $filename="/tmp/emailunattended_generate";
+    if (file_exists($filename))  {
+        echo "<p style='color:red;'>Attention : doublons dans l'annuaire</p>\n";
+        search_doublons_mac();
+    }
 
+    if(isset($_POST['suppr_doublons_ldap'])) {
+            $suppr=isset($_POST['suppr']) ? $_POST['suppr'] : NULL;
 
+            $tab_attr_recherche=array('cn');
+            for($i=0;$i<count($suppr);$i++) {
+                    if(get_tab_attribut("computers","cn=$suppr[$i]",$tab_attr_recherche)) {
+                            if(!del_entry("cn=$suppr[$i]","computers")) {
+                                    echo "Erreur lors de la suppression de l'entr&#233;e $suppr[$i]<br />\n";
+                            }
+                    }
+
+                    // Faut-il aussi supprimer les uid=$suppr[$i]$ ? OUI
+                    if(get_tab_attribut("computers","uid=$suppr[$i]$",$tab_attr_recherche)) {
+                            if(!del_entry("uid=$suppr[$i]$","computers")) {
+                                    echo "Erreur lors de la suppression de l'entr&#233;e uid=$suppr[$i]$<br />\n";
+                            }
+                    }
+            }
+    }
 } else {
     print (gettext("Vous n'avez pas les droits n&#233;cessaires pour ouvrir cette page..."));
 }
