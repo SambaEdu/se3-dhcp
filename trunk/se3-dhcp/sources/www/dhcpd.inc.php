@@ -1476,7 +1476,7 @@ function add_reservation($ip, $mac, $name) {
             if ($error == "") {
                 $insert_query = "INSERT INTO `se3_dhcp` (`ip`, `mac`, `name`) VALUES ('$ip', '$mac', '$name')";
                 mysql_query($insert_query);
-                system("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac $admin $adminpasswd");
+                exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac $admin $adminpasswd");
             }
         }
     } else {
@@ -1551,12 +1551,13 @@ function suppr_reservation($ip, $mac, $name) {
  */
 function renomme_reservation($ip, $mac, $name) {
     require_once ("ihm.inc.php");
-    $ret = "Renommage de l'entr&#233;e pour $ip<br>";
+    $ret = "Modification de l'entr&#233;e pour l'adresse $ip<br>";
     $error = already_exist("ipbidon", $name, "macbidon");
     if ($error == "") {
         $update_query = "UPDATE se3_dhcp SET name='$name'  where `ip` = '$ip' AND `mac` = '$mac'";
         mysql_query($update_query);
-        $ret .= system("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+        $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+        
         return $ret;
     } else {
         return $error;
@@ -1583,7 +1584,7 @@ function change_ip_reservation($ip, $mac, $name) {
             if ($ret == "") {
                 $update_query = "UPDATE se3_dhcp SET ip='$ip'  where `name` = '$name' AND `mac` = '$mac'";
                 mysql_query($update_query);
-                $ret .= system("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+                $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
             }
         }
     } else {
@@ -1940,8 +1941,8 @@ function dhcp_vlan_champ($nom_champ) {
 function renomme_domaine($ip, $oldname, $name) {
     require_once ("ihm.inc.php");
     $ret = "<br>\n";
-    $ret .= system("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh renomme $name $ip $oldname adminse3 $xppass") . "<br>\n";
-    $ret .= "<p align='center' style='color:red;'> Attention ! si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez c:\\netinst\\shutdown.cmd </p>\n";
+    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh renomme $name $ip $oldname adminse3 $xppass") . "<br>\n";
+    $ret .= "<p align='center' style='color:red;'> Attention : Si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez <br>c:\\netinst\\shutdown.cmd</p>\n";
     return $ret;
 }
 
@@ -1960,8 +1961,10 @@ function integre_domaine($ip, $mac, $name, $admin, $adminpasswd) {
     }
     //doit-on faire verifier l'existence dans le ldap ?
     $ret = "<br>\n";
-    $ret .= system("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh rejoint $name $ip $mac $admin $adminpasswd") . "<br>\n";
-    $ret .= "<p align='center' style='color:red;'> Attention ! si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez c:\\netinst\\shutdown.cmd </p>\n";
+    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh rejoint $name $ip $mac $admin $adminpasswd") . "<br>\n";
+    $ret .= "<p align='center' style='color:red;'> Attention : si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez <br>c:\\netinst\\shutdown.cmd </p>\n";
     return $ret;
 }
+
+
 ?>
