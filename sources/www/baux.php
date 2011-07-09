@@ -86,7 +86,8 @@ if (is_admin("system_is_admin",$login)=="Y")
         $localadminpasswd=$_POST['localadminpasswd'];
 		foreach ($ip as $keys=>$value) {
 			if ($action_res[$keys]=="reserver") { 
-			    $content .= "<FONT color='red'>".add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]))."</FONT>";
+			    $content .= add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]));
+                            
 			}
 			elseif ($action_res[$keys]=="integrer") { 
 //			    $content .= "<FONT color='red'>".add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]))."</FONT>";

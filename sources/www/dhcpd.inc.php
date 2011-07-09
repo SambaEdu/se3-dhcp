@@ -7,7 +7,7 @@
 
  * @Projet LCS / SambaEdu
 
- * @auteurs � GrosQuicK �  eric.mercier@crdp.ac-versailles.fr
+ * @auteurs GrosQuicK   eric.mercier@crdp.ac-versailles.fr
  * @auteurs Plouf
 
  * @note Ce fichier de fonction doit etre appele par un include
@@ -714,7 +714,7 @@ function my_parse_dhcpd_lease($file) {
                             // Le nom n'a pas ete trouve dans le dhcpd.leases pour cette section
 
                             if ($mode_fich_debug == "y") {
-                                fwrite($fich, "\$client[\"hostname\"][$compteur_clients] est � unresolved.\n");
+                                fwrite($fich, "\$client[\"hostname\"][$compteur_clients] est  unresolved.\n");
                             }
 
                             //$list_computer=search_machines("(&(cn=*)(ipHostNumber=$ip[0]))","computers");
@@ -1300,8 +1300,10 @@ function get_free_ip($ip) {
             } elseif ($calcul_free == $reseau['begin_range']) {
                 $calcul_free = $reseau['end_range'] + 1;
             } else {
-                print long2ip($calcul_free) . "<br>";
+                //print long2ip($calcul_free) . "le coupable<br>";
                 return long2ip($calcul_free);
+                $ipbuzy=1;
+                return $ipbuzy;
             }
         }
     } else {
@@ -1311,7 +1313,7 @@ function get_free_ip($ip) {
 }
 
 /**
- *  renvoie les caract�ristiques du vlan correspondant a l'ip 
+ *  renvoie les caracteristiques du vlan correspondant a l'ip 
 
  * @Parametres $ip : Adresse IP a tester
 
@@ -1363,7 +1365,7 @@ function get_network() {
         $reseau['begin_range'] = ip2long($dhcp_begin_range);
         $reseau['end_range'] = ip2long($dhcp_end_range);
         $reseau['gateway'] = ip2long($dhcp_gateway);
-        print long2ip($reseau['network']);
+        //print long2ip($reseau['network']);
     } else {
         for ($vlan = 0; $vlan <= $dhcp_vlan; $vlan++) {
             $nomvar = "dhcp_reseau_" . $vlan;
@@ -1461,28 +1463,34 @@ function reservation($ip) {
 
  * @Parametres $ip - $mac - $name
 
- * @Return $error
+ * @Return $ret
 
  */
 function add_reservation($ip, $mac, $name) {
     require_once ("ihm.inc.php");
-    $error = "";
+    $ret="";
     if (set_ip_in_lan($ip)) {
+        $oldip= $ip;
         $ip = get_free_ip($ip);
         if ("$ip" == "") {
-            $error = gettext("Impossible de reserver une ip dans ce vlan");
+            $ret = gettext("<FONT color='red'> Attention : Impossible de r&#233;server une ip dans ce vlan </FONT>");
         } else {
             $error = already_exist($ip, $name, $mac);
             if ($error == "") {
+                  
                 $insert_query = "INSERT INTO `se3_dhcp` (`ip`, `mac`, `name`) VALUES ('$ip', '$mac', '$name')";
                 mysql_query($insert_query);
                 exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac $admin $adminpasswd");
+                if ($ip != $oldip) {
+                    $ret = gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
+                  }
+                $ret .= gettext("Mise en place d'une r&#233;servation pour la machine  $name --> $ip");
             }
         }
     } else {
-        $error = gettext("Cette addresse n'est pas valide : " . $ip);
+        $ret = gettext("<FONT color='red'> Attention : l'addresse choisie pour cette machine n'est pas valide </FONT>" . "$name --> $ip");
     }
-    return $error;
+    return $ret;
 }
 
 /**
@@ -1535,7 +1543,7 @@ function already_exist($ip, $name, $mac) {
  */
 function suppr_reservation($ip, $mac, $name) {
     require_once ("ihm.inc.php");
-    $error = "Suppression de l'entr&#233;e pour $ip<br>";
+    $error = "Suppression de l'entr&#233;e pour la machine $name --> $ip<br>";
     $suppr_query = "DELETE FROM `se3_dhcp` where `ip` = '$ip' AND `mac` = '$mac' AND  `name` = '$name'";
     mysql_query($suppr_query);
     return $error;
@@ -1551,7 +1559,7 @@ function suppr_reservation($ip, $mac, $name) {
  */
 function renomme_reservation($ip, $mac, $name) {
     require_once ("ihm.inc.php");
-    $ret = "Modification de l'entr&#233;e pour l'adresse $ip<br>";
+    $ret = "Modification de l'entr&#233;e pour la machine $name : $ip<br>";
     $error = already_exist("ipbidon", $name, "macbidon");
     if ($error == "") {
         $update_query = "UPDATE se3_dhcp SET name='$name'  where `ip` = '$ip' AND `mac` = '$mac'";
@@ -1576,6 +1584,7 @@ function change_ip_reservation($ip, $mac, $name) {
     require_once ("ihm.inc.php");
     $ret = "";
     if (set_ip_in_lan($ip)) {
+        $oldip= $ip;
         $ip = get_free_ip($ip);
         if ("$ip" == "") {
             $ret = gettext("Impossible de reserver une ip dans ce vlan");
@@ -1585,6 +1594,10 @@ function change_ip_reservation($ip, $mac, $name) {
                 $update_query = "UPDATE se3_dhcp SET ip='$ip'  where `name` = '$name' AND `mac` = '$mac'";
                 mysql_query($update_query);
                 $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+                if ($ip != $oldip) {
+                    $ret .= gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
+                  }
+                $ret .= gettext("R&#233;servation modifi&#233;e pour la machine $name  : $ip");
             }
         }
     } else {
@@ -1784,7 +1797,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Erreur sur adresse ip : $tab_ligne[0]");
             $ligne = $z + 1;
-            print(" Ligne n� $ligne");
+            print(" Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1794,7 +1807,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Erreur sur adresse ip : $tab_ligne[0]");
             $ligne = $z + 1;
-            print gettext(" Ligne n� $ligne");
+            print gettext(" Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1804,7 +1817,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Erreur sur hostname : $tab_ligne[1] ");
             $ligne = $z + 1;
-            print gettext("Ligne n� $ligne");
+            print gettext("Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1814,7 +1827,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Erreur sur adresse mac : $tab_ligne[2] ");
             $ligne = $z + 1;
-            print gettext("Ligne n� $ligne");
+            print gettext("Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1824,7 +1837,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Erreur sur adresse mac : $tab_ligne[2] ");
             $ligne = $z + 1;
-            print gettext("Ligne n� $ligne");
+            print gettext("Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1839,7 +1852,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Adresse mac $mac d&#233;ja utilis&#233;e ");
             $ligne = $z + 1;
-            print gettext(" Ligne n� $ligne");
+            print gettext(" Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1851,7 +1864,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Hostname $nom d&#233;ja utilis&#233; ");
             $ligne = $z + 1;
-            print gettext(" Ligne n� $ligne");
+            print gettext(" Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1863,7 +1876,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Hostname $nominmaj d&#233;ja utilis&#233; ");
             $ligne = $z + 1;
-            print gettext(" Ligne n� $ligne");
+            print gettext(" Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
@@ -1876,7 +1889,7 @@ function traite_tableau($tableau) {
             print("<br>");
             print gettext("Nom $nom incorrect ");
             $ligne = $z + 1;
-            print gettext(" Ligne n� $ligne");
+            print gettext(" Ligne n $ligne");
             $erreur = 1;
             $z++;
             continue;
