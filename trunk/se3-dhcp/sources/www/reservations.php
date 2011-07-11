@@ -23,6 +23,7 @@ include "entete.inc.php";
 include "ldap.inc.php";
 include "ihm.inc.php";
 include("crob_ldap_functions.php");
+include "printers.inc.php";
 require_once "fonc_parc.inc.php";
 require_once "dhcpd.inc.php";
 ?>
@@ -155,21 +156,27 @@ echo "</form>";*/
     if(isset($_POST['suppr_doublons_ldap'])) {
             $suppr=isset($_POST['suppr']) ? $_POST['suppr'] : NULL;
 
-            $tab_attr_recherche=array('cn');
-            for($i=0;$i<count($suppr);$i++) {
-                    if(get_tab_attribut("computers","cn=$suppr[$i]",$tab_attr_recherche)) {
-                            if(!del_entry("cn=$suppr[$i]","computers")) {
-                                    echo "Erreur lors de la suppression de l'entr&#233;e $suppr[$i]<br />\n";
-                            }
-                    }
-
-                    // Faut-il aussi supprimer les uid=$suppr[$i]$ ? OUI
-                    if(get_tab_attribut("computers","uid=$suppr[$i]$",$tab_attr_recherche)) {
-                            if(!del_entry("uid=$suppr[$i]$","computers")) {
-                                    echo "Erreur lors de la suppression de l'entr&#233;e uid=$suppr[$i]$<br />\n";
-                            }
-                    }
-            }
+//             $tab_attr_recherche=array('cn');
+//             for($i=0;$i<count($suppr);$i++) {
+//                     if(get_tab_attribut("computers","cn=$suppr[$i]",$tab_attr_recherche)) {
+//                             if(!del_entry("cn=$suppr[$i]","computers")) {
+//                                     echo "Erreur lors de la suppression de l'entr&#233;e $suppr[$i]<br />\n";
+//                             }
+//                     }
+// 
+//                     // Faut-il aussi supprimer les uid=$suppr[$i]$ ? OUI
+//                     if(get_tab_attribut("computers","uid=$suppr[$i]$",$tab_attr_recherche)) {
+//                             if(!del_entry("uid=$suppr[$i]$","computers")) {
+//                                     echo "Erreur lors de la suppression de l'entr&#233;e uid=$suppr[$i]$<br />\n";
+//                             }
+//                     }
+//             }
+    for($i=0;$i<count($suppr);$i++) {
+		//echo "suppression_computer($suppr[$i])<br />";
+		echo suppression_computer($suppr[$i]);
+		//echo "<hr />";
+	}
+	echo "<hr />\n";
     }
 } else {
     print (gettext("Vous n'avez pas les droits n&#233;cessaires pour ouvrir cette page..."));
