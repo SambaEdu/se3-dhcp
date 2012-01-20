@@ -98,7 +98,7 @@ echo "</form>";*/
 
                     exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
                     if ($return_value == "1") {
-                        $content .= gettext("<p style='color:red;'>Attention  : R&#233;int&#233;gration de $oldname[$keys] impossible. La machine est injoignable ou proteg&#233;e par un parre feu  :  </p>\n " );
+                        $content .= gettext("<p style='color:red;'>Attention  : R&#233;int&#233;gration de $oldname[$keys] impossible. La machine est injoignable ou prot&#233;g&#233;e par un pare-feu  :  </p>\n " );
                     }
 
                     else {
@@ -110,7 +110,7 @@ echo "</form>";*/
                     if ($ret == "") {
                         exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
                         if ($return_value == "1") {
-                             $content .= gettext("<p style='color:red;'>Attention : Renommage de $oldname[$keys] impossible. La machine est injoignable ou proteg&#233;e par un parre feu  :  </p>\n " );
+                             $content .= gettext("<p style='color:red;'>Attention : Renommage de $oldname[$keys] impossible. La machine est injoignable ou prot&#233;g&#233;e par un pare-feu  :  </p>\n " );
                             
                             
                         }
