@@ -1300,7 +1300,7 @@ function get_free_ip($ip) {
             } elseif ($calcul_free == $reseau['begin_range']) {
                 $calcul_free = $reseau['end_range'] + 1;
             } else {
-                //print long2ip($calcul_free) . "le coupable<br>";
+//                print long2ip($calcul_free) . "le coupable<br>";
                 return long2ip($calcul_free);
                 $ipbuzy=1;
                 return $ipbuzy;
@@ -1352,7 +1352,7 @@ function get_network() {
     if ($dhcp_vlan == 0) {
         $ifconfig = ifconfig();
         $reseau['network'] = ip2long($ifconfig['network']);
-        if ("$dhcp_ip_min" != "") {
+        if (ip2long($dhcp_ip_min) > $reseau['network']) {
             $reseau['ipmin'] = ip2long($dhcp_ip_min);
         } else {
             $reseau['ipmin'] = $reseau['network'] + 51;
@@ -1365,15 +1365,14 @@ function get_network() {
         $reseau['begin_range'] = ip2long($dhcp_begin_range);
         $reseau['end_range'] = ip2long($dhcp_end_range);
         $reseau['gateway'] = ip2long($dhcp_gateway);
-        //print long2ip($reseau['network']);
     } else {
         for ($vlan = 0; $vlan <= $dhcp_vlan; $vlan++) {
             $nomvar = "dhcp_reseau_" . $vlan;
             if (isset($$nomvar)) {
                 $reseau[$vlan]['network'] = ip2long($$nomvar);
                 $nomvar = "dhcp_ip_min_" . $vlan;
-                if (isset($$nomvar)) {
-                    $reseau[$vlan]['ipmin'] = ip2long($$nomvar);
+                if (ip2long($$nomvar) > $reseau[$vlan]['network']) {
+		     $reseau[$vlan]['ipmin'] = ip2long($$nomvar);
                 } else {
                     $reseau[$vlan]['ipmin'] = $reseau[$vlan]['network'] + 51;
                     $update_query = "UPDATE params SET value='" . long2ip($reseau[$vlan]['ipmin']) . "' WHERE name='dhcp_ip_min_" . $_POST['vlan'] . "'";
