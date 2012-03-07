@@ -1,15 +1,33 @@
+se3-dhcp (0.38) stable; urgency=low
+
+  * corrections orthographiques
+
+ -- root <root@localhost.localdomain>  Sun, 22 Jan 2012 00:34:22 +0100
+
+se3-dhcp (0.37) stable; urgency=low
+
+  * dep mini sur 2.1.2460
+
+ -- root <root@localhost.localdomain>  Tue, 12 Jul 2011 10:19:49 +0200
+
+se3-dhcp (0.36) stable; urgency=low
+
+  * amelioration affichages et ajout test machin online
+
+ -- root <root@localhost.localdomain>  Thu,  7 Jul 2011 01:41:03 +0200
+
 se3-dhcp (0.35) stable; urgency=low
+
+  * incrementation version
+
+ -- root <root@localhost.localdomain>  Wed, 11 May 2011 00:23:52 +0200
+
+se3-dhcp (0.34) stable; urgency=low
 
   * correction bug suite déclaration des variables dans ldap.inc.php
     p
 
- -- root <root@localhost.localdomain>  Tue, 10 May 2011 23:57:07 +0200
-
-se3-dhcp (0.34) stable; urgency=low
-
-  * ajout bouton suppression toutes reservations
-
- -- root <root@localhost.localdomain>  Tue, 12 Apr 2011 01:52:23 +0200
+ -- root <root@localhost.localdomain>  Wed, 11 May 2011 00:01:28 +0200
 
 se3-dhcp (0.33) stable; urgency=low
 
