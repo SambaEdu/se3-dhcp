@@ -1,3 +1,9 @@
+se3-dhcp (0.39) stable; urgency=low
+
+  * correction bug vicieux resa - dbo
+
+ -- root <root@localhost.localdomain>  Wed, 07 Mar 2012 00:44:11 +0100
+
 se3-dhcp (0.38) stable; urgency=low
 
   * corrections orthographiques
