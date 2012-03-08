@@ -1,3 +1,9 @@
+se3-dhcp (0.40) stable; urgency=low
+
+  * mise a jour pour utilisation service isc-dhcp-server squeeze.
+
+ -- Denis Bonnenfant <denis.bonnenfant@se3.diderot.org>  Wed, 07 Mar 2012 23:44:37 +0100
+
 se3-dhcp (0.39) stable; urgency=low
 
   * correction bug vicieux resa - dbo
