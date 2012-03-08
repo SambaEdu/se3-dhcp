@@ -34,24 +34,26 @@ my $action = $ARGV[0];
 ########################################
 ##### If ARG is "status" ###############
 if ($action eq "state") {
-	my $status=`ps aux | grep dhcpd3 | grep -v grep`;
-	if ($status eq "") {print "0";} else {print "1";};
+	system ("/etc/init.d/isc-dhcp-server status > /dev/null");
+	if ( $? == 0  )
+    {print "1";} else {print "0
+  ";};
 	exit 0;
 }
 ########################################
 ##### If ARG is "stop" ###############
 if ($action eq "stop") {
-	`/etc/init.d/dhcp3-server stop`;
+	`/etc/init.d/isc-dhcp-server stop`;
 	exit 0;
 }
 
 ########################################
 ##### STATE on BOOT ###############
 if ($ONBOOT eq "1") {
-	`update-rc.d -f  dhcp3-server defaults`;
+	`insserv -d isc-dhcp-server`;
 }
 else {
-	`update-rc.d -f  dhcp3-server remove`;
+	`insserv -r -d isc-dhcp-server`;
 }
 
 ######################################
@@ -111,11 +113,11 @@ sub IpMaskToLan {
 setlogsock('unix');
 openlog("SE3-DHCP",'pid');
 ####################################################
-########  First : make /etc/default/dhcp3-server for interface listening for dhcpd 
+########  First : make /etc/default/isc-dhcp-server for interface listening for dhcpd 
 ######## 														#######
 
-syslog('INFO','Erasing /etc/default/dhcp3-server with SE3 config :  listening '.$IFACE);
-open (FILE,">/etc/default/dhcp3-server");
+syslog('INFO','Erasing /etc/default/isc-dhcp-server with SE3 config :  listening '.$IFACE);
+open (FILE,">/etc/default/isc-dhcp-server");
 print FILE "INTERFACES=\"$IFACE\"\n";
 close FILE;
 
@@ -451,7 +453,7 @@ while (@result = $requete->fetchrow_array())
 close FILE;
 
 print "restart dhcpd-server\n";
-system("/etc/init.d/dhcp3-server restart");
+system("/etc/init.d/isc-dhcp-server restart");
 
 
 $proxy = `grep \"http_proxy=\" /etc/profile | cut -d\\\" -f2 | cut -d/ -f3`;
