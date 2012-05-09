@@ -1,3 +1,9 @@
+se3-dhcp (0.41) stable; urgency=low
+
+  * corrections  bugs pour distrib wheezy
+
+ -- Denis Bonnenfant <denis.bonnenfant@se3.diderot.org>  Wed, 09 May 2012 15:24:16 +0200
+
 se3-dhcp (0.40) stable; urgency=low
 
   * mise a jour pour utilisation service isc-dhcp-server squeeze.
