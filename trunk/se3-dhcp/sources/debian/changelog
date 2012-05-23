@@ -1,3 +1,9 @@
+se3-dhcp (0.42) stable; urgency=low
+
+  * correction bin/sh pour bash
+
+ -- root <root@DevilXen>  Wed, 23 May 2012 01:03:30 +0200
+
 se3-dhcp (0.41) stable; urgency=low
 
   * corrections  bugs pour distrib wheezy
