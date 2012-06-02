@@ -254,7 +254,7 @@ $requete->finish;
 ###########  Make dhcp.conf ############################################
 
 syslog('INFO','WAIT : Making /etc/dhcp3/dhcp.conf SE3 config  who  listening '.$IFACE);
-open (FILE,">/etc/dhcp3/dhcpd.conf");
+open (FILE,">/etc/dhcp/dhcpd.conf");
 print FILE "################################################################################\n";
 print FILE "# This File is automagically created by SE3 interface\n\n";
 print FILE "##       GENERAL OPTIONS          ##############################################\n";
