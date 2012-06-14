@@ -225,8 +225,8 @@ mysql -h $dbhost $dbname -u $dbuser -p$dbpass < /var/cache/se3_install/se3-dhcp/
 
 
 ##### SVG dhcp.conf if exist
-if [ -f /etc/dhcp3/dhcpd.conf ]; then
-	mv /etc/dhcp3/dhcpd.conf /etc/dhcp3/dhcpd.conf.svg.SE3
+if [ -f /etc/dhcp/dhcpd.conf ]; then
+	mv /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.svg.SE3
 	/usr/share/se3/scripts/makedhcpdconf
 fi
 
@@ -240,19 +240,19 @@ fi
 
 
 ##### ADD good line in /etc/sudoers.conf if necessary and restart sudo
-if [  ! "`cat /etc/sudoers | grep SE3DHCP`" ]; then
-sed -i 's/^\(www-se3.*\)$/\1,NOPASSWD:SE3DHCP/'  /etc/sudoers
-sed -i 's|^\(# Cmnd alias specification.*\)$|\1\nCmnd_Alias SE3DHCP=/usr/share/se3/scripts/makedhcpdconf,/usr/share/se3/scripts/move_dhcp_leases.sh|' /etc/sudoers
-/etc/init.d/sudo restart
-else
-	# La ligne Cmnd_Alias SE3DHCP existe déjà (avec au moins une commande 
-	if [ ! "$(grep "/usr/share/se3/scripts/move_dhcp_leases.sh" /etc/sudoers)" ]; then
-		# On ajoute la commande au premier rang
-		sed -i 's|Cmnd_Alias SE3DHCP=|Cmnd_Alias SE3DHCP=/usr/share/se3/scripts/move_dhcp_leases.sh,|' /etc/sudoers
-		TEMOIN_CHGT_SUDO="y"
-	fi
-
-fi
+# if [  ! "`cat /etc/sudoers | grep SE3DHCP`" ]; then
+# sed -i 's/^\(www-se3.*\)$/\1,NOPASSWD:SE3DHCP/'  /etc/sudoers
+# sed -i 's|^\(# Cmnd alias specification.*\)$|\1\nCmnd_Alias SE3DHCP=/usr/share/se3/scripts/makedhcpdconf,/usr/share/se3/scripts/move_dhcp_leases.sh|' /etc/sudoers
+# /etc/init.d/sudo restart
+# else
+# 	# La ligne Cmnd_Alias SE3DHCP existe déjà (avec au moins une commande 
+# 	if [ ! "$(grep "/usr/share/se3/scripts/move_dhcp_leases.sh" /etc/sudoers)" ]; then
+# 		# On ajoute la commande au premier rang
+# 		sed -i 's|Cmnd_Alias SE3DHCP=|Cmnd_Alias SE3DHCP=/usr/share/se3/scripts/move_dhcp_leases.sh,|' /etc/sudoers
+# 		TEMOIN_CHGT_SUDO="y"
+# 	fi
+# 
+# fi
 
     ;;
 
