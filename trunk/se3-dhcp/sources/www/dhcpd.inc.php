@@ -1787,7 +1787,7 @@ function traite_tableau($tableau) {
     while ($z < $nb_lignes) {
         // sauter eventuelle ligne vide
         // c'est souvent le cas pour la derniere ligne du presse-papier
-        if ($tableau[$z] == "")
+        if (trim($tableau[$z]) == "")
             break;
         // decoupage de chaque ligne a partir du separateur |
         $tab_ligne = explode($separ, $tableau[$z]);
