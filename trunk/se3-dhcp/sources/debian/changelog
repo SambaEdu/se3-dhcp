@@ -1,3 +1,10 @@
+se3-dhcp (0.45) stable; urgency=low
+
+  * correction faute de frappe et prise en compte eventuelle ligne vide
+    pour import
+
+ -- root <root@DevilXen>  Fri, 29 Jun 2012 23:47:27 +0200
+
 se3-dhcp (0.44) stable; urgency=low
 
   * supppresion modifs sur sudoers et correction chemin /etc/dhcp
