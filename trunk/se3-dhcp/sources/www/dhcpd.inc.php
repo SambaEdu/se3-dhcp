@@ -1671,7 +1671,7 @@ function valid_name($nom) {
             return 0;
         }
     }
-    $prem = substr($nom, O, 1);
+    $prem = substr($nom, 0, 1);
     if (!preg_match("/[a-zA-Z0-9]/", $prem, $tab_err)) {
         print gettext("<br><I>le nom $nom doit commencer par une lettre ou un chiffre</I>");
         return 0;
