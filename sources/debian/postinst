@@ -148,7 +148,7 @@ fi
 ##### MAX lease
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_max_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_max_lease\",\"720000\",\"\",\"Bail maximum\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_max_lease\",\"72000\",\"\",\"Bail maximum\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7 WHERE name='dhcp_max_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
@@ -157,7 +157,7 @@ fi
 ##### Default lease
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_default_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_default_lease\",\"60000\",\"\",\"Bail par défaut\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_default_lease\",\"6000\",\"\",\"Bail par défaut\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7 WHERE name='dhcp_default_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
