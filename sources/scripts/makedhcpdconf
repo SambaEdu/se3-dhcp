@@ -25,7 +25,7 @@ $requete->execute();
 my @row = $requete->fetchrow_array();
 my $ONBOOT=$row[0];
 $requete->finish;
-my $requete = $connexion_db->prepare("SELECT corresp.valeur FROM corresp,restrictions where corresp.chemin like '%AutoConfigURL%' and corresp.cleID=restrictions.cleID and restrictions.groupe='base';");
+my $requete = $connexion_db->prepare("SELECT restrictions.valeur FROM corresp,restrictions where corresp.chemin like '%AutoConfigURL%' and corresp.cleID=restrictions.cleID and restrictions.groupe='base';");
 $requete->execute();
 my @row = $requete->fetchrow_array();
 my $WPAD=$row[0];
