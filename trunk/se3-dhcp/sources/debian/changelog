@@ -1,3 +1,9 @@
+se3-dhcp (0.46) stable; urgency=low
+
+  * correction url wpad
+
+ -- root <root@DevilXen>  Sun, 20 Oct 2013 02:21:06 +0200
+
 se3-dhcp (0.45) stable; urgency=low
 
   * correction faute de frappe et prise en compte eventuelle ligne vide
