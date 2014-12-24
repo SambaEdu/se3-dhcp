@@ -32,8 +32,12 @@ require_once "dhcpd.inc.php";
 
 <?php
 
+
+if (is_admin("system_is_admin",$login)!="Y")
+	die (gettext("Vous n'avez pas les droits suffisants pour acc&#233;der &#224; cette fonction")."</BODY></HTML>");
+
 $action = $_POST['action'];
-if (is_admin("system_is_admin", $login) == "Y") {
+
 
     //aide
     $_SESSION["pageaide"] = "Le_module_DHCP#G.C3.A9rer_les_baux_et_r.C3.A9server_des_IPs";
@@ -94,6 +98,23 @@ echo "</form>";*/
                     //$content .= "<FONT color='red'>" . "Attention";
                    
                     
+                } elseif ($action_res[$keys] == "renommer-linux") {
+                    $ret = already_exist("ipbidon", strtolower($name[$keys]), "macbidon");
+                    if ($ret == "") {
+                        exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:22 | grep alive",$arrval,$return_value);
+                        if ($return_value == "1") {
+                            $content .= gettext("<p style='color:red;'>Attention  : Renommage de $oldname[$keys] impossible. La machine est injoignable en ssh :  </p>\n " );
+                        }
+
+                        else {
+                            $content .= renomme_linux($ip[$keys], $oldname[$keys], strtolower($name[$keys]));
+                            $content .= renomme_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
+                            $content .= renomme_machine_parcs(strtolower($oldname[$keys]), strtolower($name[$keys]));
+                            }   
+                    } else {
+                            $content .= gettext("<p style='color:red;'>Attention : Le nom $name[$keys] n'est pas valide ou existe d&#233;j&#224;");
+
+                     }
                 } elseif ($action_res[$keys] == "reintegrer") {
 
                     exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
@@ -104,7 +125,16 @@ echo "</form>";*/
                     else {
                         $content .= renomme_domaine($ip[$keys], $oldname[$keys], strtolower($name[$keys]));
                     }
-
+                } elseif ($action_res[$keys] == "renommer-base") {
+                    $ret = already_exist("ipbidon", strtolower($name[$keys]), "macbidon");
+                    if ($ret == "") {
+                        $content .= renomme_reservation($ip[$keys], $mac[$keys], strtolower($name[$keys]));
+                    }
+                    else {
+                        $content .= gettext("<p style='color:red;'>Attention : Le nom $name[$keys] n'est pas valide ou existe d&#233;j&#224;");
+                        
+                    }
+                     
                } elseif ($action_res[$keys] == "renommer") {
                     $ret = already_exist("ipbidon", strtolower($name[$keys]), "macbidon");
                     if ($ret == "") {
@@ -178,9 +208,7 @@ echo "</form>";*/
 	}
 	echo "<hr />\n";
     }
-} else {
-    print (gettext("Vous n'avez pas les droits n&#233;cessaires pour ouvrir cette page..."));
-}
+ 
 
 // Footer
 include ("pdp.inc.php");

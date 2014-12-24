@@ -1120,6 +1120,7 @@ function UncheckAll_baux(){
 function form_existing_reservation() {
     require_once("includes/ldap.inc.php");
     require_once ("ihm.inc.php");
+    require_once ("printers.inc.php");
     // Recuperation des donnees dans la base SQL
 
     if (($_GET['order'] == "") || ($_GET['order'] == "ip")) {
@@ -1128,7 +1129,22 @@ function form_existing_reservation() {
         $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC";
     }
     $result = mysql_query($query);
-    //
+    
+    
+    //recup liste ip imprimantes
+    $liste_imprimantes=search_imprimantes("printer-name=*","printers");
+    //$resultat=search_imprimantes("printer-name=$mpenc","printers");
+		echo "test";
+			for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++) {
+					
+                                        $printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
+                                        $printer_name = $liste_imprimantes[$loopp]['printer-name'];
+                                        echo "liste imp : $printer_name $printer_uri" ;
+					continue;
+					
+			}
+    
+    
     $clef = 0;
 
     $content .= "<script type='text/javascript'>
@@ -1177,6 +1193,25 @@ function UncheckAll_reservations(){
         $content .= "</td><td>\n";
         $content .= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"name[$clef]\">\n";
         $content .= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"oldname[$clef]\">\n";
+        
+        for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++) {
+					
+                                        $printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
+                                        $printer_name = $liste_imprimantes[$loopp]['printer-name'];
+                                        //echo "liste imp : $printer_name $printer_uri" ;
+                                        if (preg_match("/$row[ip]/", $printer_uri)) { 
+                                            $suisje_printer = "yes";
+                                            break;	
+                                        } else { $suisje_printer = "no" ;
+                                        
+                                            
+                                        }
+                                        		
+			}
+        if  ($suisje_printer=="yes") {
+                        $content.="<br><FONT color='blue'>" . gettext("Imprimante $printer_name") . "</FONT>\n"; 
+                    }
+        
         $content .="</td><td>\n";
         $showid = 0;
         $listaction = "";
@@ -1190,13 +1225,29 @@ function UncheckAll_reservations(){
             }
             // ajouter a un parc dans lequel la machine n'est  pas ?
             $content .= add_to_parc($parc[$clef], $clef);
+            // windows linux ou imprimante ?
+            
             // est ce que la machine est integree au domaine ?
             if (count(search_machines("(uid=" . $row["name"] . "$)", "computers")) > 0) {
-                $listaction .="<OPTION value=\"renommer\">Renommer\n";
+                $listaction .="<OPTION value=\"renommer\">Renommer un poste win &#224; distance\n";
+                $listaction .="<OPTION value=\"renommer\">Renommer un poste linux &#224; distance\n";
                 $listaction .="<OPTION value=\"reintegrer\">R&#233;int&#233;grer\n";
             } else { // this computer is not recorded on the domain
-                $content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n";
-                $listaction .="<OPTION value=\"integrer\">Integrer\n";
+                // une imprimante ?
+                
+                
+                
+                    if  ($suisje_printer=="yes") { 
+                        $listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+                         
+                    }
+                    else {
+                    $content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n"; 
+                    $listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+                    $listaction .="<OPTION value=\"renommer-linux\">Renommer un poste linux\n";
+                    $listaction .="<OPTION value=\"integrer\">Integrer un windows au domaine\n";
+                
+                    }
                 $showid = 1;
             }
         } else { // this computer is not registered in ldap
@@ -1208,6 +1259,7 @@ function UncheckAll_reservations(){
             } else {
                 $content.="<FONT color='red'>" . gettext("Non enregistr&#233;e") . "</FONT>\n";
                 $listaction .="<OPTION value=\"integrer\">Integrer\n";
+                $listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
                 $showid = 1;
             }
         }
@@ -1547,6 +1599,73 @@ function suppr_reservation($ip, $mac, $name) {
     mysql_query($suppr_query);
     return $error;
 }
+/**
+ * renomme une machine sous linux 
+
+ * @Parametres $ip : Ip de la machine - $mac : Adresse mac de la machine - $name : Nom de la machine
+
+ * @Return Message d'erreur SQL en cas de d'echec de l'update
+
+ */
+
+/**
+ * renomme une machine sous linux 
+
+ * @Parametres $ip : Ip de la machine - $mac : Adresse mac de la machine - $name : Nom de la machine
+
+ * @Return Message d'erreur SQL en cas de d'echec de l'update
+
+ */
+
+function renomme_linux($ip, $mac, $name) {
+require_once ("ihm.inc.php");
+$ret = "Renommage du poste $ip <br>";
+$scriptfile="/tmp/rename.sh";
+if (file_exists($scriptfile)) unlink($scriptfile);
+
+$fich=fopen("$scriptfile","w+");
+fwrite($fich,"#!/bin/bash
+echo \"$name\" > \"/etc/hostname\"
+invoke-rc.d hostname.sh stop 
+invoke-rc.d hostname.sh start
+
+echo \"
+127.0.0.1    localhost
+127.0.1.1    $name
+
+# The following lines are desirable for IPv6 capable hosts
+::1      ip6-localhost ip6-loopback
+fe00::0  ip6-localnet
+ff00::0  ip6-mcastprefix
+ff02::1  ip6-allnodes
+ff02::2  ip6-allrouters
+\" > \"/etc/hosts\"
+
+reboot");
+fclose($fich);
+
+// Copie du script sur l'esclave avec scp
+exec ("/usr/bin/scp $scriptfile root@$ip:/tmp/", $AllOutput, $ReturnValue);
+        // chmod +x du script bash
+        exec ("ssh -l root  $ip 'chmod +x $scriptfile ; $scriptfile'", $AllOutput, $ReturnValue);
+        if ($ReturnValue==0) {
+                echo "renommage distant en cours....";
+
+        } else {
+                echo "renommage distant impossible ";
+        }
+return $ret;
+
+}   
+
+
+
+
+
+
+
+
+
 
 /**
  * renomme une reservation et met a jour l'enregistrement ldap
@@ -1627,7 +1746,7 @@ function dhcpd_status() {
 
  * @Parametres
 
- * @Return
+ * MongoUpdateBatch@Return
 
  */
 function dhcpd_restart() {
@@ -1638,7 +1757,7 @@ function dhcpd_restart() {
  * Stop le serveur DHCP
 
  * @Parametres
- * @Return
+ * MongoUpdateBatch@Return
 
  */
 function dhcpd_stop() {
@@ -1931,7 +2050,7 @@ function dhcp_vlan_test() {
  * Verifie l'existance des champs dans la table params pour les vlans
 
  * @Parametres $nom_champ : Nom du champ a tester
- * @Return
+ * MongoUpdateBatch@Return
 
 
  */
