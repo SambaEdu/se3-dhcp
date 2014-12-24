@@ -1,3 +1,9 @@
+se3-dhcp (0.47) stable; urgency=low
+
+  * Gestion imprimantes et renommage clients linux via ssh
+
+ -- root <root@DevilXen>  Thu, 25 Dec 2014 00:32:12 +0100
+
 se3-dhcp (0.46) stable; urgency=low
 
   * correction url wpad
