@@ -1134,12 +1134,11 @@ function form_existing_reservation() {
     //recup liste ip imprimantes
     $liste_imprimantes=search_imprimantes("printer-name=*","printers");
     //$resultat=search_imprimantes("printer-name=$mpenc","printers");
-		echo "test";
 			for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++) {
 					
                                         $printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
                                         $printer_name = $liste_imprimantes[$loopp]['printer-name'];
-                                        echo "liste imp : $printer_name $printer_uri" ;
+                                        //echo "liste imp : $printer_name $printer_uri" ;
 					continue;
 					
 			}
