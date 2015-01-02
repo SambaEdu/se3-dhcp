@@ -1,3 +1,9 @@
+se3-dhcp (0.60) stable; urgency=low
+
+  * version wheezy
+
+ -- root <root@DevilXen>  Fri, 02 Jan 2015 22:46:36 +0100
+
 se3-dhcp (0.47) stable; urgency=low
 
   * Gestion imprimantes et renommage clients linux via ssh
