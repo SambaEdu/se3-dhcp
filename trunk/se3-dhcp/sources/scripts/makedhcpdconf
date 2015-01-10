@@ -107,7 +107,9 @@ sub IpMaskToLan {
 ##        /  Sub function end           ##
 ###########################################
 
-
+if (! -e "/var/run/rsyslogd.pid") {
+	system("/usr/sbin/service rsyslog start");
+	}
 
 # Open syslog########################
 setlogsock('unix');
