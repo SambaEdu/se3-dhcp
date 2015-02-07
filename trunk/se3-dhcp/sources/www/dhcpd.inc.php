@@ -70,7 +70,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_iface'] . "</b>";
+	if (isset($error['dhcp_iface'])) {
+	    $ret .= "<b>" . $error['dhcp_iface'] . "</b>";
+	}
     $ret .= "</td></tr>\n";
 
     // dhcp_domain_name : Nom du domaine
@@ -80,7 +82,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_domain_name'] . "</b>";
+    if (isset($error['dhcp_domain_name'])) {
+            $ret .= "<b>" . $error['dhcp_domain_name'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // dhcp_in_boot : dhcp start oon boot ? 0 ou 1
@@ -95,7 +99,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_on_boot'] . "</b>";
+    if (isset($error['dhcp_iface'])) {
+            $ret .= "<b>" . $error['dhcp_on_boot'] . "</b>";
+            }
     $ret .= "</td></tr>\n";
 
     // dhcp_max_lease : bail maximal
@@ -105,7 +111,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_max_lease'] . "</b>";
+    if (isset($error['dhcp_max_lease'])) {
+            $ret .= "<b>" . $error['dhcp_max_lease'] . "</b>";
+            }
     $ret .= "</td></tr>\n";
 
 
@@ -116,7 +124,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_default_lease'] . "</b>";
+    if (isset($error['dhcp_default_lease'])) {
+            $ret .= "<b>" . $error['dhcp_default_lease'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // dhcp_ntp : Serveur NTP
@@ -126,8 +136,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_ntp'] . "</b>";
-    $ret .= "</td></tr>\n";
+    if (isset($error['dhcp_ntp'])) {
+            $ret .= "<b>" . $error['dhcp_ntp'] . "</b>";
+    }
 
     // dhcp_wins : Serveur WINS
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_wins"]["descr"]) . "</td><td>\n";
@@ -136,7 +147,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_wins'] . "</b>";
+    if (isset($error['dhcp_wins'])) {
+         $ret .= "<b>" . $error['dhcp_wins'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // dhcp_dns_server_prim : Serveur DNS primaire
@@ -146,7 +159,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_dns_server_prim'] . "</b>";
+    if (isset($error['dhcp_dns_server_prim'])) {
+            $ret .= "<b>" . $error['dhcp_dns_server_prim'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // dhcp_dns_server_sec : Serveur DNS secondaire
@@ -156,7 +171,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_dns_server_sec'] . "</b>";
+    if (isset($error['dhcp_dns_server_sec'])) {
+            $ret .= "<b>" . $error['dhcp_dns_server_sec'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // partie reserve si on a des vlan
@@ -177,7 +194,9 @@ function dhcp_config_form($error) {
         $dhcp_masque_vlan = "dhcp_masque_" . $_POST['vlan'];
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_masque_vlan\" value=\"" . $dhcp["$dhcp_masque_vlan"]["value"] . "\" maxlength=\"15\">";
     }
-    $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
+    if (isset($error['dhcp_gateway'])) {
+            $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
 
@@ -189,14 +208,18 @@ function dhcp_config_form($error) {
         $ret .= "</td><td>\n";
         $dhcp_gateway_vlan = "dhcp_gateway_" . $_POST['vlan'];
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_gateway_vlan\" value=\"" . $dhcp["$dhcp_gateway_vlan"]["value"] . "\" maxlength=\"15\">";
-        $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
+        if (isset($error['dhcp_gateway'])) {
+                $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
+        }
         $ret .= "</td></tr>\n";
     } else {
         if ($nbr_vlan == "0") {
             $ret .= "<tr><td>" . gettext($dhcp["dhcp_gateway"]["descr"]);
             $ret .= "</td><td>\n";
             $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_gateway\" value=\"" . $dhcp["dhcp_gateway"]["value"] . "\" maxlength=\"15\">";
-            $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
+            if (isset($error['dhcp_gateway'])) {
+                    $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
+            }
             $ret .= "</td></tr>\n";
         }
     }
@@ -209,14 +232,18 @@ function dhcp_config_form($error) {
         $dhcp_ip_min_vlan = "dhcp_ip_min_" . $_POST['vlan'];
 //		if ($dhcp["$dhcp_ip_min_vlan"]["value"] == "") { $dhcp["$dhcp_ip_min_vlan"]["value"] = 
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_ip_min_vlan\" value=\"" . $dhcp["$dhcp_ip_min_vlan"]["value"] . "\" maxlength=\"15\">";
-        $ret .= "<b>" . $error['dhcp_ip_min'] . "</b>";
+        if (isset($error['dhcp_ip_min'])) {
+            $ret .= "<b>" . $error['dhcp_ip_min'] . "</b>";
+        }
         $ret .= "</td></tr>\n";
     } else {
         if ($nbr_vlan == "0") {
             $ret .= "<tr><td>" . gettext($dhcp["dhcp_ip_min"]["descr"]);
             $ret .= "</td><td>\n";
             $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_ip_min\" value=\"" . $dhcp["dhcp_ip_min"]["value"] . "\" maxlength=\"15\">";
-            $ret .= "<b>" . $error['dhcp_ip_min'] . "</b>";
+            if (isset($error['dhcp_ip_min'])) {
+                    $ret .= "<b>" . $error['dhcp_ip_min'] . "</b>";
+            }
             $ret .= "</td></tr>\n";
         }
     }
@@ -228,14 +255,18 @@ function dhcp_config_form($error) {
         $ret .= "</td><td>\n";
         $dhcp_begin_range_vlan = "dhcp_begin_range_" . $_POST['vlan'];
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_begin_range_vlan\" value=\"" . $dhcp["$dhcp_begin_range_vlan"]["value"] . "\" maxlength=\"15\">";
-        $ret .= "<b>" . $error['dhcp_begin_range'] . "</b>";
+        if (isset($error['dhcp_begin_range'])) {
+                $ret .= "<b>" . $error['dhcp_begin_range'] . "</b>";
+        }
         $ret .= "</td></tr>\n";
     } else {
         if ($nbr_vlan == "0") {
             $ret .= "<tr><td>" . gettext($dhcp["dhcp_begin_range"]["descr"]);
             $ret .= "</td><td>\n";
             $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_begin_range\" value=\"" . $dhcp["dhcp_begin_range"]["value"] . "\" maxlength=\"15\">";
-            $ret .= "<b>" . $error['dhcp_begin_range'] . "</b>";
+            if (isset($error['dhcp_begin_range'])) {
+                    $ret .= "<b>" . $error['dhcp_begin_range'] . "</b>";
+            }
             $ret .= "</td></tr>\n";
         }
     }
@@ -247,14 +278,18 @@ function dhcp_config_form($error) {
         $ret .= "</td><td>\n";
         $dhcp_end_range_vlan = "dhcp_end_range_" . $_POST['vlan'];
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_end_range_vlan\" value=\"" . $dhcp["$dhcp_end_range_vlan"]["value"] . "\" maxlength=\"15\"";
-        $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
+        if (isset($error['dhcp_end_range'])) {
+               $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
+        }
         $ret .= "</td></tr>\n";
     } else {
         if ($nbr_vlan == "0") {
             $ret .= "<tr><td>" . gettext($dhcp["dhcp_end_range"]["descr"]);
             $ret .= "</td><td>\n";
             $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_end_range\" value=\"" . $dhcp["dhcp_end_range"]["value"] . "\" maxlength=\"15\">";
-            $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
+            if (isset($error['dhcp_end_range'])) {
+                    $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
+            }
             $ret .= "</td></tr>\n";
         }
     }
@@ -267,14 +302,18 @@ function dhcp_config_form($error) {
         $ret .= "</td><td>\n";
         $dhcp_extra_option_vlan = "dhcp_extra_option_" . $_POST['vlan'];
         $ret .= ": <input type=\"text\" SIZE=30 name=\"$dhcp_extra_option_vlan\" value=\"" . $dhcp["$dhcp_extra_option_vlan"]["value"] . "\" maxlength=\"30\"";
-        $ret .= "<b>" . $error['dhcp_extra_option'] . "</b>";
+        if (isset($error['dhcp_extra_option'])) {
+                $ret .= "<b>" . $error['dhcp_extra_option'] . "</b>";
+        }
         $ret .= "</td></tr>\n";
     } else {
         if ($nbr_vlan == "0") {
             $ret .= "<tr><td>" . gettext($dhcp["dhcp_extra_option"]["descr"]);
             $ret .= "</td><td>\n";
             $ret .= ": <input type=\"text\" SIZE=30 name=\"dhcp_extra_option\" value=\"" . $dhcp["dhcp_extra_option"]["value"] . "\" maxlength=\"30\">";
-            $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
+            if (isset($error['dhcp_end_range'])) {
+                    $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
+            }
             $ret .= "</td></tr>\n";
         }
     }
@@ -288,7 +327,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_tftp_server'] . "</b>";
+    if (isset($error['dhcp_tftp_server'])) {
+            $ret .= "<b>" . $error['dhcp_tftp_server'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // dhcp_unatt_filename fichier de boot PXE
@@ -298,7 +339,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_unatt_filename'] . "</b>";
+    if (isset($error['dhcp_unatt_filename'])) {
+            $ret .= "<b>" . $error['dhcp_unatt_filename'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     $ret .= "<tr><td></td><td></td></tr>\n";
@@ -316,7 +359,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_unatt_login'] . "</b>";
+    if (isset($error['dhcp_unatt_login'])) {
+            $ret .= "<b>" . $error['dhcp_unatt_login'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
     // dhcp_unatt_pass
@@ -326,7 +371,9 @@ function dhcp_config_form($error) {
         $ret .= " disabled ";
     }
     $ret .= ">";
-    $ret .= "<b>" . $error['dhcp_unatt_pass'] . "</b>";
+    if (isset($error['dhcp_unatt_pass'])) {
+         $ret .= "<b>" . $error['dhcp_unatt_pass'] . "</b>";
+    }
     $ret .= "</td></tr>\n";
 
 
