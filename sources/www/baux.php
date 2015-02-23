@@ -32,8 +32,14 @@ include "ihm.inc.php";
 require_once "fonc_parc.inc.php";
 require_once "dhcpd.inc.php";
 
+// HTMLpurifier
+include("../se3/includes/library/HTMLPurifier.auto.php");
+$config = HTMLPurifier_Config::createDefault();
+$purifier = new HTMLPurifier($config);
 
-$action=$_POST['action'];
+
+$action = $purifier->purify($_POST['action']);
+
 if (is_admin("system_is_admin",$login)=="Y")
 {
 
@@ -76,14 +82,15 @@ if (is_admin("system_is_admin",$login)=="Y")
 		break;
 	
 	case 'valid' :
-		$ip=$_POST['ip'];
-		$mac=$_POST['mac'];
-		$action_res=$_POST['action_res'];
-		$name=$_POST['name'];
-		$oldname=$_POST['name'];
-		$parc=$_POST['parc'];	    
-        $localadminname=$_POST['localadminname'];
-        $localadminpasswd=$_POST['localadminpasswd'];
+		$ip=$purifier->purify($_POST['ip']);
+		$mac=$purifier->purify($_POST['mac']);
+		$action_res=$purifier->purify($_POST['action_res']);
+		$name=$purifier->purify($_POST['name']);
+		$oldname=$purifier->purify($_POST['name']);
+		$parc=$purifier->purify($_POST['parc']);	    
+                $localadminname=$purifier->purify($_POST['localadminname']);
+                $localadminpasswd=$purifier->purify($_POST['localadminpasswd']);
+                
 		foreach ($ip as $keys=>$value) {
 			if ($action_res[$keys]=="reserver") { 
 			    $content .= add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]));

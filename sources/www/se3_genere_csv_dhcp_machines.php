@@ -21,14 +21,20 @@
    * file: se3_genere_csv_dhcp_machines.php
 */
 
+// HTMLpurifier
+include("../se3/includes/library/HTMLPurifier.auto.php");
+$config = HTMLPurifier_Config::createDefault();
+$purifier = new HTMLPurifier($config);
 
+$genere_csv = $purifier->purify($_POST['genere_csv']);
+$suppr_doublons_ldap = $purifier->purify($_POST['suppr_doublons_ldap']);
 
 //==================================
 // Generation du CSV:
-if(isset($_POST['genere_csv'])) {
-	$cn=isset($_POST['cn']) ? $_POST['cn'] : NULL;
-	$ip=isset($_POST['ip']) ? $_POST['ip'] : NULL;
-	$mac=isset($_POST['mac']) ? $_POST['mac'] : NULL;
+if(isset($genere_csv)) {
+	$cn=isset($_POST['cn']) ? $purifier->purify($_POST['cn']) : NULL;
+	$ip=isset($_POST['ip']) ? $purifier->purify($_POST['ip']) : NULL;
+	$mac=isset($_POST['mac']) ? $purifier->purify($_POST['mac']) : NULL;
 
 	if((isset($ip))&&(isset($cn))&&(isset($mac))) {
 		$nom_fic = "se3_dhcp_".strftime("%Y%m%d-%H%M%S").".csv";
@@ -79,8 +85,8 @@ if (!is_admin("se3_is_admin",$login)=="Y")  {
 }
 
 // Suppression des doublons
-if(isset($_POST['suppr_doublons_ldap'])) {
-	$suppr=isset($_POST['suppr']) ? $_POST['suppr'] : NULL;
+if(isset($suppr_doublons_ldap)) {
+	$suppr=isset($_POST['suppr']) ?$purifier->purify($_POST['suppr']) : NULL;
 
 	/*
 	$tab_attr_recherche=array('cn');

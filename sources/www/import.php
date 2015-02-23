@@ -31,8 +31,15 @@ include "ldap.inc.php";
 include "ihm.inc.php";
 require_once "dhcpd.inc.php";
 
+// HTMLpurifier
+include("../se3/includes/library/HTMLPurifier.auto.php");
+$config = HTMLPurifier_Config::createDefault();
+$purifier = new HTMLPurifier($config);
 
-$action=$_POST['action'];
+
+$action = $purifier->purify($_POST['action']);
+
+
 if (is_admin("system_is_admin",$login)=="Y")
 {
 

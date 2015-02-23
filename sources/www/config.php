@@ -8,7 +8,7 @@
   
    * @Projet LCS / SambaEdu
 
-   * @auteurs  « GrosQuicK »  eric.mercier@crdp.ac-versailles.fr
+   * @auteurs  GrosQuicK   eric.mercier@crdp.ac-versailles.fr
 	
    * @note
    
@@ -31,7 +31,14 @@ include "ldap.inc.php";
 include "ihm.inc.php";
 require_once "dhcpd.inc.php";
 
-$action=$_POST['action'];
+// HTMLpurifier
+include("../se3/includes/library/HTMLPurifier.auto.php");
+$config = HTMLPurifier_Config::createDefault();
+$purifier = new HTMLPurifier($config);
+
+
+$action = $purifier->purify($_POST['action']);
+
 if (is_admin("system_is_admin",$login)=="Y")
 {
 	
