@@ -22,15 +22,23 @@
    * file: readressage_ip.php
 */
 
-	$step=isset($_POST['step']) ? $_POST['step'] : NULL;
+// HTMLpurifier
+include("../se3/includes/library/HTMLPurifier.auto.php");
+$config = HTMLPurifier_Config::createDefault();
+$purifier = new HTMLPurifier($config);
+
+
+
+
+	$step=isset($_POST['step']) ? $purifier->purify($_POST['step']) : NULL;
 	//$tri_nom_netbios=isset($_POST['tri_nom_netbios']) ? $_POST['tri_nom_netbios'] : "n";
-	$tri_machines=isset($_POST['tri_machines']) ? $_POST['tri_machines'] : "";
+	$tri_machines=isset($_POST['tri_machines']) ? $purifier->purify($_POST['tri_machines']) : "";
 
 	if($step==2) {
-		$ip=isset($_POST['ip']) ? $_POST['ip'] : array();
-		$t_0=isset($_POST['t_0']) ? $_POST['t_0'] : array();
-		$t_1=isset($_POST['t_1']) ? $_POST['t_1'] : array();
-		$t_2=isset($_POST['t_2']) ? $_POST['t_2'] : array();
+		$ip=isset($_POST['ip']) ? $purifier->purify($_POST['ip']) : array();
+		$t_0=isset($_POST['t_0']) ? $purifier->purify($_POST['t_0']) : array();
+		$t_1=isset($_POST['t_1']) ? $purifier->purify($_POST['t_1']) : array();
+		$t_2=isset($_POST['t_2']) ? $purifier->purify($_POST['t_2']) : array();
 
 		$nom_fic="se3_dhcp_".preg_replace("/ /","_",time());
 		$nom_fic.=".csv";
@@ -126,9 +134,9 @@
 			echo "<p>Adresse reseau: <input type='text' name='ip' value='172.21.1.0' /><br />\n";
 			echo "Nombre de classes de 256 machines: <input type='text' name='nb_classes' value='4' /><br />\n";
 			echo "Laisser <input type='text' name='nb_ip_libres' value='241' /> IP libres en debut de liste (*)<br />\n";
-			//echo "Trier les machines ordre alphabétique: <input type='checkbox' name='tri_nom_netbios' value='y' />\n";
+			//echo "Trier les machines ordre alphabetique: <input type='checkbox' name='tri_nom_netbios' value='y' />\n";
 			echo "<input type='radio' name='tri_machines' value='' id='pas_de_tri_machines' checked /><label for='pas_de_tri_machines'> Ne pas trier les machines  (<i>prendre l'ordre du fichier fourni</i>),</label><br />\n";
-			echo "<input type='radio' name='tri_machines' id='tri_machines_netbios' value='netbios' /><label for='tri_machines_netbios'> Trier les machines ordre alphabétique,</label><br />\n";
+			echo "<input type='radio' name='tri_machines' id='tri_machines_netbios' value='netbios' /><label for='tri_machines_netbios'> Trier les machines ordre alphabï¿½tique,</label><br />\n";
 			echo "<input type='radio' name='tri_machines' id='tri_machines_ip' value='ip' /><label for='tri_machines_ip'> Trier les machines selon les adresses IP actuelles.</label><br />\n";
 			echo "<input type='hidden' name='step' value='1' /></p>\n";
 			echo "<p>Veuillez fournir le fichier CSV des noms de machines et adresses MAC:<br />\n";
@@ -153,7 +161,7 @@
 					echo "<p>Erreur 2</p>\n";
 				}
 				else {
-					$nb_ip_libres=isset($_POST['nb_ip_libres']) ? $_POST['nb_ip_libres'] : 0;
+					$nb_ip_libres=isset($_POST['nb_ip_libres']) ? $purifier->purify($_POST['nb_ip_libres']) : 0;
 
 					$tab=array();
 					if($tri_machines=='') {
@@ -374,16 +382,16 @@
 				}
 				*/
 
-				$nb_classes=isset($_POST['nb_classes']) ? $_POST['nb_classes'] : 4;
+				$nb_classes=isset($_POST['nb_classes']) ? $purifier->purify($_POST['nb_classes']) : 4;
 				if($nb_classes=="") {$nb_classes=4;}
 				elseif(strlen(preg_replace("/[0-9]/","",$nb_classes))!=0) {$nb_classes=4;}
 				elseif($nb_classes==0) {$nb_classes=4;}
 
-				// Nombre d'IP dispo... il faudra quand même exclure la dernière en 255 qui correspond au broadcast
+				// Nombre d'IP dispo... il faudra quand meme exclure la derniere en 255 qui correspond au broadcast
 				$total=$nb_classes*256-15;
 
-				$ip=isset($_POST['ip']) ? $_POST['ip'] : "172.16.1.0";
-				// On commence à 15 pour garder de l'espace en début de classe IP pour les serveurs
+				$ip=isset($_POST['ip']) ? $purifier->purify($_POST['ip']) : "172.16.1.0";
+				// On commence  a 15 pour garder de l'espace en debut de classe IP pour les serveurs
 				$ip=ip(tip($ip)+15);
 				$tip=tip($ip);
 

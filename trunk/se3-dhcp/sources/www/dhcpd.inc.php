@@ -31,7 +31,16 @@
  */
 function dhcp_config_form($error) {
     require_once ("ihm.inc.php");
-    // Recuperation des donnees dans la base SQL
+    
+    // HTMLpurifier
+    include("../se3/includes/library/HTMLPurifier.auto.php");
+    $config = HTMLPurifier_Config::createDefault();
+    $purifier = new HTMLPurifier($config);
+
+
+    $vlan = $purifier->purify($_POST['vlan']);
+    
+// Recuperation des donnees dans la base SQL
     $query = "SELECT * from params where name REGEXP '^dhcp*' ";
     $result = mysql_query($query);
     $ret = "<table>\n";
@@ -47,7 +56,7 @@ function dhcp_config_form($error) {
         $ret .= "<option value=\"0\">D&#233;faut</option>";
         while ($i <= $nbr_vlan) {
             $ret .= "<option ";
-            if ($_POST['vlan'] == $i) {
+            if ($vlan == $i) {
                 $ret .= "selected";
             }
             $ret .= " value=\"$i\">vlan $i</option>";
@@ -66,7 +75,7 @@ function dhcp_config_form($error) {
     // dhcp_iface : interface d'ecoute du dhcp
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_iface"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=5 name=\"dhcp_iface\" value=\"" . $dhcp["dhcp_iface"]["value"] . "\" maxlength=\"5\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -78,7 +87,7 @@ function dhcp_config_form($error) {
     // dhcp_domain_name : Nom du domaine
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_domain_name"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=60 name=\"dhcp_domain_name\" value=\"" . $dhcp["dhcp_domain_name"]["value"] . "\" maxlength=\"55\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -95,7 +104,7 @@ function dhcp_config_form($error) {
         $CHECKED = "";
     }
     $ret .= ": <input type=\"checkbox\" name=\"dhcp_on_boot\" $CHECKED ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -107,7 +116,7 @@ function dhcp_config_form($error) {
     // dhcp_max_lease : bail maximal
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_max_lease"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=10 name=\"dhcp_max_lease\" value=\"" . $dhcp["dhcp_max_lease"]["value"] . "\" maxlength=\"10\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -120,7 +129,7 @@ function dhcp_config_form($error) {
     // dhcp_default_lease : bail par defaut
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_default_lease"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=10 name=\"dhcp_default_lease\" value=\"" . $dhcp["dhcp_default_lease"]["value"] . "\" maxlength=\"10\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -132,7 +141,7 @@ function dhcp_config_form($error) {
     // dhcp_ntp : Serveur NTP
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_ntp"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=20 name=\"dhcp_ntp\" value=\"" . $dhcp["dhcp_ntp"]["value"] . "\"  maxlength=\"20\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -143,7 +152,7 @@ function dhcp_config_form($error) {
     // dhcp_wins : Serveur WINS
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_wins"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=20 name=\"dhcp_wins\" value=\"" . $dhcp["dhcp_wins"]["value"] . "\"maxlength=\"30\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -155,7 +164,7 @@ function dhcp_config_form($error) {
     // dhcp_dns_server_prim : Serveur DNS primaire
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_dns_server_prim"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_dns_server_prim\" value=\"" . $dhcp["dhcp_dns_server_prim"]["value"] . "\"maxlength=\"15\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -167,7 +176,7 @@ function dhcp_config_form($error) {
     // dhcp_dns_server_sec : Serveur DNS secondaire
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_dns_server_sec"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_dns_server_sec\" value=\"" . $dhcp["dhcp_dns_server_sec"]["value"] . "\" maxlength=\"15\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -178,20 +187,20 @@ function dhcp_config_form($error) {
 
     // partie reserve si on a des vlan
 
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         // Adresse du reseau
         $ret .= "<tr><td>" . gettext("Adresse de r&#233;seau ");
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_reseau_vlan = "dhcp_reseau_" . $_POST['vlan'];
+        $dhcp_reseau_vlan = "dhcp_reseau_" . $vlan;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_reseau_vlan\" value=\"" . $dhcp["$dhcp_reseau_vlan"]["value"] . "\" maxlength=\"15\">";
 
 
         // Masque du reseau
         $ret .= "<tr><td>" . gettext("Masque de r&#233;seau ");
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_masque_vlan = "dhcp_masque_" . $_POST['vlan'];
+        $dhcp_masque_vlan = "dhcp_masque_" . $vlan;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_masque_vlan\" value=\"" . $dhcp["$dhcp_masque_vlan"]["value"] . "\" maxlength=\"15\">";
     }
     if (isset($error['dhcp_gateway'])) {
@@ -202,11 +211,11 @@ function dhcp_config_form($error) {
 
     // dhcp_gateway : PASSERELLE
 
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_gateway"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_gateway_vlan = "dhcp_gateway_" . $_POST['vlan'];
+        $dhcp_gateway_vlan = "dhcp_gateway_" . $vlan;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_gateway_vlan\" value=\"" . $dhcp["$dhcp_gateway_vlan"]["value"] . "\" maxlength=\"15\">";
         if (isset($error['dhcp_gateway'])) {
                 $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
@@ -225,11 +234,11 @@ function dhcp_config_form($error) {
     }
 
     // dhcp_ip_min : Debut de la plage de reservations
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_ip_min"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_ip_min_vlan = "dhcp_ip_min_" . $_POST['vlan'];
+        $dhcp_ip_min_vlan = "dhcp_ip_min_" . $vlan;
 //		if ($dhcp["$dhcp_ip_min_vlan"]["value"] == "") { $dhcp["$dhcp_ip_min_vlan"]["value"] = 
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_ip_min_vlan\" value=\"" . $dhcp["$dhcp_ip_min_vlan"]["value"] . "\" maxlength=\"15\">";
         if (isset($error['dhcp_ip_min'])) {
@@ -249,11 +258,11 @@ function dhcp_config_form($error) {
     }
 
     // dhcp_begin_range : Debut de la plage
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_begin_range"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_begin_range_vlan = "dhcp_begin_range_" . $_POST['vlan'];
+        $dhcp_begin_range_vlan = "dhcp_begin_range_" . $vlan;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_begin_range_vlan\" value=\"" . $dhcp["$dhcp_begin_range_vlan"]["value"] . "\" maxlength=\"15\">";
         if (isset($error['dhcp_begin_range'])) {
                 $ret .= "<b>" . $error['dhcp_begin_range'] . "</b>";
@@ -272,11 +281,11 @@ function dhcp_config_form($error) {
     }
 
     // dhcp_end_range : Fin de la plage
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_end_range"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_end_range_vlan = "dhcp_end_range_" . $_POST['vlan'];
+        $dhcp_end_range_vlan = "dhcp_end_range_" . $vlan;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_end_range_vlan\" value=\"" . $dhcp["$dhcp_end_range_vlan"]["value"] . "\" maxlength=\"15\"";
         if (isset($error['dhcp_end_range'])) {
                $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
@@ -296,11 +305,11 @@ function dhcp_config_form($error) {
 
     $ret .= "<tr><td></td><td></td></tr>\n";
     // Option autre
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_extra_option"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan;
         $ret .= "</td><td>\n";
-        $dhcp_extra_option_vlan = "dhcp_extra_option_" . $_POST['vlan'];
+        $dhcp_extra_option_vlan = "dhcp_extra_option_" . $vlan;
         $ret .= ": <input type=\"text\" SIZE=30 name=\"$dhcp_extra_option_vlan\" value=\"" . $dhcp["$dhcp_extra_option_vlan"]["value"] . "\" maxlength=\"30\"";
         if (isset($error['dhcp_extra_option'])) {
                 $ret .= "<b>" . $error['dhcp_extra_option'] . "</b>";
@@ -323,7 +332,7 @@ function dhcp_config_form($error) {
     // dhcp_tftp_server : SERVER TFTP
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_tftp_server"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_tftp_server\" value=\"" . $dhcp["dhcp_tftp_server"]["value"] . "\" maxlength=\"15\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -335,7 +344,7 @@ function dhcp_config_form($error) {
     // dhcp_unatt_filename fichier de boot PXE
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_unatt_filename"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_unatt_filename\" value=\"" . $dhcp["dhcp_unatt_filename"]["value"] . "\" ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -355,7 +364,7 @@ function dhcp_config_form($error) {
     // dhcp_unatt_login
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_unatt_login"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_unatt_login\" value=\"" . $dhcp["dhcp_unatt_login"]["value"] . "\" ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -367,7 +376,7 @@ function dhcp_config_form($error) {
     // dhcp_unatt_pass
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_unatt_pass"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_unatt_pass\" value=\"" . $dhcp["dhcp_unatt_pass"]["value"] . "\" ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -380,7 +389,7 @@ function dhcp_config_form($error) {
 
     $ret .= "</table>";
     $ret .= "<input type='hidden' name='action' value='newconfig'>\n";
-    $ret .= "<input type='hidden' name='vlan' value='" . $_POST['vlan'] . "'>\n";
+    $ret .= "<input type='hidden' name='vlan' value='" . $vlan . "'>\n";
     $ret .= "<input type=\"submit\" name=\"button\" value=\"" . gettext("Modifier") . "\">\n";
     $ret .= "</form>\n";
     exec("sudo /usr/share/se3/scripts/makedhcpdconf state", $state);
@@ -412,22 +421,31 @@ function dhcp_update_config() {  // insert range in option service table
     require_once ("ihm.inc.php");
     $error = "";
 
-    if ($_POST['vlan'] > 0) {
+    // HTMLpurifier
+    include("../se3/includes/library/HTMLPurifier.auto.php");
+    $config = HTMLPurifier_Config::createDefault();
+    $purifier = new HTMLPurifier($config);
+
+
+    $vlan = $purifier->purify($_POST['vlan']);
+    
+    
+    if ($vlan > 0) {
         //verif si le champ existe dans la table sinon on le cree
 
-        $dhcp_min = "dhcp_ip_min_" . $_POST['vlan'];
+        $dhcp_min = "dhcp_ip_min_" . $vlan;
         dhcp_vlan_champ($dhcp_min);
-        $dhcp_begin = "dhcp_begin_range_" . $_POST['vlan'];
+        $dhcp_begin = "dhcp_begin_range_" . $vlan;
         dhcp_vlan_champ($dhcp_begin);
-        $dhcp_end = "dhcp_end_range_" . $_POST['vlan'];
+        $dhcp_end = "dhcp_end_range_" . $vlan;
         dhcp_vlan_champ($dhcp_end);
-        $dhcp_gateway_vlan = "dhcp_gateway_" . $_POST['vlan'];
+        $dhcp_gateway_vlan = "dhcp_gateway_" . $vlan;
         dhcp_vlan_champ($dhcp_gateway_vlan);
-        $dhcp_reseau = "dhcp_reseau_" . $_POST['vlan'];
+        $dhcp_reseau = "dhcp_reseau_" . $vlan;
         dhcp_vlan_champ($dhcp_reseau);
-        $dhcp_masque = "dhcp_masque_" . $_POST['vlan'];
+        $dhcp_masque = "dhcp_masque_" . $vlan;
         dhcp_vlan_champ($dhcp_masque);
-        $dhcp_extra_option = "dhcp_extra_option_" . $_POST['vlan'];
+        $dhcp_extra_option = "dhcp_extra_option_" . $vlan;
         dhcp_vlan_champ($dhcp_extra_option);
     } else {
         $dhcp_min = "dhcp_ip_min";
