@@ -29,14 +29,11 @@ include "ldap.inc.php";
 include "ihm.inc.php";
 require_once "fonc_parc.inc.php";
 
-// HTMLpurifier
-include("../se3/includes/library/HTMLPurifier.auto.php");
-$config = HTMLPurifier_Config::createDefault();
-$purifier = new HTMLPurifier($config);
 
 
-$action = $purifier->purify($_POST['action']);
-$saisie = $purifier->purify($_POST['saisie']);
+
+$action = $_POST['action'];
+$saisie = $_POST['saisie'];
 
 if (is_admin("system_is_admin",$login)=="Y")
 {
