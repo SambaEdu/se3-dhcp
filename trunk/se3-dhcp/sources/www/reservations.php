@@ -32,14 +32,8 @@ require_once "dhcpd.inc.php";
 
 <?php
 
-// HTMLpurifier
-include("../se3/includes/library/HTMLPurifier.auto.php");
-$config = HTMLPurifier_Config::createDefault();
-$purifier = new HTMLPurifier($config);
-
-
-$action = $purifier->purify($_POST['action']);
-$suppr_doublons_ldap = $purifier->purify($_POST['suppr_doublons_ldap']);
+$action = $_POST['action'];
+$suppr_doublons_ldap = $_POST['suppr_doublons_ldap'];
 
 if (is_admin("system_is_admin",$login)!="Y")
 	die (gettext("Vous n'avez pas les droits suffisants pour acc&#233;der &#224; cette fonction")."</BODY></HTML>");
@@ -82,14 +76,14 @@ echo "</form>";*/
             break;
 
         case 'valid' :
-            $ip = $purifier->purify($_POST['ip']);
-            $mac = $purifier->purify($_POST['mac']);
-            $localadminname = $purifier->purify($_POST['localadminname']);
-            $localadminpasswd = $purifier->purify($_POST['localadminpasswd']);
-            $oldname = $purifier->purify($_POST['oldname']);
-            $name = $purifier->purify($_POST['name']);
-            $parc = $purifier->purify($_POST['parc']);
-            $action_res = $purifier->purify($_POST['action_res']);
+            $ip = $_POST['ip'];
+            $mac = $_POST['mac'];
+            $localadminname = $_POST['localadminname'];
+            $localadminpasswd = $_POST['localadminpasswd'];
+            $oldname = $_POST['oldname'];
+            $name = $_POST['name'];
+            $parc = $_POST['parc'];
+            $action_res = $_POST['action_res'];
             foreach ($ip as $keys => $value) {
                 if ($action_res[$keys] == "integrer") {
                     if ($localadminpasswd[$keys] == "") {
@@ -190,7 +184,7 @@ echo "</form>";*/
     }
 
     if(isset($suppr_doublons_ldap)) {
-            $suppr=isset($_POST['suppr']) ? $purifier->purify($_POST['suppr']) : NULL;
+            $suppr=isset($_POST['suppr']) ? $_POST['suppr'] : NULL;
 
 //             $tab_attr_recherche=array('cn');
 //             for($i=0;$i<count($suppr);$i++) {
