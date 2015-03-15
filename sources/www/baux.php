@@ -32,14 +32,8 @@ include "ihm.inc.php";
 require_once "fonc_parc.inc.php";
 require_once "dhcpd.inc.php";
 
-// HTMLpurifier
-include("../se3/includes/library/HTMLPurifier.auto.php");
-$config = HTMLPurifier_Config::createDefault();
-$purifier = new HTMLPurifier($config);
 
-
-$action = $purifier->purify($_POST['action']);
-
+$action=$_POST['action'];
 if (is_admin("system_is_admin",$login)=="Y")
 {
 
@@ -69,7 +63,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 	switch($action) {
 	case '' :
 	case 'index' :
-		$file="/var/lib/dhcp/dhcpd.leases";
+		$file="/var/lib/dhcp3/dhcpd.leases";
 		//$parser=parse_dhcpd_lease($file);
 		$parser=my_parse_dhcpd_lease($file);
 		if ($parser != "" ) {
@@ -82,15 +76,14 @@ if (is_admin("system_is_admin",$login)=="Y")
 		break;
 	
 	case 'valid' :
-		$ip=$purifier->purify($_POST['ip']);
-		$mac=$purifier->purify($_POST['mac']);
-		$action_res=$purifier->purify($_POST['action_res']);
-		$name=$purifier->purify($_POST['name']);
-		$oldname=$purifier->purify($_POST['name']);
-		$parc=$purifier->purify($_POST['parc']);	    
-                $localadminname=$purifier->purify($_POST['localadminname']);
-                $localadminpasswd=$purifier->purify($_POST['localadminpasswd']);
-                
+		$ip=$_POST['ip'];
+		$mac=$_POST['mac'];
+		$action_res=$_POST['action_res'];
+		$name=$_POST['name'];
+		$oldname=$_POST['name'];
+		$parc=$_POST['parc'];	    
+        $localadminname=$_POST['localadminname'];
+        $localadminpasswd=$_POST['localadminpasswd'];
 		foreach ($ip as $keys=>$value) {
 			if ($action_res[$keys]=="reserver") { 
 			    $content .= add_reservation($ip[$keys],$mac[$keys],strtolower($name[$keys]));
@@ -107,7 +100,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 		    }
 			if (($parc[$keys] != "none")&&($parc[$keys] != "")) { $content .= add_machine_parc(strtolower($name[$keys]),$parc[$keys]);}
 		}
-		$file="/var/lib/dhcp/dhcpd.leases";
+		$file="/var/lib/dhcp3/dhcpd.leases";
 		//$parser=parse_dhcpd_lease($file);
 		$parser=my_parse_dhcpd_lease($file);
 		if ($parser != "" ) {
