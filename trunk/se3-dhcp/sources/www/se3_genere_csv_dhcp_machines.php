@@ -22,6 +22,9 @@
 */
 
 
+// HTMLPurifier
+require_once ("traitement_data.inc.php");
+
 
 $genere_csv = $_POST['genere_csv'];
 $suppr_doublons_ldap = $_POST['suppr_doublons_ldap'];
