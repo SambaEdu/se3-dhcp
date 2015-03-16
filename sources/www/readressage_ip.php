@@ -22,7 +22,8 @@
    * file: readressage_ip.php
 */
 
-
+// HTMLPurifier
+require_once ("traitement_data.inc.php");
 
 	$step=isset($_POST['step']) ? $_POST['step'] : NULL;
 	//$tri_nom_netbios=isset($_POST['tri_nom_netbios']) ? $_POST['tri_nom_netbios'] : "n";
