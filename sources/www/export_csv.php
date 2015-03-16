@@ -43,3 +43,5 @@ if (mysql_num_rows($query) != 0) {
 		echo "$AFFICHE\n";
 	}
 }	
+
+?>
