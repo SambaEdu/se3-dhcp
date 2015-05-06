@@ -4,3 +4,4 @@ var/cache/se3_install/se3-dhcp
 var/www/se3/includes/menu.d
 var/www/se3/dhcp
 usr/share/se3/scripts
+etc/sudoers.d

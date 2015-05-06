@@ -1,0 +1,9 @@
+# sudoers file for se3-dhcp
+### $Id$ ###
+
+# Cmnd alias specification
+Cmnd_Alias SE3DHCP=/usr/share/se3/scripts/makedhcpdconf,/usr/share/se3/scripts/move_dhcp_leases.sh
+
+
+www-se3 ALL=NOPASSWD:SE3DHCP
+

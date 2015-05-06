@@ -10,5 +10,6 @@ install:
 	cp -R menu/* $(DESTDIR)/var/www/se3/includes/menu.d/
 	cp -R install-scripts/* $(DESTDIR)/var/cache/se3_install/se3-dhcp/
 	cp -R scripts/* $(DESTDIR)/usr/share/se3/scripts/
+	cp conf/sudoers-se3dhcp $(DESTDIR)/etc/sudoers.d/sudoers-se3dhcp
 
 clean:
