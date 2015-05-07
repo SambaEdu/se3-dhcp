@@ -1,3 +1,9 @@
+se3-dhcp (0.61) stable; urgency=low
+
+  * Modifs pour conf sudo
+
+ -- root <root@DevilXen>  Thu, 07 May 2015 10:36:08 +0200
+
 se3-dhcp (0.60) stable; urgency=low
 
   * version wheezy
