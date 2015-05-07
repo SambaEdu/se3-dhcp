@@ -63,7 +63,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 	switch($action) {
 	case '' :
 	case 'index' :
-		$file="/var/lib/dhcp3/dhcpd.leases";
+		$file="/var/lib/dhcp/dhcpd.leases";
 		//$parser=parse_dhcpd_lease($file);
 		$parser=my_parse_dhcpd_lease($file);
 		if ($parser != "" ) {
@@ -100,7 +100,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 		    }
 			if (($parc[$keys] != "none")&&($parc[$keys] != "")) { $content .= add_machine_parc(strtolower($name[$keys]),$parc[$keys]);}
 		}
-		$file="/var/lib/dhcp3/dhcpd.leases";
+		$file="/var/lib/dhcp/dhcpd.leases";
 		//$parser=parse_dhcpd_lease($file);
 		$parser=my_parse_dhcpd_lease($file);
 		if ($parser != "" ) {
