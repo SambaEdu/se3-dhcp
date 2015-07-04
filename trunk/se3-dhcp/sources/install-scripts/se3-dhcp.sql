@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS se3_dhcp(
   mac	text	NOT NULL,
   name	text	NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
