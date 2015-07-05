@@ -1,5 +1,10 @@
 #!/bin/bash
-# $Id$
+
+
+## $Id$ ##
+ 
+
+
 DISTRIB=$1
 BRANCHE=$2
 [ "$BRANCHE" != "stable" ] && OPT="XP"
@@ -94,7 +99,7 @@ cd /tmp
 rm -rf $SE3MODULE
 cd $PATH_SE3MODULE
 
-echo "copie sur le dépot se3$OPT du paquet $SE3MODULE pour la branche $BRANCHE"
+echo "copie sur le dÃ©pot se3$OPT du paquet $SE3MODULE pour la branche $BRANCHE"
 POURSUIVRE
 # scp -P 2222 $SE3MODULE*.deb root@wawadeb:/var/ftp/debian/dists/stable/se3XP/binary-i386/net/
 
