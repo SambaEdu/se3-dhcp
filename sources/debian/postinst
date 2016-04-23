@@ -77,7 +77,7 @@ fi
 ##### Interface who dhcp listen by default firs iface
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_iface'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_iface\",\"$device\",\"\",\"Interface d'Ècoute du dhcp \",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_iface\",\"$device\",\"\",\"Interface d'√©coute du dhcp \",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7 WHERE name='dhcp_iface'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
@@ -85,15 +85,15 @@ fi
 ##### begin range reservations
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ip_min\",\"\",\"\",\"DÈbut de la plage de reservation (par defaut network + 51) \",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ip_min\",\"\",\"\",\"D√©but de la plage de reservation (par defaut network + 51) \",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7,descr=\"DÈbut de la plage de reservation (par defaut network + 51)\" WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"D√©but de la plage de reservation (par defaut network + 51)\" WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### begin range dynamic
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_begin_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_begin_range\",\"\",\"\",\"DÈbut de la plage dynamique\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_begin_range\",\"\",\"\",\"D√©but de la plage dynamique\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7 WHERE name='dhcp_begin_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
@@ -157,7 +157,7 @@ fi
 ##### Default lease
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_default_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_default_lease\",\"6000\",\"\",\"Bail par dÈfaut\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_default_lease\",\"6000\",\"\",\"Bail par d√©faut\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7 WHERE name='dhcp_default_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
@@ -196,7 +196,7 @@ fi
 
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_unatt_filename'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_unatt_filename\",\"pxelinux.0\",\"\",\"Fichier de boot PXE utilisÈ pour udpcast ou unattented\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_unatt_filename\",\"pxelinux.0\",\"\",\"Fichier de boot PXE utilis√© pour udpcast ou unattented\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7 WHERE name='dhcp_unatt_filename'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
@@ -247,7 +247,7 @@ chmod 440 /etc/sudoers.d/sudoers-se3dhcp
 # sed -i 's|^\(# Cmnd alias specification.*\)$|\1\nCmnd_Alias SE3DHCP=/usr/share/se3/scripts/makedhcpdconf,/usr/share/se3/scripts/move_dhcp_leases.sh|' /etc/sudoers
 # /etc/init.d/sudo restart
 # else
-# 	# La ligne Cmnd_Alias SE3DHCP existe dÈj‡ (avec au moins une commande 
+# 	# La ligne Cmnd_Alias SE3DHCP existe d√©j√† (avec au moins une commande 
 # 	if [ ! "$(grep "/usr/share/se3/scripts/move_dhcp_leases.sh" /etc/sudoers)" ]; then
 # 		# On ajoute la commande au premier rang
 # 		sed -i 's|Cmnd_Alias SE3DHCP=|Cmnd_Alias SE3DHCP=/usr/share/se3/scripts/move_dhcp_leases.sh,|' /etc/sudoers
