@@ -70,22 +70,22 @@ if [ "X$test_exist" = "X" ]; then # if empty
 	##### DHCP3-SERVER does not start oin boot after install ...
 	/usr/sbin/update-rc.d -f dhcp3-server remove
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_on_boot'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Activation du dhcp au boot\" WHERE name='dhcp_on_boot'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 
 ##### Interface who dhcp listen by default firs iface
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_iface'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_iface\",\"$device\",\"\",\"Interface d'écoute du dhcp \",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_iface\",\"$device\",\"\",\"Interface d'écoute du dhcp\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_iface'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Interface d'écoute du dhcp\" WHERE name='dhcp_iface'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 ##### begin range reservations
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ip_min\",\"\",\"\",\"Début de la plage de reservation (par defaut network + 51) \",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ip_min\",\"\",\"\",\"Début de la plage de reservation (par defaut network + 51)\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
 	 echo "UPDATE params SET cat=7,descr=\"Début de la plage de reservation (par defaut network + 51)\" WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
@@ -95,14 +95,14 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_begin_range'" | mysql -
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_begin_range\",\"\",\"\",\"Début de la plage dynamique\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_begin_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Début de la plage dynamique\" WHERE name='dhcp_begin_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 ##### end range dynamic
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_end_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_end_range\",\"\",\"\",\"Fin de la plage dynamique\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_end_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Fin de la plage dynamique\" WHERE name='dhcp_end_range'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 ##### DNS PRIMARY
@@ -110,7 +110,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_dns_server_prim'" | mys
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_dns_server_prim\",\"$dns_primary\",\"\",\"Serveur DNS primaire\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_dns_server_prim'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Serveur DNS primaire\" WHERE name='dhcp_dns_server_prim'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 ##### DNS SECONDARY
@@ -118,7 +118,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_dns_server_sec'" | mysq
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_dns_server_sec\",\"$dns_secondary\",\"\",\"Serveur DNS secondaire\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_dns_server_sec'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Serveur DNS secondaire\" WHERE name='dhcp_dns_server_sec'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 ##### GATEWAY
@@ -126,7 +126,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_gateway'" | mysql -h $d
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_gateway\",\"$gateway\",\"\",\"Passerelle\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_gateway'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Passerelle\" WHERE name='dhcp_gateway'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 ##### WINS SERVER it's se3 ip by default
@@ -134,7 +134,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_wins'" | mysql -h $dbho
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_wins\",\"$se3ip\",\"\",\"Serveur wins\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_wins'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Serveur wins\" WHERE name='dhcp_wins'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### NTP server
@@ -142,7 +142,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_ntp'" | mysql -h $dbhos
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ntp\",\"\",\"\",\"Serveur de temps\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_ntp'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Serveur de temps\" WHERE name='dhcp_ntp'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### MAX lease
@@ -150,7 +150,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_max_lease'" | mysql -h 
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_max_lease\",\"72000\",\"\",\"Bail maximum\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_max_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Bail maximum\" WHERE name='dhcp_max_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 
 fi
 
@@ -159,7 +159,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_default_lease'" | mysql
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_default_lease\",\"6000\",\"\",\"Bail par défaut\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_default_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Bail par défaut\" WHERE name='dhcp_default_lease'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### Domain name
@@ -167,7 +167,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_domain_name'" | mysql -
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_domain_name\",\"$domain_name\",\"\",\"Nom du domaine\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_domain_name'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Nom du domaine\" WHERE name='dhcp_domain_name'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### serveur tftp
@@ -176,7 +176,7 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_tftp_server'" | mysql -
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_tftp_server\",\"$se3ip\",\"\",\"Serveur TFTP\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_tftp_server'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Serveur TFTP\" WHERE name='dhcp_tftp_server'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### UNATTENDED PARAMS*
@@ -184,21 +184,21 @@ test_exist=`echo "SELECT id FROM params WHERE name='dhcp_unatt_login'" | mysql -
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_unatt_login\",\"\",\"\",\"Nom d'utilisateur pour unattended\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_unatt_login'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Nom d'utilisateur pour unattended\" WHERE name='dhcp_unatt_login'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_unatt_pass'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_unatt_pass\",\"\",\"\",\"Mot de passe pour unattended\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_unatt_pass'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Mot de passe pour unattended\" WHERE name='dhcp_unatt_pass'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_unatt_filename'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
 	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_unatt_filename\",\"pxelinux.0\",\"\",\"Fichier de boot PXE utilisé pour udpcast ou unattented\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7 WHERE name='dhcp_unatt_filename'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Fichier de boot PXE utilisé pour udpcast ou unattented\" WHERE name='dhcp_unatt_filename'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 # extra option
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_extra_option'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
