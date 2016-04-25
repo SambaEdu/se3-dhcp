@@ -1,0 +1,22 @@
+Format: 1.8
+Date: Fri, 25 april 2016 00:20:30 +0200
+Source: se3-dhcp
+Binary: se3-dhcp
+Architecture: all
+Version: 0.64
+Distribution: stable
+Urgency: low
+Maintainer: Eric Mercier <eric.mercier@crdp.ac-versailles.fr>
+Changed-By: root <root@DevilXen>
+Description: 
+ se3-dhcp   - A dhcp interface for se3 server
+Changes: 
+ se3-dhcp (0.64) stable; urgency=low
+ .
+   * update descr fields
+Checksums-Sha1: 
+ 0c1ae2480fc7f40cd5ad1baa8b8691e6b3bc6214 35994 se3-dhcp_0.64_all.deb
+Checksums-Sha256: 
+ 17e12031f1f9dd4354aac4916363e7d91e06b16f56ad1c874fef8ab19c41318b 35994 se3-dhcp_0.64_all.deb
+Files: 
+ 1e9e23342a734ed468bba16a3aecb53b 35994 misc optional se3-dhcp_0.64_all.deb

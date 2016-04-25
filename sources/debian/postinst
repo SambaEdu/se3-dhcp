@@ -85,9 +85,9 @@ fi
 ##### begin range reservations
 test_exist=`echo "SELECT id FROM params WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N`
 if [ "X$test_exist" = "X" ]; then # if empty
-	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ip_min\",\"\",\"\",\"Début de la plage de reservation (par defaut network + 51)\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	echo "INSERT into params (name,value,srv_id,descr,cat) VALUES (\"dhcp_ip_min\",\"\",\"\",\"Début de la plage de réservation (par defaut network + 51)\",7) " | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 else
-	 echo "UPDATE params SET cat=7,descr=\"Début de la plage de reservation (par defaut network + 51)\" WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
+	 echo "UPDATE params SET cat=7,descr=\"Début de la plage de réservation (par defaut network + 51)\" WHERE name='dhcp_ip_min'" | mysql -h $dbhost $dbname -u $dbuser -p$dbpass -N
 fi
 
 ##### begin range dynamic

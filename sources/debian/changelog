@@ -1,8 +1,14 @@
+se3-dhcp (0.64) stable; urgency=low
+
+  * update descr fields
+
+ -- root <root@DevilXen>  Fri, 25 april 2016 00:20:30 +0200
+
 se3-dhcp (0.63) stable; urgency=low
 
   * utf8 for postinst
 
- -- root <root@DevilXen>  Fri, 22 apri 2016 15:18:10 +0200
+ -- root <root@DevilXen>  Fri, 22 april 2016 15:18:10 +0200
 
 se3-dhcp (0.62) stable; urgency=low
 
