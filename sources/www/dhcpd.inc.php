@@ -1239,10 +1239,16 @@ function UncheckAll_reservations(){
 }
 </script>\n";
 
-	$content .= "Page ";
+	$content .= "Page";
+	if ($nb_pages_max>1)
+		$content .= "s";
+	$content .= " ";
 	for ($ii=1; $ii<$nb_pages_max+1; $ii++)
 	{
-		$content .= "<a href=\"reservations.php?order=".$order."&nb_page=".$ii."\">".$ii."</a> ";
+		if ($ii==$nb_page)
+			$content .= $ii." ";
+		else
+			$content .= "<a href=\"reservations.php?order=".$order."&nb_page=".$ii."\">".$ii."</a> ";
 	}
 
     $content .= "<form name=\"lease_form\" method=post action=\"reservations.php?order=".$order."&nb_page=".$nb_page."\">\n";
