@@ -1240,9 +1240,9 @@ function UncheckAll_reservations(){
 </script>\n";
 
 	$content .= "Page ";
-	for ($i=1; $i<$nb_page_max+1; $i++)
+	for ($ii=1; $ii<$nb_pages_max+1; $ii++)
 	{
-		$content .= "<a href=\"reservations.php?order=".$order."&nb_page=".$i."\">".$i."</a> ";
+		$content .= "<a href=\"reservations.php?order=".$order."&nb_page=".$ii."\">".$ii."</a> ";
 	}
 
     $content .= "<form name=\"lease_form\" method=post action=\"reservations.php?order=".$order."&nb_page=".$nb_page."\">\n";
