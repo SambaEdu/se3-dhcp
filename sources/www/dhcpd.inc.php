@@ -1175,7 +1175,7 @@ function form_existing_reservation() {
 	// Recuperation du nombre total d'enregistrement
 	$nb_total = 0;
 	$query2 = "SELECT count(*) as NB FROM `se3_dhcp`";
-	$result2 = mysql_query($query2);
+	$result2 = mysql_query($query2,0,0);
 	$nb_total = mysql_result($result2)+0;
 	
 	// Nombre total de pages
