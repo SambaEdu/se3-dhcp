@@ -1175,8 +1175,8 @@ function form_existing_reservation() {
 	// Recuperation du nombre total d'enregistrement
 	$nb_total = 0;
 	$query2 = "SELECT count(*) as NB FROM `se3_dhcp`";
-	$result2 = mysql_query($query2,0,0);
-	$nb_total = mysql_result($result2)+0;
+	$result2 = mysql_query($query2);
+	$nb_total = mysql_result($result2,0,0)+0;
 	
 	// Nombre total de pages
 	$nb_pages_max = ceil($nb_total/$nb_par_page);
@@ -1194,10 +1194,10 @@ function form_existing_reservation() {
 	
     // Recuperation des donnees dans la base SQL
     if (($_GET['order'] == "") || ($_GET['order'] == "ip")) {
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".($nb_page-1*100).",100";
+        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
 		$order="ip";
 	} else {
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".($nb_page-1*100).",100";
+        $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".(($nb_page-1)*100).",100";
 		$order=$_GET['order'];
     }
     $result = mysql_query($query);
