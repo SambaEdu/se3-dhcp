@@ -1,0 +1,142 @@
+ dpkg-buildpackage -rfakeroot -D -us -uc -b
+dpkg-buildpackage: avertissement: utilisation d'une commande pour obtenir les privilèges administrateur en tant qu'administrateur
+parsechangelog/debian: avertissement:     debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+dpkg-buildpackage: paquet source se3-dhcp
+dpkg-buildpackage: version source 0.65
+dpkg-buildpackage: source changé par Laurent JOLY <laurentjoly@orange.fr>
+ dpkg-source --before-build se3-dhcp-master
+dpkg-buildpackage: architecture hôte amd64
+parsechangelog/debian: avertissement: se3-dhcp-master/debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+ fakeroot debian/rules clean
+dh_testdir
+dh_testroot
+rm -f build-stamp configure-stamp
+# Add here commands to clean up after the build process.
+/usr/bin/make clean
+make[1]: entrant dans le répertoire « /root/se3-dhcp-master/build/se3-dhcp-master »
+make[1]: Rien à faire pour « clean ».
+make[1]: quittant le répertoire « /root/se3-dhcp-master/build/se3-dhcp-master »
+dh_clean 
+dh_clean: Compatibility levels before 5 are deprecated (level 4 in use)
+ debian/rules build
+dh_testdir
+# Add here commands to configure the package.
+touch configure-stamp
+dh_testdir
+# Add here commands to compile the package.
+/usr/bin/make
+make[1]: entrant dans le répertoire « /root/se3-dhcp-master/build/se3-dhcp-master »
+make[1]: Rien à faire pour « all ».
+make[1]: quittant le répertoire « /root/se3-dhcp-master/build/se3-dhcp-master »
+#docbook-to-man debian/se3-dhcp.sgml > se3-dhcp.1
+touch build-stamp
+ fakeroot debian/rules binary
+dh_testdir
+dh_testroot
+dh_clean -k 
+dh_clean: dh_clean -k is deprecated; use dh_prep instead
+dh_clean: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_installdirs
+dh_installdirs: Compatibility levels before 5 are deprecated (level 4 in use)
+# Add here commands to install the package into debian/se3-dhcp.
+/usr/bin/make install DESTDIR=/root/se3-dhcp-master/build/se3-dhcp-master/debian/se3-dhcp
+make[1]: entrant dans le répertoire « /root/se3-dhcp-master/build/se3-dhcp-master »
+cp -R www/* /root/se3-dhcp-master/build/se3-dhcp-master/debian/se3-dhcp/var/www/se3/dhcp/
+cp -R menu/* /root/se3-dhcp-master/build/se3-dhcp-master/debian/se3-dhcp/var/www/se3/includes/menu.d/
+cp -R install-scripts/* /root/se3-dhcp-master/build/se3-dhcp-master/debian/se3-dhcp/var/cache/se3_install/se3-dhcp/
+cp -R scripts/* /root/se3-dhcp-master/build/se3-dhcp-master/debian/se3-dhcp/usr/share/se3/scripts/
+cp conf/sudoers-se3dhcp /root/se3-dhcp-master/build/se3-dhcp-master/debian/se3-dhcp/etc/sudoers.d/sudoers-se3dhcp
+make[1]: quittant le répertoire « /root/se3-dhcp-master/build/se3-dhcp-master »
+dh_testdir
+dh_testroot
+dh_installchangelogs 
+parsechangelog/debian: avertissement:     debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+dh_installchangelogs: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_installdocs
+dh_installdocs: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_installexamples
+dh_installexamples: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_installman
+dh_installman: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_link
+dh_link: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_strip
+dh_strip: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_compress
+dh_compress: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_fixperms
+dh_fixperms: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_installdeb
+dh_installdeb: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_shlibdeps
+dh_shlibdeps: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_gencontrol
+dh_gencontrol: Compatibility levels before 5 are deprecated (level 4 in use)
+parsechangelog/debian: avertissement:     debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+dh_md5sums
+dh_md5sums: Compatibility levels before 5 are deprecated (level 4 in use)
+dh_builddeb
+dh_builddeb: Compatibility levels before 5 are deprecated (level 4 in use)
+dpkg-deb : construction du paquet « se3-dhcp » dans « ../se3-dhcp_0.65_all.deb ».
+dh_builddeb: Compatibility levels before 5 are deprecated (level 4 in use)
+ dpkg-genchanges -b >../se3-dhcp_0.65_amd64.changes
+parsechangelog/debian: avertissement:     debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+parsechangelog/debian: avertissement:     debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+dpkg-genchanges: envoi d'un binaire - aucune inclusion de code source
+ dpkg-source --after-build se3-dhcp-master
+parsechangelog/debian: avertissement: se3-dhcp-master/debian/changelog(l6): ligne de fin mal formée
+LINE:  -- Laurent JOLY <laurentjoly@orange.fr> Fri, 28 Oct 2016 00:35:11 +0200
+dpkg-buildpackage: envoi d'un binaire seulement (aucune inclusion de code source)
+Now running lintian...
+warning: the authors of lintian do not recommend running it with root privileges!
+W: se3-dhcp: syntax-error-in-debian-changelog line 6 "badly formatted trailer line"
+W: se3-dhcp: wrong-bug-number-in-closes l327:#nnnn
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address root@DevilXen
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address denis@bureau
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address denis@bureau
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address denis@bureau
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address denis@bureau
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address franck@fport
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address franck@fport
+E: se3-dhcp: debian-changelog-file-contains-invalid-email-address franck@fport
+W: se3-dhcp: old-fsf-address-in-copyright-file
+W: se3-dhcp: copyright-without-copyright-notice
+W: se3-dhcp: description-synopsis-starts-with-article
+W: se3-dhcp: file-in-unusual-dir var/cache/se3_install/se3-dhcp/se3-dhcp.sql
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/baux.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/config.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/dhcpd.inc.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/export_csv.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/import.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/import_valid.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/readressage_ip.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/reservations.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/dhcp/se3_genere_csv_dhcp_machines.php
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/includes/
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/includes/menu.d/
+E: se3-dhcp: dir-or-file-in-var-www var/www/se3/includes/menu.d/97dhcp.inc
+W: se3-dhcp: executable-not-elf-or-script var/www/se3/dhcp/import.php
+W: se3-dhcp: executable-not-elf-or-script var/www/se3/dhcp/import_valid.php
+W: se3-dhcp: executable-not-elf-or-script var/www/se3/dhcp/export_csv.php
+W: se3-dhcp: command-with-path-in-maintainer-script postinst:43 /sbin/ifconfig
+W: se3-dhcp: command-with-path-in-maintainer-script postinst:71 /usr/sbin/update-rc.d
+E: se3-dhcp: maintainer-script-calls-init-script-directly postrm:44
+Finished running lintian.
