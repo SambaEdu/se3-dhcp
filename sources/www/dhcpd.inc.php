@@ -1168,12 +1168,37 @@ function form_existing_reservation() {
     require_once("includes/ldap.inc.php");
     require_once ("ihm.inc.php");
     require_once ("printers.inc.php");
+	
+	// Nombre par page
+	$nb_par_page = 100;
+	
+	// Recuperation du nombre total d'enregistrement
+	$nb_total = 0;
+	$query2 = "SELECT count(*) as NB FROM `se3_dhcp`";
+	$result2 = mysql_query($query2);
+	$nb_total = mysql_result($result2)+0;
+	
+	// Nombre total de pages
+	$nb_pages_max = ceil($nb_total/$nb_par_page);
+	
+	// Recuperation du numero de la page
+	if ((isset($_GET['nb_page']))) {
+        $nb_page=$_GET['nb_page']+0;
+    }
+	else
+		$nb_page=1;
+	if ($nb_page<1)
+		$nb_page=1;
+	if ($nb_page>$nb_pages_max)
+		$nb_page=$nb_pages_max;
+	
     // Recuperation des donnees dans la base SQL
-
     if (($_GET['order'] == "") || ($_GET['order'] == "ip")) {
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC";
-    } else {
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC";
+        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".($nb_page-1*100).",100";
+		$order="ip";
+	} else {
+        $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".($nb_page-1*100).",100";
+		$order=$_GET['order'];
     }
     $result = mysql_query($query);
     
@@ -1214,11 +1239,17 @@ function UncheckAll_reservations(){
 }
 </script>\n";
 
-    $content .= "<form name=\"lease_form\" method=post action=\"reservations.php\">\n";
+	$content .= "Page ";
+	for ($i=1; $i<$nb_page_max+1; $i++)
+	{
+		$content .= "<a href=\"reservations.php?order=".$order."&nb_page=".$i."\">".$i."</a> ";
+	}
+
+    $content .= "<form name=\"lease_form\" method=post action=\"reservations.php?order=".$order."&nb_page=".$nb_page."\">\n";
     $content .= "<table border=\"1\" width=\"90%\">\n";
-    $header = "<tr class=\"menuheader\"><td align=\"center\"><b>\n<a href=\"reservations.php?order=ip\">" . gettext("Adresse IP") . "</a>";
-    $header .= "</b></td><td align=\"center\"><b>\n<a href=\"reservations.php?order=mac\">" . gettext("Adresse MAC") . "</a>";
-    $header .="</b></td><td align=\"center\"><b>\n<a href=\"reservations.php?order=name\">" . gettext("Nom NETBIOS") . "</a>";
+    $header = "<tr class=\"menuheader\"><td align=\"center\"><b>\n<a href=\"reservations.php?order=ip&nb_page=".$nb_page."\">" . gettext("Adresse IP") . "</a>";
+    $header .= "</b></td><td align=\"center\"><b>\n<a href=\"reservations.php?order=mac&nb_page=".$nb_page."\">" . gettext("Adresse MAC") . "</a>";
+    $header .="</b></td><td align=\"center\"><b>\n<a href=\"reservations.php?order=name&nb_page=".$nb_page."\">" . gettext("Nom NETBIOS") . "</a>";
     $header .="</b></td><td align=\"center\"><b>\n" . gettext("Parc(s)");
     $header .="</b></td><td align=\"center\"><b>\n";
     $header .= "<input type='hidden' name='action' value='valid' />\n";
