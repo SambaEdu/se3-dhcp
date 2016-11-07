@@ -31,6 +31,7 @@
  */
 function dhcp_config_form($error) {
     require_once ("ihm.inc.php");
+	global $vlan_actif;
     // Recuperation des donnees dans la base SQL
     $query = "SELECT * from params where name REGEXP '^dhcp*' ";
     $result = mysql_query($query);
@@ -47,7 +48,7 @@ function dhcp_config_form($error) {
         $ret .= "<option value=\"0\">D&#233;faut</option>";
         while ($i <= $nbr_vlan) {
             $ret .= "<option ";
-            if ($_POST['vlan'] == $i) {
+            if ($vlan_actif == $i) {
                 $ret .= "selected";
             }
             $ret .= " value=\"$i\">vlan $i</option>";
@@ -66,7 +67,7 @@ function dhcp_config_form($error) {
     // dhcp_iface : interface d'ecoute du dhcp
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_iface"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=5 name=\"dhcp_iface\" value=\"" . $dhcp["dhcp_iface"]["value"] . "\" maxlength=\"5\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -78,7 +79,7 @@ function dhcp_config_form($error) {
     // dhcp_domain_name : Nom du domaine
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_domain_name"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=60 name=\"dhcp_domain_name\" value=\"" . $dhcp["dhcp_domain_name"]["value"] . "\" maxlength=\"55\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -95,7 +96,7 @@ function dhcp_config_form($error) {
         $CHECKED = "";
     }
     $ret .= ": <input type=\"checkbox\" name=\"dhcp_on_boot\" $CHECKED ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -107,7 +108,7 @@ function dhcp_config_form($error) {
     // dhcp_max_lease : bail maximal
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_max_lease"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=10 name=\"dhcp_max_lease\" value=\"" . $dhcp["dhcp_max_lease"]["value"] . "\" maxlength=\"10\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -120,7 +121,7 @@ function dhcp_config_form($error) {
     // dhcp_default_lease : bail par defaut
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_default_lease"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=10 name=\"dhcp_default_lease\" value=\"" . $dhcp["dhcp_default_lease"]["value"] . "\" maxlength=\"10\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -132,7 +133,7 @@ function dhcp_config_form($error) {
     // dhcp_ntp : Serveur NTP
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_ntp"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=20 name=\"dhcp_ntp\" value=\"" . $dhcp["dhcp_ntp"]["value"] . "\"  maxlength=\"20\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -143,7 +144,7 @@ function dhcp_config_form($error) {
     // dhcp_wins : Serveur WINS
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_wins"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=20 name=\"dhcp_wins\" value=\"" . $dhcp["dhcp_wins"]["value"] . "\"maxlength=\"30\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -155,7 +156,7 @@ function dhcp_config_form($error) {
     // dhcp_dns_server_prim : Serveur DNS primaire
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_dns_server_prim"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_dns_server_prim\" value=\"" . $dhcp["dhcp_dns_server_prim"]["value"] . "\"maxlength=\"15\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -167,7 +168,7 @@ function dhcp_config_form($error) {
     // dhcp_dns_server_sec : Serveur DNS secondaire
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_dns_server_sec"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_dns_server_sec\" value=\"" . $dhcp["dhcp_dns_server_sec"]["value"] . "\" maxlength=\"15\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -178,20 +179,20 @@ function dhcp_config_form($error) {
 
     // partie reserve si on a des vlan
 
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         // Adresse du reseau
         $ret .= "<tr><td>" . gettext("Adresse de r&#233;seau ");
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_reseau_vlan = "dhcp_reseau_" . $_POST['vlan'];
+        $dhcp_reseau_vlan = "dhcp_reseau_" . $vlan_actif;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_reseau_vlan\" value=\"" . $dhcp["$dhcp_reseau_vlan"]["value"] . "\" maxlength=\"15\">";
 
 
         // Masque du reseau
         $ret .= "<tr><td>" . gettext("Masque de r&#233;seau ");
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_masque_vlan = "dhcp_masque_" . $_POST['vlan'];
+        $dhcp_masque_vlan = "dhcp_masque_" . $vlan_actif;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_masque_vlan\" value=\"" . $dhcp["$dhcp_masque_vlan"]["value"] . "\" maxlength=\"15\">";
     }
     if (isset($error['dhcp_gateway'])) {
@@ -202,11 +203,11 @@ function dhcp_config_form($error) {
 
     // dhcp_gateway : PASSERELLE
 
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_gateway"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_gateway_vlan = "dhcp_gateway_" . $_POST['vlan'];
+        $dhcp_gateway_vlan = "dhcp_gateway_" . $vlan_actif;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_gateway_vlan\" value=\"" . $dhcp["$dhcp_gateway_vlan"]["value"] . "\" maxlength=\"15\">";
         if (isset($error['dhcp_gateway'])) {
                 $ret .= "<b>" . $error['dhcp_gateway'] . "</b>";
@@ -225,11 +226,11 @@ function dhcp_config_form($error) {
     }
 
     // dhcp_ip_min : Debut de la plage de reservations
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_ip_min"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_ip_min_vlan = "dhcp_ip_min_" . $_POST['vlan'];
+        $dhcp_ip_min_vlan = "dhcp_ip_min_" . $vlan_actif;
 //		if ($dhcp["$dhcp_ip_min_vlan"]["value"] == "") { $dhcp["$dhcp_ip_min_vlan"]["value"] = 
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_ip_min_vlan\" value=\"" . $dhcp["$dhcp_ip_min_vlan"]["value"] . "\" maxlength=\"15\">";
         if (isset($error['dhcp_ip_min'])) {
@@ -249,11 +250,11 @@ function dhcp_config_form($error) {
     }
 
     // dhcp_begin_range : Debut de la plage
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_begin_range"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_begin_range_vlan = "dhcp_begin_range_" . $_POST['vlan'];
+        $dhcp_begin_range_vlan = "dhcp_begin_range_" . $vlan_actif;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_begin_range_vlan\" value=\"" . $dhcp["$dhcp_begin_range_vlan"]["value"] . "\" maxlength=\"15\">";
         if (isset($error['dhcp_begin_range'])) {
                 $ret .= "<b>" . $error['dhcp_begin_range'] . "</b>";
@@ -272,11 +273,11 @@ function dhcp_config_form($error) {
     }
 
     // dhcp_end_range : Fin de la plage
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_end_range"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_end_range_vlan = "dhcp_end_range_" . $_POST['vlan'];
+        $dhcp_end_range_vlan = "dhcp_end_range_" . $vlan_actif;
         $ret .= ": <input type=\"text\" SIZE=15 name=\"$dhcp_end_range_vlan\" value=\"" . $dhcp["$dhcp_end_range_vlan"]["value"] . "\" maxlength=\"15\"";
         if (isset($error['dhcp_end_range'])) {
                $ret .= "<b>" . $error['dhcp_end_range'] . "</b>";
@@ -296,11 +297,11 @@ function dhcp_config_form($error) {
 
     $ret .= "<tr><td></td><td></td></tr>\n";
     // Option autre
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= "<tr><td>" . gettext($dhcp["dhcp_extra_option"]["descr"]);
-        $ret .= gettext(" du vlan ") . $_POST['vlan'];
+        $ret .= gettext(" du vlan ") . $vlan_actif;
         $ret .= "</td><td>\n";
-        $dhcp_extra_option_vlan = "dhcp_extra_option_" . $_POST['vlan'];
+        $dhcp_extra_option_vlan = "dhcp_extra_option_" . $vlan_actif;
         $ret .= ": <input type=\"text\" SIZE=30 name=\"$dhcp_extra_option_vlan\" value=\"" . $dhcp["$dhcp_extra_option_vlan"]["value"] . "\" maxlength=\"30\"";
         if (isset($error['dhcp_extra_option'])) {
                 $ret .= "<b>" . $error['dhcp_extra_option'] . "</b>";
@@ -323,7 +324,7 @@ function dhcp_config_form($error) {
     // dhcp_tftp_server : SERVER TFTP
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_tftp_server"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_tftp_server\" value=\"" . $dhcp["dhcp_tftp_server"]["value"] . "\" maxlength=\"15\"";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -335,7 +336,7 @@ function dhcp_config_form($error) {
     // dhcp_unatt_filename fichier de boot PXE
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_unatt_filename"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_unatt_filename\" value=\"" . $dhcp["dhcp_unatt_filename"]["value"] . "\" ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -355,7 +356,7 @@ function dhcp_config_form($error) {
     // dhcp_unatt_login
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_unatt_login"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_unatt_login\" value=\"" . $dhcp["dhcp_unatt_login"]["value"] . "\" ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -367,7 +368,7 @@ function dhcp_config_form($error) {
     // dhcp_unatt_pass
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_unatt_pass"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=15 name=\"dhcp_unatt_pass\" value=\"" . $dhcp["dhcp_unatt_pass"]["value"] . "\" ";
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         $ret .= " disabled ";
     }
     $ret .= ">";
@@ -380,7 +381,7 @@ function dhcp_config_form($error) {
 
     $ret .= "</table>";
     $ret .= "<input type='hidden' name='action' value='newconfig'>\n";
-    $ret .= "<input type='hidden' name='vlan' value='" . $_POST['vlan'] . "'>\n";
+    $ret .= "<input type='hidden' name='vlan' value='" . $vlan_actif . "'>\n";
     $ret .= "<input type=\"submit\" name=\"button\" value=\"" . gettext("Modifier") . "\">\n";
     $ret .= "</form>\n";
     exec("sudo /usr/share/se3/scripts/makedhcpdconf state", $state);
@@ -411,23 +412,25 @@ function dhcp_config_form($error) {
 function dhcp_update_config() {  // insert range in option service table
     require_once ("ihm.inc.php");
     $error = "";
+	
+	Global $vlan_actif;
 
-    if ($_POST['vlan'] > 0) {
+    if ($vlan_actif > 0) {
         //verif si le champ existe dans la table sinon on le cree
 
-        $dhcp_min = "dhcp_ip_min_" . $_POST['vlan'];
+        $dhcp_min = "dhcp_ip_min_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_min);
-        $dhcp_begin = "dhcp_begin_range_" . $_POST['vlan'];
+        $dhcp_begin = "dhcp_begin_range_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_begin);
-        $dhcp_end = "dhcp_end_range_" . $_POST['vlan'];
+        $dhcp_end = "dhcp_end_range_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_end);
-        $dhcp_gateway_vlan = "dhcp_gateway_" . $_POST['vlan'];
+        $dhcp_gateway_vlan = "dhcp_gateway_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_gateway_vlan);
-        $dhcp_reseau = "dhcp_reseau_" . $_POST['vlan'];
+        $dhcp_reseau = "dhcp_reseau_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_reseau);
-        $dhcp_masque = "dhcp_masque_" . $_POST['vlan'];
+        $dhcp_masque = "dhcp_masque_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_masque);
-        $dhcp_extra_option = "dhcp_extra_option_" . $_POST['vlan'];
+        $dhcp_extra_option = "dhcp_extra_option_" . $vlan_actif;
         dhcp_vlan_champ($dhcp_extra_option);
     } else {
         $dhcp_min = "dhcp_ip_min";
@@ -466,21 +469,23 @@ function dhcp_update_config() {  // insert range in option service table
     } else {
         $error["$dhcp_gateway_vlan"] = gettext("Cette adresse n'est pas valide : " . $_POST["$dhcp_gateway_vlan"]);
     }
+	
+	if ($vlan_actif > 0)
+	{		
+		if ((set_ip_in_lan($_POST["$dhcp_reseau"])) || ($_POST["$dhcp_reseau"] == "")) {
+			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_reseau"] . "' WHERE name='$dhcp_reseau'";
+			mysql_query($update_query);
+		} else {
+			$error["$dhcp_reseau"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_reseau"]);
+		}
 
-    if ((set_ip_in_lan($_POST["$dhcp_reseau"])) || ($_POST["$dhcp_reseau"] == "")) {
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_reseau"] . "' WHERE name='$dhcp_reseau'";
-        mysql_query($update_query);
-    } else {
-        $error["$dhcp_reseau"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_reseau"]);
-    }
-
-
-    if ((set_ip_in_lan($_POST["$dhcp_masque"])) || ($_POST["$dhcp_masque"] == "")) {
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_masque"] . "' WHERE name='$dhcp_masque'";
-        mysql_query($update_query);
-    } else {
-        $error["$dhcp_masque"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_masque"]);
-    }
+		if ((set_ip_in_lan($_POST["$dhcp_masque"])) || ($_POST["$dhcp_masque"] == "")) {
+			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_masque"] . "' WHERE name='$dhcp_masque'";
+			mysql_query($update_query);
+		} else {
+			$error["$dhcp_masque"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_masque"]);
+		}
+	}
 
 //	if (!($_POST["$dhcp_extra_option"]=="")) {
     $update_query = "UPDATE params SET value='" . $_POST["$dhcp_extra_option"] . "' WHERE name='$dhcp_extra_option'";
@@ -488,7 +493,7 @@ function dhcp_update_config() {  // insert range in option service table
 //	}
     // Si on est dans la conf des vlan cette partie n'est pas modifiable
 
-    if ($_POST['vlan'] < 1) {
+    if ($vlan_actif < 1) {
         if (set_ip_in_lan($_POST['dhcp_dns_server_prim'])) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_prim'] . "' WHERE name='dhcp_dns_server_prim'";
             mysql_query($update_query);
@@ -566,12 +571,14 @@ function dhcp_update_config() {  // insert range in option service table
             $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_tftp_server'];
         }
         // unatt
+		/*
         if ((set_ip_in_lan($_POST['dhcp_unatt_server'])) || ($_POST['dhcp_unatt_server'] == "")) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_server'] . "' WHERE name='dhcp_unatt_server'";
             mysql_query($update_query);
         } else {
             $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_unatt_server'];
         }
+		*/
         $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_login'] . "' WHERE name='dhcp_unatt_login'";
         mysql_query($update_query);
         $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_pass'] . "' WHERE name='dhcp_unatt_pass'";
@@ -1179,7 +1186,7 @@ function form_existing_reservation() {
 	$nb_total = mysql_result($result2,0,0)+0;
 	
 	// Nombre total de pages
-	$nb_pages_max = ceil($nb_total/$nb_par_page);
+	$nb_pages_max = max(ceil($nb_total/$nb_par_page),1);
 	
 	// Recuperation du numero de la page
 	if ((isset($_GET['nb_page']))) {
@@ -1191,17 +1198,16 @@ function form_existing_reservation() {
 		$nb_page=1;
 	if ($nb_page>$nb_pages_max)
 		$nb_page=$nb_pages_max;
-	
+   
     // Recuperation des donnees dans la base SQL
-    if (($_GET['order'] == "") || ($_GET['order'] == "ip")) {
+    if ((@$_GET['order'] == "") || (@$_GET['order'] == "ip")) {
         $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
 		$order="ip";
 	} else {
         $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".(($nb_page-1)*100).",100";
-		$order=$_GET['order'];
+		$order=@$_GET['order'];
     }
     $result = mysql_query($query);
-    
     
     //recup liste ip imprimantes
     $liste_imprimantes=search_imprimantes("printer-name=*","printers");
@@ -1218,7 +1224,7 @@ function form_existing_reservation() {
     
     $clef = 0;
 
-    $content .= "<script type='text/javascript'>
+    @$content .= "<script type='text/javascript'>
 function checkAll_reservations(){
 	champs_input=document.getElementsByTagName('input');
 	for(i=0;i<champs_input.length;i++){
@@ -1266,106 +1272,110 @@ function UncheckAll_reservations(){
     $header .= "</td></tr>\n";
     $content .= $header;
     $nbligne = 0;
-    while ($row = mysql_fetch_assoc($result)) {
-        $content .= "<tr><td>\n";
-        $content .= "<input type=\"text\" maxlength=\"15\" SIZE=\"15\" value=\"" . $row["ip"] . "\"  name=\"ip[$clef]\">\n";
-//        $content .= "<input type=\"hidden\" maxlength=\"15\" SIZE=\"15\" value=\"".$row["ip"]."\"  name=\"oldip[$clef]\">\n";
-        $content .= "</td><td>\n";
-        $content .= "<input type=\"text\" maxlength=\"17\" SIZE=\"17\" value=\"" . strtolower($row["mac"]) . "\"  name=\"mac[$clef]\" readonly>\n";
-        ;
-        $content .= "</td><td>\n";
-        $content .= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"name[$clef]\">\n";
-        $content .= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"oldname[$clef]\">\n";
-        
-        for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++) {
+	if (mysql_num_rows($result))
+	{
+		while ($row = mysql_fetch_assoc($result))
+		{
+			$content .= "<tr><td>\n";
+			$content .= "<input type=\"text\" maxlength=\"15\" SIZE=\"15\" value=\"" . $row["ip"] . "\"  name=\"ip[$clef]\">\n";
+	//        $content .= "<input type=\"hidden\" maxlength=\"15\" SIZE=\"15\" value=\"".$row["ip"]."\"  name=\"oldip[$clef]\">\n";
+			$content .= "</td><td>\n";
+			$content .= "<input type=\"text\" maxlength=\"17\" SIZE=\"17\" value=\"" . strtolower($row["mac"]) . "\"  name=\"mac[$clef]\" readonly>\n";
+			;
+			$content .= "</td><td>\n";
+			$content .= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"name[$clef]\">\n";
+			$content .= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"oldname[$clef]\">\n";
+			
+			for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++) {
+						
+											$printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
+											$printer_name = $liste_imprimantes[$loopp]['printer-name'];
+											//echo "liste imp : $printer_name $printer_uri" ;
+											if (preg_match("/$row[ip]/", $printer_uri)) { 
+												$suisje_printer = "yes";
+												break;	
+											} else { $suisje_printer = "no" ;
+											
+												
+											}
+													
+				}
+			if  ($suisje_printer=="yes") {
+							$content.="<br><FONT color='blue'>" . gettext("Imprimante $printer_name") . "</FONT>\n"; 
+						}
+			
+			$content .="</td><td>\n";
+			$showid = 0;
+			$listaction = "";
+			// Est-ce que cette machine est enregistree ?
+			$parc[$clef] = search_parcs($row["name"]);
+			if ((count(search_machines("(cn=" . $row["name"] . ")", "computers"))) > 0) {
+				if (isset($parc[$clef])) {
+					foreach ($parc[$clef] as $keys2 => $value2) {
+						$content.="<a href=../parcs/show_parc.php?parc=" . $parc[$clef][$keys2]["cn"] . ">" . $parc[$clef][$keys2]["cn"] . "</a><br>\n";
+					}
+				}
+				// ajouter a un parc dans lequel la machine n'est  pas ?
+				$content .= add_to_parc($parc[$clef], $clef);
+				// windows linux ou imprimante ?
+				
+				// est ce que la machine est integree au domaine ?
+				if (count(search_machines("(uid=" . $row["name"] . "$)", "computers")) > 0) {
+					$listaction .="<OPTION value=\"renommer\">Renommer un poste win &#224; distance\n";
+					$listaction .="<OPTION value=\"renommer\">Renommer un poste linux &#224; distance\n";
+					$listaction .="<OPTION value=\"reintegrer\">R&#233;int&#233;grer\n";
+				} else { // this computer is not recorded on the domain
+					// une imprimante ?
 					
-                                        $printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
-                                        $printer_name = $liste_imprimantes[$loopp]['printer-name'];
-                                        //echo "liste imp : $printer_name $printer_uri" ;
-                                        if (preg_match("/$row[ip]/", $printer_uri)) { 
-                                            $suisje_printer = "yes";
-                                            break;	
-                                        } else { $suisje_printer = "no" ;
-                                        
-                                            
-                                        }
-                                        		
+					
+					
+						if  ($suisje_printer=="yes") { 
+							$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+							 
+						}
+						else {
+						$content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n"; 
+						$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+						$listaction .="<OPTION value=\"renommer-linux\">Renommer un poste linux\n";
+						$listaction .="<OPTION value=\"integrer\">Integrer un windows au domaine\n";
+					
+						}
+					$showid = 1;
+				}
+			} else { // this computer is not registered in ldap
+				$list_computer = search_machines("(&(ipHostNumber=" . $row['ip'] . ")(macAddress=" . $row['mac'] . "))", "computers");
+				if (count($list_computer) > 0) {
+					$content.="<FONT color='red'>" . gettext("Autre nom : ") . $list_computer[0]["cn"] . "</FONT>\n";
+					$content .= "<input type=\"hidden\" value=\"" . $list_computer[0]["cn"] . "\"  name=\"name[$clef]\">\n";
+					$listaction .="<OPTION value=\"actualiser\">Actualiser la reservation\n";
+				} else {
+					$content.="<FONT color='red'>" . gettext("Non enregistr&#233;e") . "</FONT>\n";
+					$listaction .="<OPTION value=\"integrer\">Integrer\n";
+					$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+					$showid = 1;
+				}
 			}
-        if  ($suisje_printer=="yes") {
-                        $content.="<br><FONT color='blue'>" . gettext("Imprimante $printer_name") . "</FONT>\n"; 
-                    }
-        
-        $content .="</td><td>\n";
-        $showid = 0;
-        $listaction = "";
-        // Est-ce que cette machine est enregistree ?
-        $parc[$clef] = search_parcs($row["name"]);
-        if ((count(search_machines("(cn=" . $row["name"] . ")", "computers"))) > 0) {
-            if (isset($parc[$clef])) {
-                foreach ($parc[$clef] as $keys2 => $value2) {
-                    $content.="<a href=../parcs/show_parc.php?parc=" . $parc[$clef][$keys2]["cn"] . ">" . $parc[$clef][$keys2]["cn"] . "</a><br>\n";
-                }
-            }
-            // ajouter a un parc dans lequel la machine n'est  pas ?
-            $content .= add_to_parc($parc[$clef], $clef);
-            // windows linux ou imprimante ?
-            
-            // est ce que la machine est integree au domaine ?
-            if (count(search_machines("(uid=" . $row["name"] . "$)", "computers")) > 0) {
-                $listaction .="<OPTION value=\"renommer\">Renommer un poste win &#224; distance\n";
-                $listaction .="<OPTION value=\"renommer\">Renommer un poste linux &#224; distance\n";
-                $listaction .="<OPTION value=\"reintegrer\">R&#233;int&#233;grer\n";
-            } else { // this computer is not recorded on the domain
-                // une imprimante ?
-                
-                
-                
-                    if  ($suisje_printer=="yes") { 
-                        $listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
-                         
-                    }
-                    else {
-                    $content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n"; 
-                    $listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
-                    $listaction .="<OPTION value=\"renommer-linux\">Renommer un poste linux\n";
-                    $listaction .="<OPTION value=\"integrer\">Integrer un windows au domaine\n";
-                
-                    }
-                $showid = 1;
-            }
-        } else { // this computer is not registered in ldap
-            $list_computer = search_machines("(&(ipHostNumber=" . $row['ip'] . ")(macAddress=" . $row['mac'] . "))", "computers");
-            if (count($list_computer) > 0) {
-                $content.="<FONT color='red'>" . gettext("Autre nom : ") . $list_computer[0]["cn"] . "</FONT>\n";
-                $content .= "<input type=\"hidden\" value=\"" . $list_computer[0]["cn"] . "\"  name=\"name[$clef]\">\n";
-                $listaction .="<OPTION value=\"actualiser\">Actualiser la reservation\n";
-            } else {
-                $content.="<FONT color='red'>" . gettext("Non enregistr&#233;e") . "</FONT>\n";
-                $listaction .="<OPTION value=\"integrer\">Integrer\n";
-                $listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
-                $showid = 1;
-            }
-        }
-        $content .="</td><td align=\"center\">\n";
-        $content .="<SELECT  name=\"action_res[$clef]\">";
-        $content .="<OPTION value=\"none\">" . gettext("Action...");
-        $content .= $listaction;
-        $content .= "<OPTION value=\"newip\">Changer l'adresse ip\n";
-        $content .= "<OPTION value=\"supprimer\">Supprimer la reservation\n";
-        $content .="</SELECT>\n";
-        $content .="</td>\n";
-        $content .="<td align=\"center\">\n";
-        if ($showid) {
-            $content .= "Admin local : <input type=\"text\" maxlength=\"20\" SIZE=\"15\" value=\"administrateur\"  name=\"localadminname[$clef]\" ><br>\n";
-            $content .= "Mot de passe : <input type=\"text\" maxlength=\"20\" SIZE=\"8\" value=\"\"  name=\"localadminpasswd[$clef]\" ><br>\n";
-        }
-        $content .="</td></tr>\n";
-        if ($nbligne++ == 10) {
-            $content .=$header;
-            $nbligne = 0;
-        }
-        $clef++;
-    }
+			$content .="</td><td align=\"center\">\n";
+			$content .="<SELECT  name=\"action_res[$clef]\">";
+			$content .="<OPTION value=\"none\">" . gettext("Action...");
+			$content .= $listaction;
+			$content .= "<OPTION value=\"newip\">Changer l'adresse ip\n";
+			$content .= "<OPTION value=\"supprimer\">Supprimer la reservation\n";
+			$content .="</SELECT>\n";
+			$content .="</td>\n";
+			$content .="<td align=\"center\">\n";
+			if ($showid) {
+				$content .= "Admin local : <input type=\"text\" maxlength=\"20\" SIZE=\"15\" value=\"administrateur\"  name=\"localadminname[$clef]\" ><br>\n";
+				$content .= "Mot de passe : <input type=\"text\" maxlength=\"20\" SIZE=\"8\" value=\"\"  name=\"localadminpasswd[$clef]\" ><br>\n";
+			}
+			$content .="</td></tr>\n";
+			if ($nbligne++ == 10) {
+				$content .=$header;
+				$nbligne = 0;
+			}
+			$clef++;
+		}
+	}
     $content .= "</table>\n";
     $content .= "<input type='hidden' name='action' value='valid'>\n";
     $content .= "<input type=\"submit\" name=\"button\" value=\"" . gettext("Valider les modifications") . "\">\n";
@@ -1817,9 +1827,9 @@ function change_ip_reservation($ip, $mac, $name) {
 function dhcpd_status() {
     exec("sudo /usr/share/se3/scripts/makedhcpdconf state", $ret);
     if ($ret[0] == "1") {
-        $content .= gettext("Le serveur DHCP est : ") . "<FONT color='green'>" . gettext("actif") . "</FONT>";
+        $content = gettext("Le serveur DHCP est : ") . "<FONT color='green'>" . gettext("actif") . "</FONT>";
     } else {
-        $content .= gettext("Le serveur DHCP est : ") . "<FONT color='red'>" . gettext("inactif") . "</FONT>";
+        $content = gettext("Le serveur DHCP est : ") . "<FONT color='red'>" . gettext("inactif") . "</FONT>";
     }
     return $content;
 }

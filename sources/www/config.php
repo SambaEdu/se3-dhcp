@@ -34,7 +34,8 @@ require_once "dhcpd.inc.php";
 
 
 
-$action = $_POST['action'];
+$action = isset($_POST['action']) ? $_POST['action'] : '';
+$vlan_actif = isset($_POST['vlan']) ? $_POST['vlan'] : '';
 
 if (is_admin("system_is_admin",$login)=="Y")
 {
@@ -42,7 +43,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 	//aide
 	$_SESSION["pageaide"]="Le_module_DHCP#Configuration_du_serveur_DHCP";
 	
-	$content .= "<h1>".gettext("Param&#232;tres du serveur DHCP")."</h1>";
+	$content = "<h1>".gettext("Param&#232;tres du serveur DHCP")."</h1>";
 	switch($action) {
 	case '' :
 	case 'index' :
@@ -66,7 +67,6 @@ if (is_admin("system_is_admin",$login)=="Y")
 		$content .= dhcp_config_form("");
 		$content .= dhcpd_status();
 		break;
-
 	default :
 		$title = '';
 		$content = '';

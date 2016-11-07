@@ -1,15 +1,22 @@
+se3-dhcp (0.66) stable; urgency=low
+
+  * correctif en cours des fonctions pour suppression des notices
+  * correctif d'un warning dans la page des reservations
+
+ -- Laurent Joly <laurentjoly@orange.fr>  Mon, 07 Nov 2016 01:05:30 +0200
+
 se3-dhcp (0.65) stable; urgency=low
 
-  * correctif d'affichage de la page des réservations
+  * correctif d'affichage de la page des reservations
 
- -- Laurent Joly <laurentjoly@orange.fr>  Fri, 07 Nov 2016 00:20:30 +0200
+ -- Laurent Joly <laurentjoly@orange.fr>  Mon, 07 Nov 2016 00:20:30 +0200
 
 
 se3-dhcp (0.64) stable; urgency=low
 
   * update descr fields
 
- -- root <root@DevilXen>  Fri, 25 april 2016 00:20:30 +0200
+ -- root <root@DevilXen>  Mon, 25 april 2016 00:20:30 +0200
 
 se3-dhcp (0.63) stable; urgency=low
 
