@@ -13,6 +13,26 @@
  * @note Ce fichier de fonction doit etre appele par un include
 
  */
+ 
+/**
+
+* Fonction de connexion/deconnexion à la database
+
+**/
+
+function connexion_db_dhcp()
+{
+	global $dbhost,$dbuser,$dbpass, $dbname;
+	$link = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+	mysqli_set_charset($link, "utf8");
+	return $link;
+}
+
+function deconnexion_db_dhcp($link)
+{
+	mysqli_close($link);
+}
+ 
 /**
 
  * @Repertoire: dhcp
@@ -33,8 +53,9 @@ function dhcp_config_form($error) {
     require_once ("ihm.inc.php");
 	global $vlan_actif;
     // Recuperation des donnees dans la base SQL
+	$dhcp_link=connexion_db_dhcp();
     $query = "SELECT * from params where name REGEXP '^dhcp*' ";
-    $result = mysql_query($query);
+    $result = mysqli_query($dhcp_link,$query);
     $ret = "<table>\n";
     // Menu select pour les vlan
     $nbr_vlan = dhcp_vlan_test();
@@ -60,10 +81,12 @@ function dhcp_config_form($error) {
 
     // formulaire
     $ret .= "<form name=\"configuration\" method=\"post\" action=\"config.php\">\n";
-    while ($resultat = mysql_fetch_assoc($result)) {
+    while ($resultat = mysqli_fetch_assoc($result)) {
         $dhcp[$resultat['name']]["value"] = $resultat['value'];
         $dhcp[$resultat['name']]["descr"] = $resultat['descr'];
     }
+	mysqli_free_result($result);
+	deconnexion_db_dhcp($dhcp_link);
     // dhcp_iface : interface d'ecoute du dhcp
     $ret .= "<tr><td>" . gettext($dhcp["dhcp_iface"]["descr"]) . "</td><td>\n";
     $ret .= ": <input type=\"text\" SIZE=5 name=\"dhcp_iface\" value=\"" . $dhcp["dhcp_iface"]["value"] . "\" maxlength=\"5\"";
@@ -439,17 +462,19 @@ function dhcp_update_config() {  // insert range in option service table
         $dhcp_gateway_vlan = "dhcp_gateway";
         $dhcp_extra_option = "dhcp_extra_option";
     }
-
+	
+	$dhcp_link=connexion_db_dhcp();
+	
     if ((set_ip_in_lan($_POST["$dhcp_min"])) || ($_POST["$dhcp_min"] == "")) {
         $update_query = "UPDATE params SET value='" . $_POST["$dhcp_min"] . "' WHERE name='$dhcp_min'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
     } else {
         $error["$dhcp_min"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_min"]);
     }
 
     if ((set_ip_in_lan($_POST["$dhcp_begin"])) || ($_POST["$dhcp_begin"] == "")) {
         $update_query = "UPDATE params SET value='" . $_POST["$dhcp_begin"] . "' WHERE name='$dhcp_begin'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
     } else {
         $error["$dhcp_begin"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_begin"]);
     }
@@ -457,7 +482,7 @@ function dhcp_update_config() {  // insert range in option service table
 
     if ((set_ip_in_lan($_POST["$dhcp_end"]) || ($_POST["$dhcp_end"]) == "")) {
         $update_query = "UPDATE params SET value='" . $_POST["$dhcp_end"] . "' WHERE name='$dhcp_end'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
     } else {
         $error["$dhcp_end"] = gettext("Cette adresse n'est pas valide : " . $_POST["$dhcp_end"]);
     }
@@ -465,7 +490,7 @@ function dhcp_update_config() {  // insert range in option service table
 
     if ((set_ip_in_lan($_POST["$dhcp_gateway_vlan"])) || ($_POST["$dhcp_gateway_vlan"] == "")) {
         $update_query = "UPDATE params SET value='" . $_POST["$dhcp_gateway_vlan"] . "' WHERE name='$dhcp_gateway_vlan'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
     } else {
         $error["$dhcp_gateway_vlan"] = gettext("Cette adresse n'est pas valide : " . $_POST["$dhcp_gateway_vlan"]);
     }
@@ -474,14 +499,14 @@ function dhcp_update_config() {  // insert range in option service table
 	{		
 		if ((set_ip_in_lan($_POST["$dhcp_reseau"])) || ($_POST["$dhcp_reseau"] == "")) {
 			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_reseau"] . "' WHERE name='$dhcp_reseau'";
-			mysql_query($update_query);
+			mysqli_query($dhcp_link,$update_query);
 		} else {
 			$error["$dhcp_reseau"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_reseau"]);
 		}
 
 		if ((set_ip_in_lan($_POST["$dhcp_masque"])) || ($_POST["$dhcp_masque"] == "")) {
 			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_masque"] . "' WHERE name='$dhcp_masque'";
-			mysql_query($update_query);
+			mysqli_query($dhcp_link,$update_query);
 		} else {
 			$error["$dhcp_masque"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_masque"]);
 		}
@@ -489,21 +514,21 @@ function dhcp_update_config() {  // insert range in option service table
 
 //	if (!($_POST["$dhcp_extra_option"]=="")) {
     $update_query = "UPDATE params SET value='" . $_POST["$dhcp_extra_option"] . "' WHERE name='$dhcp_extra_option'";
-    mysql_query($update_query);
+    mysqli_query($dhcp_link,$update_query);
 //	}
     // Si on est dans la conf des vlan cette partie n'est pas modifiable
 
     if ($vlan_actif < 1) {
         if (set_ip_in_lan($_POST['dhcp_dns_server_prim'])) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_prim'] . "' WHERE name='dhcp_dns_server_prim'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_dns_server_prim"] = gettext("Cette adresse n'est pas valide :" . $_POST['dhcp_dns_server_prim']);
         }
 
         if ((set_ip_in_lan($_POST['dhcp_dns_server_sec'])) || ($_POST['dhcp_dns_server_sec'] == "")) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_sec'] . "' WHERE name='dhcp_dns_server_sec'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_dns_server_sec"] = gettext("Cette adresse n'est pas valide : " . $_POST['dhcp_dns_server_sec']);
         }
@@ -513,39 +538,39 @@ function dhcp_update_config() {  // insert range in option service table
             list($wins_ip_1, $wins_ip_2) = preg_split('/,/', $_POST['dhcp_wins']);
             if ((set_ip_in_lan($wins_ip_1)) && (set_ip_in_lan($wins_ip_2))) {
                 $update_query = "UPDATE params SET value='" . $_POST['dhcp_wins'] . "' WHERE name='dhcp_wins'";
-                mysql_query($update_query);
+                mysqli_query($dhcp_link,$update_query);
             } else {
                 $error["dhcp_wins"] = gettext("Une des adresses n'est pas valide : " . $_POST['dhcp_wins']);
             }
         } elseif ((set_ip_in_lan($_POST['dhcp_wins'])) || ($_POST['dhcp_wins'] == "")) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_wins'] . "' WHERE name='dhcp_wins'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_wins"] = gettext("Cette adresse n'est pas valide : " . $_POST['dhcp_wins']);
         }
 
         if ((set_ip_in_lan($_POST['dhcp_ntp'])) || ($_POST['dhcp_ntp'] == "")) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_ntp'] . "' WHERE name='dhcp_ntp'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_ntp"] = gettext("Cette adresse n'est pas valide : " . $_POST['dhcp_ntp']);
         }
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_max_lease'])) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_max_lease'] . "' WHERE name='dhcp_max_lease'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_max_lease"] = gettext("Ce n'est pas un nombre valide : " . $_POST['dhcp_max_lease']);
         }
 
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_default_lease'])) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_default_lease'] . "' WHERE name='dhcp_default_lease'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_default_lease"] = gettext("Ce n'est pas un nombre valide : " . $_POST['dhcp_default_lease']);
         }
         if (preg_match("/^eth[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^bond[0-9]+$/", $_POST['dhcp_iface'])) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_iface'] . "' WHERE name='dhcp_iface'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_iface"] = gettext("Ce n'est pas une interface valide : " . $_POST['dhcp_iface']);
         }
@@ -555,18 +580,15 @@ function dhcp_update_config() {  // insert range in option service table
             $value = "0";
         }
         $update_query = "UPDATE params SET value='" . $value . "' WHERE name='dhcp_on_boot'";
-        mysql_query($update_query);
-
-
+        mysqli_query($dhcp_link,$update_query);
 
         $update_query = "UPDATE params SET value='" . $_POST['dhcp_domain_name'] . "' WHERE name='dhcp_domain_name'";
-        mysql_query($update_query);
-
+        mysqli_query($dhcp_link,$update_query);
 
         // TFTP SERVER
         if ((set_ip_in_lan($_POST['dhcp_tftp_server'])) || ($_POST['dhcp_tftp_server'] == "")) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_tftp_server'] . "' WHERE name='dhcp_tftp_server'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_tftp_server'];
         }
@@ -574,18 +596,19 @@ function dhcp_update_config() {  // insert range in option service table
 		/*
         if ((set_ip_in_lan($_POST['dhcp_unatt_server'])) || ($_POST['dhcp_unatt_server'] == "")) {
             $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_server'] . "' WHERE name='dhcp_unatt_server'";
-            mysql_query($update_query);
+            mysqli_query($dhcp_link,$update_query);
         } else {
             $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_unatt_server'];
         }
 		*/
         $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_login'] . "' WHERE name='dhcp_unatt_login'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
         $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_pass'] . "' WHERE name='dhcp_unatt_pass'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
         $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_filename'] . "' WHERE name='dhcp_unatt_filename'";
-        mysql_query($update_query);
+        mysqli_query($dhcp_link,$update_query);
     }
+	deconnexion_db_dhcp($dhcp_link);
     return $error;
 }
 
@@ -1180,10 +1203,13 @@ function form_existing_reservation() {
 	$nb_par_page = 100;
 	
 	// Recuperation du nombre total d'enregistrement
+	$dhcp_link=connexion_db_dhcp();
 	$nb_total = 0;
 	$query2 = "SELECT count(*) as NB FROM `se3_dhcp`";
-	$result2 = mysql_query($query2);
-	$nb_total = mysql_result($result2,0,0)+0;
+	$result2 = mysqli_query($dhcp_link,$query2);
+	mysqli_data_seek($result2,0);
+	$result2=mysqli_fetch_row($result2);
+	$nb_total = $result2[0]+0;
 	
 	// Nombre total de pages
 	$nb_pages_max = max(ceil($nb_total/$nb_par_page),1);
@@ -1207,7 +1233,7 @@ function form_existing_reservation() {
         $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".(($nb_page-1)*100).",100";
 		$order=@$_GET['order'];
     }
-    $result = mysql_query($query);
+    $result = mysqli_query($dhcp_link,$query);
     
     //recup liste ip imprimantes
     $liste_imprimantes=search_imprimantes("printer-name=*","printers");
@@ -1272,9 +1298,9 @@ function UncheckAll_reservations(){
     $header .= "</td></tr>\n";
     $content .= $header;
     $nbligne = 0;
-	if (mysql_num_rows($result))
+	if (mysqli_num_rows($result))
 	{
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = mysqli_fetch_assoc($result))
 		{
 			$content .= "<tr><td>\n";
 			$content .= "<input type=\"text\" maxlength=\"15\" SIZE=\"15\" value=\"" . $row["ip"] . "\"  name=\"ip[$clef]\">\n";
@@ -1376,6 +1402,8 @@ function UncheckAll_reservations(){
 			$clef++;
 		}
 	}
+	mysqli_free_result($result);
+	deconnexion_db_dhcp($dhcp_link);
     $content .= "</table>\n";
     $content .= "<input type='hidden' name='action' value='valid'>\n";
     $content .= "<input type=\"submit\" name=\"button\" value=\"" . gettext("Valider les modifications") . "\">\n";
