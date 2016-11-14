@@ -6,6 +6,7 @@ se3-dhcp (0.70~) stable; urgency=low
   * passage en mysqli
   * securisation des reservation : interdiction de reserver hors plage de reservation
   * desactivation complete des fonctions d'integration et renommage des postes a partir de la page des baux actifs
+  * modification du niveau de compatibilite
   
 
  -- Laurent Joly <laurentjoly@orange.fr>  Sat, 12 Nov 2016 23:05:30 +0200

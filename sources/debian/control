@@ -2,7 +2,7 @@ Source: se3-dhcp
 Section: misc
 Priority: optional
 Maintainer: Eric Mercier <eric.mercier@crdp.ac-versailles.fr>
-Build-Depends: debhelper (>= 4.0.0)
+Build-Depends: debhelper (>= 5.0.0)
 Standards-Version: 3.6.1
 
 Package: se3-dhcp
