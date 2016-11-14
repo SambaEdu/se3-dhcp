@@ -221,6 +221,7 @@ chmod +x /usr/share/se3/scripts/makedhcpdconf
 
 ##### Now create table if not exist for recorded dhcp computers
 mysql -h $dbhost $dbname -u $dbuser -p$dbpass < /var/cache/se3_install/se3-dhcp/se3-dhcp.sql >/dev/null 2>&1
+mysql -h $dbhost $dbname -u $dbuser -p$dbpass < /var/cache/se3_install/se3-dhcp/se3-dhcp-maj.sql >/dev/null 2>&1
 
 
 

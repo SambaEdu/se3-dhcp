@@ -1,3 +1,15 @@
+se3-dhcp (0.70~) stable; urgency=low
+
+  * correctif des fonctions pour suppression des notices php
+  * suppression des notices php 
+  * modification de la base sql : ajout index unique et changement format donnees
+  * passage en mysqli
+  * securisation des reservation : interdiction de reserver hors plage de reservation
+  * desactivation complete des fonctions d'integration et renommage des postes a partir de la page des baux actifs
+  
+
+ -- Laurent Joly <laurentjoly@orange.fr>  Sat, 12 Nov 2016 23:05:30 +0200
+
 se3-dhcp (0.66) stable; urgency=low
 
   * correctif en cours des fonctions pour suppression des notices
