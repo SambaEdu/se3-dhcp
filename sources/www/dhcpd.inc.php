@@ -1544,21 +1544,49 @@ function UncheckAll_reservations(){
 			$content .= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"name[$clef]\">\n";
 			$content .= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"" . $row["name"] . "\"  name=\"oldname[$clef]\">\n";
 			
+			$suisje_printer = "" ;
+
 			for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++)
 			{
 				$printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
 				$printer_name = $liste_imprimantes[$loopp]['printer-name'];
 				//echo "liste imp : $printer_name $printer_uri" ;
-				if (preg_match("/$row[ip]/", $printer_uri))
+				if (preg_match("/http/", $printer_uri) or preg_match("/socket/", $printer_uri))
 				{
-					$suisje_printer = "yes";
-					break;	
+					if (preg_match("/$row[ip]:/", $printer_uri))
+					{
+						$suisje_printer = "yes";
+						break;
+					}
+					else
+						{
+						$suisje_printer = "no" ;
+					}
+				}
+				elseif (preg_match("/lpd/", $printer_uri) or preg_match("/smb/", $printer_uri))
+				{
+					if (preg_match("#$row[ip]/#", $printer_uri))
+					{
+						$suisje_printer = "yes";
+						break;
+					}
+					else
+						{
+						$suisje_printer = "no" ;
+					}
 				}
 				else
 				{
-					$suisje_printer = "no" ;
+					if (preg_match("/$row[ip]$/", $printer_uri))
+					{
+						$suisje_printer = "yes";
+						break;
+					}
+					else
+					{
+						$suisje_printer = "no" ;
+					}
 				}
-													
 			}
 			if  ($suisje_printer=="yes")
 			{
