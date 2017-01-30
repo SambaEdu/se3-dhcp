@@ -310,7 +310,14 @@ if (! $tftp_server =="")
 }
 if (! $unatt_filename =="")
 {
-	print FILE "filename \"$unatt_filename\";\n";
+	print FILE "if exists user-class and option user-class = \"iPXE\" {\n";
+# TODO : page dynamique pour boot ipxe
+#       print FILE "    filename \"http://$tftp_server:909/tftp/ipxe.php\";\n";
+#       en attendant fichier statique dans /var/www/  
+        print FILE "    filename \"http://$tftp_server/boot.ipxe\";\n";
+	print FILE " } else {\n";
+        print FILE "    filename \"$unatt_filename\";\n";
+        print FILE " }\n";
 }
 
 
