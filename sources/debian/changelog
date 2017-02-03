@@ -1,3 +1,9 @@
+se3-dhcp (0.71~) stable; urgency=low
+
+  * Ajout du mecanisme de boot iPXE
+
+ -- denis <denis.bonnenfant@diderot.org>  Fri, 04 Feb 2017 10:05:30 +0100
+
 se3-dhcp (0.70~) stable; urgency=low
 
   * correctif des fonctions pour suppression des notices php
