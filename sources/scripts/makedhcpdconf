@@ -310,7 +310,12 @@ if (! $tftp_server =="")
 }
 if (! $unatt_filename =="")
 {
-	print FILE "filename \"$unatt_filename\";\n";
+	print FILE "if exists user-class and option user-class = \"iPXE\" {\n";
+        print FILE "    filename \"http://$tftp_server:909/ipxe/boot.php?mac=${net0/mac}\";\n";
+#       faut-il differencier le boot des systemes uEFI ?  
+	print FILE " } else {\n";
+        print FILE "    filename \"$unatt_filename\";\n";
+        print FILE " }\n";
 }
 
 
