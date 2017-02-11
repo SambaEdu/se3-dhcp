@@ -2,6 +2,8 @@ se3-dhcp (0.80~) stable; urgency=low
 
   * modification de la detection des imprimantes de la page des reservations
   * suppression des notices et passage en mysqli sur la page des reservations
+  * correction des balises html <option>
+  * correctif pour la suppression des notices php sur la page des reservations
 
  -- Laurent Joly <laurentjoly@orange.fr>  Mon, 14 Nov 2016 14:05:30 +0200
 

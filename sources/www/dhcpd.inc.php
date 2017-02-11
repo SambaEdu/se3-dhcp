@@ -1257,28 +1257,28 @@ function UncheckAll_baux(){
                 // est ce que la machine est integree au domaine ?
                 if (count(search_machines("(uid=" . $parser["hostname"][$keys] . "$)", "computers")) > 0)
 				{
-//                    $listaction .="<OPTION value=\"renommer\">Renommer\n"; 
+//                    $listaction .="<OPTION value=\"renommer\">Renommer\</OPTION>n"; 
                 }
 				else
 				{ // this computer is not recorded on the domain
                     $content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n";
-//                    $listaction .="<OPTION value=\"integrer\">Integrer\n";
+//                    $listaction .="<OPTION value=\"integrer\">Integrer</OPTION>\n";
 //                    $showid = 1;
                 }
             }
 			else
 			{ // this computer is not registered in ldap
                 $content.="<FONT color='red'>" . gettext("Non enregistre") . "</FONT>\n";
-//                $listaction .="<OPTION value=\"integrer\">Integrer\n";
+//                $listaction .="<OPTION value=\"integrer\">Integrer</OPTION>\n";
 //                $showid = 1; 
             }
             //
             $content .="</td><td align=\"center\">\n";
             $content .="<SELECT  name=\"action_res[$keys]\">";
-            $content .="<OPTION value=\"none\">" . gettext("Action...");
+            $content .="<OPTION value=\"none\">" . gettext("Action...") . "</OPTION>";
             $content .= $listaction;
-            $content .= "<OPTION value=\"reserver\">Reserver\n";
-            $content .= "<OPTION value=\"reserver2\">Reserver hors plage de reservation\n";
+            $content .= "<OPTION value=\"reserver\">Reserver</OPTION>\n";
+            $content .= "<OPTION value=\"reserver2\">Reserver hors plage de reservation</OPTION>\n";
             $content .="</SELECT>\n";
             $content .="</td>\n";
             $content .="<td align=\"center\">\n";
@@ -1376,28 +1376,28 @@ function UncheckAll_baux(){
                 // est ce que la machine est integree au domaine ?
                 if (count(search_machines("(uid=" . $parser["hostname"][$keys] . "$)", "computers")) > 0)
 				{
-                    $listaction .="<OPTION value=\"renommer\">Renommer\n";
+                    $listaction .="<OPTION value=\"renommer\">Renommer</OPTION>\n";
                 }
 				else
 				{ // this computer is not recorded on the domain
                     $content.="<FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n";
-                    $listaction .="<OPTION value=\"integrer\">Integrer\n";
+                    $listaction .="<OPTION value=\"integrer\">Integrer</OPTION>\n";
                     $showid = 1;
                 }
             }
 			else
 			{ // this computer is not registered in ldap
                 $content.="<FONT color='red'>" . gettext("Non enregistre") . "</FONT>\n";
-                $listaction .="<OPTION value=\"integre\">Integrer\n";
+                $listaction .="<OPTION value=\"integre\">Integrer</OPTION>\n";
                 $showid = 1;
             }
             //
             $content .="</td><td align=\"center\">\n";
             $content .="<SELECT  name=\"action_res[$keys]\">";
-            $content .="<OPTION value=\"none\">" . gettext("Action...");
+            $content .="<OPTION value=\"none\">" . gettext("Action...") . "</OPTION>";
             $content .= $listaction;
-            $content .= "<OPTION value=\"reserver\">Reserver\n";
-            $content .= "<OPTION value=\"reserver2\">Reserver hors plage de reservation\n";
+            $content .= "<OPTION value=\"reserver\">Reserver</OPTION>\n";
+            $content .= "<OPTION value=\"reserver2\">Reserver hors plage de reservation</OPTION>\n";
             $content .="</SELECT>\n";
             $content .="</td>\n";
             $content .="<td align=\"center\">\n";
@@ -1614,23 +1614,23 @@ function UncheckAll_reservations(){
 				// est ce que la machine est integree au domaine ?
 				if (count(search_machines("(uid=" . $row["name"] . "$)", "computers")) > 0)
 				{
-					$listaction .="<OPTION value=\"renommer\">Renommer un poste win &#224; distance\n";
-					$listaction .="<OPTION value=\"renommer\">Renommer un poste linux &#224; distance\n";
-					$listaction .="<OPTION value=\"reintegrer\">R&#233;int&#233;grer\n";
+					$listaction .="<OPTION value=\"renommer\">Renommer un poste win &#224; distance</OPTION>\n";
+					$listaction .="<OPTION value=\"renommer\">Renommer un poste linux &#224; distance</OPTION>\n";
+					$listaction .="<OPTION value=\"reintegrer\">R&#233;int&#233;grer</OPTION>\n";
 				}
 				else
 				{ // this computer is not recorded on the domain
 					// une imprimante ?
 					if  ($suisje_printer=="yes")
 					{ 
-						$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+						$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base</OPTION>\n";
 					}
 					else
 					{
 						$content.="<br><FONT color='red'>" . gettext("Pas au domaine!") . "</FONT>\n"; 
-						$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
-						$listaction .="<OPTION value=\"renommer-linux\">Renommer un poste linux\n";
-						$listaction .="<OPTION value=\"integrer\">Integrer un windows au domaine\n";
+						$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base</OPTION>\n";
+						$listaction .="<OPTION value=\"renommer-linux\">Renommer un poste linux</OPTION>\n";
+						$listaction .="<OPTION value=\"integrer\">Integrer un windows au domaine</OPTION>\n";
 					}
 					$showid = 1;
 				}
@@ -1638,26 +1638,27 @@ function UncheckAll_reservations(){
 			else
 			{ // this computer is not registered in ldap
 				$list_computer = search_machines("(&(ipHostNumber=" . $row['ip'] . ")(macAddress=" . $row['mac'] . "))", "computers");
+				$content.="<INPUT TYPE=\"hidden\"  name=\"parc[$clef]\">";
 				if (count($list_computer) > 0)
 				{
 					$content.="<FONT color='red'>" . gettext("Autre nom : ") . $list_computer[0]["cn"] . "</FONT>\n";
 					$content .= "<input type=\"hidden\" value=\"" . $list_computer[0]["cn"] . "\"  name=\"name[$clef]\">\n";
-					$listaction .="<OPTION value=\"actualiser\">Actualiser la reservation\n";
+					$listaction .="<OPTION value=\"actualiser\">Actualiser la reservation</OPTION>\n";
 				}
 				else
 				{
 					$content.="<FONT color='red'>" . gettext("Non enregistr&#233;e") . "</FONT>\n";
-					$listaction .="<OPTION value=\"integrer\">Integrer\n";
-					$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base\n";
+					$listaction .="<OPTION value=\"integrer\">Integrer</OPTION>\n";
+					$listaction .="<OPTION value=\"renommer-base\">Renommer dans la base</OPTION>\n";
 					$showid = 1;
 				}
 			}
 			$content .="</td><td align=\"center\">\n";
 			$content .="<SELECT  name=\"action_res[$clef]\">";
-			$content .="<OPTION value=\"none\">" . gettext("Action...");
+			$content .="<OPTION value=\"none\">" . gettext("Action...") . "</OPTION>";
 			$content .= $listaction;
-			$content .= "<OPTION value=\"newip\">Changer l'adresse ip\n";
-			$content .= "<OPTION value=\"supprimer\">Supprimer la reservation\n";
+			$content .= "<OPTION value=\"newip\">Changer l'adresse ip</OPTION>\n";
+			$content .= "<OPTION value=\"supprimer\">Supprimer la reservation</OPTION>\n";
 			$content .="</SELECT>\n";
 			$content .="</td>\n";
 			$content .="<td align=\"center\">\n";
@@ -1702,7 +1703,7 @@ function add_to_parc($parcs, $keys)
     if (count($liste_parcs)>0)
 	{
         @$ret .="<SELECT  name=\"parc[$keys]\">";
-        $ret .="<OPTION value=\"none\">" . gettext("Ajouter &#224; un parc...");
+        $ret .="<OPTION value=\"none\">" . gettext("Ajouter &#224; un parc...") . "</OPTION>";
         foreach ($liste_parcs as $keys => $value)
 		{
             if (is_array($parcs))
@@ -1718,7 +1719,7 @@ function add_to_parc($parcs, $keys)
             }
             if (!in_array($value['cn'], $parc_tab))
 			{
-                $ret .="<OPTION value=\"" . $value['cn'] . "\">" . $value['cn'] . "\n";
+                $ret .="<OPTION value=\"" . $value['cn'] . "\">" . $value['cn'] . "</OPTION>\n";
             }
         }
         $ret .= "</SELECT>";
