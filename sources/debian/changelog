@@ -1,21 +1,30 @@
+se3-dhcp (0.80~) stable; urgency=low
+
+  * modification de la detection des imprimantes de la page des reservations
+  * suppression des notices et passage en mysqli sur la page des reservations
+  * correction des balises html <option>
+  * correctif pour la suppression des notices php sur la page des reservations
+
+ -- Laurent Joly <laurentjoly@orange.fr>  Mon, 14 Nov 2016 14:05:30 +0200
+
 se3-dhcp (0.71~) stable; urgency=low
 
   * Ajout du mecanisme de boot iPXE
 
  -- denis <denis.bonnenfant@diderot.org>  Fri, 04 Feb 2017 10:05:30 +0100
 
-se3-dhcp (0.70~) stable; urgency=low
+se3-dhcp (0.70) stable; urgency=low
 
   * correctif des fonctions pour suppression des notices php
   * suppression des notices php 
-  * modification de la base sql : ajout index unique et changement format donnees
+  * modification base sql : ajout index unique et changement format donnees
   * passage en mysqli
-  * securisation des reservation : interdiction de reserver hors plage de reservation
-  * desactivation complete des fonctions d'integration et renommage des postes a partir de la page des baux actifs
+  * securisation : interdiction de reserver hors plage de reservation
+  * desactivation complete des fonctions d'integration et renommage des postes
+	a partir de la page des baux actifs
   * modification du niveau de compatibilite
-  
 
- -- Laurent Joly <laurentjoly@orange.fr>  Sat, 12 Nov 2016 23:05:30 +0200
+ -- Laurent Joly <laurentjoly@orange.fr>  Mon, 14 Nov 2016 01:45:30 +0200
 
 se3-dhcp (0.66) stable; urgency=low
 
@@ -292,8 +301,8 @@ se3-dhcp (0.11) unstable; urgency=low
 
 se3-dhcp (0.10) unstable; urgency=low
 
-  * ajout support vlan et insertion auto des ips des machines avec les
-    donnes annu
+  * ajout support vlan et insertion auto des ips des machines avec les donnees
+	annu
 
  -- root <root@localhost.localdomain>  Tue, 18 Mar 2008 21:52:25 +0100
 
@@ -305,22 +314,20 @@ se3-dhcp (0.9) unstable; urgency=low
 
 se3-dhcp (0.8) unstable; urgency=low
 
-  * Correction sur les entrees mysql passage cat de 4 � 7
-    7
+  * Correction sur les entrees mysql passage cat de 4 a 7
 
  -- franck <franck@fport>  Thu, 26 Apr 2007 23:02:37 +0100
 
 se3-dhcp (0.7) unstable; urgency=low
 
-  * correction bug affichage des parcs li�s aux machines
-    es
+  * correction bug affichage des parcs lies aux machines
 
  -- franck <franck@fport>  Sun, 25 Feb 2007 19:41:07 +0100
 
 se3-dhcp (0.6) unstable; urgency=low
 
   * ajout possibilite d'avoir plusieurs serveurs wins, ajout instruction
-    indiquant que le serveur fait autorite
+	indiquant que le serveur fait autorite
 
  -- franck <franck@fport>  Tue,  9 Jan 2007 23:19:51 +0100
 
