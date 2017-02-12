@@ -2268,7 +2268,7 @@ function change_ip_reservation($ip, $mac, $name)
 				{
                     $ret .= gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
 				}
-                $ret .= gettext("R&#233;servation modifi&#233;e pour la machine $name  : $ip");
+                $ret .= gettext("R&#233;servation modifi&#233;e pour la machine $name  : $ip/n");
             }
         }
     }

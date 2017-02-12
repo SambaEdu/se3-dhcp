@@ -23,25 +23,35 @@
    * file: export_csv.php
 */
 
-include "config.inc.php";
+// loading libs and init
+include "entete.inc.php";
+include "ldap.inc.php";
+include "ihm.inc.php";
 
-/******************** Export les tables ******************************************************/
-
+require_once "dhcpd.inc.php";
 
 $jour=date("d-n-y");
-$query = mysql_query("select * from se3_dhcp");
 header("Content-Type: application/csv-tab-delimited-table");
 header("Content-disposition: filename=inventaire-$jour.csv");
 
-if (mysql_num_rows($query) != 0) {
-		
-//	echo"\n";
-       	while($row = mysql_fetch_array($query)) {
-		$AFFICHE="$row[1];$row[3];$row[2]";	
-			
-		// Affichage final
-		echo "$AFFICHE\n";
+if (is_admin("system_is_admin",$login)=="Y")
+{
+	$link=connexion_db_dhcp();
+	$query = "select * from se3_dhcp";
+    $result = mysqli_query($dhcp_link,$query);
+	
+	if (mysqli_num_rows($result))
+	{
+		while ($row = mysqli_fetch_assoc($result))
+		{
+			echo "$row[1];$row[3];$row[2]\n";
+		}
 	}
-}	
-
+	mysqli_free_result($result);
+	deconnexion_db_dhcp($link);
+}
+else
+{
+	echo "Acc&#232;s Refus&#233;";
+}
 ?>
