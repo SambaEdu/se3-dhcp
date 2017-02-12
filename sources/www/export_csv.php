@@ -25,7 +25,7 @@
 
 // loading libs and init
 @session_start();
-require_once "functions.php";
+require_once "functions.inc.php";
 include "ldap.inc.php";
 include "ihm.inc.php";
 $login=isauth();
@@ -44,9 +44,9 @@ if (is_admin("system_is_admin",$login)=="Y")
 	
 	if (mysqli_num_rows($result))
 	{
-		while ($row = mysqli_fetch_assoc($result))
+		while ($row = mysql	i_fetch_assoc($result))
 		{
-			echo "$row[1];$row[3];$row[2]\n";
+			echo $row['ip'].";".$row['name'].";".$row['mac']."\n";
 		}
 	}
 	mysqli_free_result($result);
