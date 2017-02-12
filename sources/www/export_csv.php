@@ -24,9 +24,11 @@
 */
 
 // loading libs and init
-include "entete.inc.php";
+@session_start();
+require_once "functions.php";
 include "ldap.inc.php";
 include "ihm.inc.php";
+$login=isauth();
 
 require_once "dhcpd.inc.php";
 
@@ -38,7 +40,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 {
 	$link=connexion_db_dhcp();
 	$query = "select * from se3_dhcp";
-    $result = mysqli_query($dhcp_link,$query);
+    $result = mysqli_query($link,$query);
 	
 	if (mysqli_num_rows($result))
 	{
@@ -52,6 +54,6 @@ if (is_admin("system_is_admin",$login)=="Y")
 }
 else
 {
-	echo "Acc&#232;s Refus&#233;";
+	echo "Acces Refuse";
 }
 ?>
