@@ -44,7 +44,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 	
 	if (mysqli_num_rows($result))
 	{
-		while ($row = mysql	i_fetch_assoc($result))
+		while ($row = mysqli_fetch_assoc($result))
 		{
 			echo $row['ip'].";".$row['name'].";".$row['mac']."\n";
 		}
