@@ -35,7 +35,7 @@ require_once "dhcpd.inc.php";
 
 $jour=date("d-n-y");
 header("Content-Type: application/csv-tab-delimited-table");
-header("Content-disposition: "se3_dhcp_".strftime("%Y%m%d-%H%M%S").".csv");
+header("Content-disposition: se3_dhcp_".strftime("%Y%m%d-%H%M%S").".csv");
 
 if (is_admin("system_is_admin",$login)=="Y")
 {
