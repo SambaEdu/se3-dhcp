@@ -539,7 +539,7 @@ function dhcp_update_config()
 	
     if ((set_ip_in_lan($_POST["$dhcp_min"])) || ($_POST["$dhcp_min"] == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_min"] . "' WHERE name='$dhcp_min'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_min"]) . "' WHERE name='".mysql_real_escape_string($dhcp_min)."'";
         mysqli_query($dhcp_link,$update_query);
     }
 	else
@@ -549,7 +549,7 @@ function dhcp_update_config()
 
     if ((set_ip_in_lan($_POST["$dhcp_begin"])) || ($_POST["$dhcp_begin"] == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_begin"] . "' WHERE name='$dhcp_begin'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_begin"]) . "' WHERE name='".mysql_real_escape_string($dhcp_begin)."'";
         mysqli_query($dhcp_link,$update_query);
     }
 	else
@@ -560,7 +560,7 @@ function dhcp_update_config()
 
     if ((set_ip_in_lan($_POST["$dhcp_end"]) || ($_POST["$dhcp_end"]) == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_end"] . "' WHERE name='$dhcp_end'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_end"]) . "' WHERE name='".mysql_real_escape_string($dhcp_end)."'";
         mysqli_query($dhcp_link,$update_query);
     }
 	else
@@ -571,7 +571,7 @@ function dhcp_update_config()
 
     if ((set_ip_in_lan($_POST["$dhcp_gateway_vlan"])) || ($_POST["$dhcp_gateway_vlan"] == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_gateway_vlan"] . "' WHERE name='$dhcp_gateway_vlan'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_gateway_vlan"]) . "' WHERE name='".mysql_real_escape_string($dhcp_gateway_vlan)."'";
         mysqli_query($dhcp_link,$update_query);
     }
 	else
@@ -583,7 +583,7 @@ function dhcp_update_config()
 	{		
 		if ((set_ip_in_lan($_POST["$dhcp_reseau"])) || ($_POST["$dhcp_reseau"] == ""))
 		{
-			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_reseau"] . "' WHERE name='$dhcp_reseau'";
+			$update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_reseau"]) . "' WHERE name='".mysql_real_escape_string($dhcp_reseau)."'";
 			mysqli_query($dhcp_link,$update_query);
 		}
 		else
@@ -593,7 +593,7 @@ function dhcp_update_config()
 
 		if ((set_ip_in_lan($_POST["$dhcp_masque"])) || ($_POST["$dhcp_masque"] == ""))
 		{
-			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_masque"] . "' WHERE name='$dhcp_masque'";
+			$update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_masque"]) . "' WHERE name='".mysql_real_escape_string($dhcp_masque)."'";
 			mysqli_query($dhcp_link,$update_query);
 		}
 		else
@@ -603,7 +603,7 @@ function dhcp_update_config()
 	}
 
 //	if (!($_POST["$dhcp_extra_option"]=="")) {
-    $update_query = "UPDATE params SET value='" . $_POST["$dhcp_extra_option"] . "' WHERE name='$dhcp_extra_option'";
+    $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST["$dhcp_extra_option"]) . "' WHERE name='".mysql_real_escape_string($dhcp_extra_option'";
     mysqli_query($dhcp_link,$update_query);
 //	}
     // Si on est dans la conf des vlan cette partie n'est pas modifiable
@@ -612,7 +612,7 @@ function dhcp_update_config()
 	{
         if (set_ip_in_lan($_POST['dhcp_dns_server_prim']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_prim'] . "' WHERE name='dhcp_dns_server_prim'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_dns_server_prim']) . "' WHERE name='dhcp_dns_server_prim'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -622,7 +622,7 @@ function dhcp_update_config()
 
         if ((set_ip_in_lan($_POST['dhcp_dns_server_sec'])) || ($_POST['dhcp_dns_server_sec'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_sec'] . "' WHERE name='dhcp_dns_server_sec'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_dns_server_sec']) . "' WHERE name='dhcp_dns_server_sec'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -636,7 +636,7 @@ function dhcp_update_config()
             list($wins_ip_1, $wins_ip_2) = preg_split('/,/', $_POST['dhcp_wins']);
             if ((set_ip_in_lan($wins_ip_1)) && (set_ip_in_lan($wins_ip_2)))
 			{
-                $update_query = "UPDATE params SET value='" . $_POST['dhcp_wins'] . "' WHERE name='dhcp_wins'";
+                $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_wins']) . "' WHERE name='dhcp_wins'";
                 mysqli_query($dhcp_link,$update_query);
             }
 			else
@@ -647,7 +647,7 @@ function dhcp_update_config()
 		elseif
 		((set_ip_in_lan($_POST['dhcp_wins'])) || ($_POST['dhcp_wins'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_wins'] . "' WHERE name='dhcp_wins'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_wins']) . "' WHERE name='dhcp_wins'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -657,7 +657,7 @@ function dhcp_update_config()
 
         if ((set_ip_in_lan($_POST['dhcp_ntp'])) || ($_POST['dhcp_ntp'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_ntp'] . "' WHERE name='dhcp_ntp'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_ntp']) . "' WHERE name='dhcp_ntp'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -666,7 +666,7 @@ function dhcp_update_config()
         }
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_max_lease']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_max_lease'] . "' WHERE name='dhcp_max_lease'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_max_lease']) . "' WHERE name='dhcp_max_lease'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -676,7 +676,7 @@ function dhcp_update_config()
 
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_default_lease']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_default_lease'] . "' WHERE name='dhcp_default_lease'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_default_lease']) . "' WHERE name='dhcp_default_lease'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -685,7 +685,7 @@ function dhcp_update_config()
         }
         if (preg_match("/^eth[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^bond[0-9]+$/", $_POST['dhcp_iface']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_iface'] . "' WHERE name='dhcp_iface'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_iface']) . "' WHERE name='dhcp_iface'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -703,13 +703,13 @@ function dhcp_update_config()
         $update_query = "UPDATE params SET value='" . $value . "' WHERE name='dhcp_on_boot'";
         mysqli_query($dhcp_link,$update_query);
 
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_domain_name'] . "' WHERE name='dhcp_domain_name'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_domain_name']) . "' WHERE name='dhcp_domain_name'";
         mysqli_query($dhcp_link,$update_query);
 
         // TFTP SERVER
         if ((set_ip_in_lan($_POST['dhcp_tftp_server'])) || ($_POST['dhcp_tftp_server'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_tftp_server'] . "' WHERE name='dhcp_tftp_server'";
+            $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_tftp_server']) . "' WHERE name='dhcp_tftp_server'";
             mysqli_query($dhcp_link,$update_query);
         }
 		else
@@ -728,11 +728,11 @@ function dhcp_update_config()
             $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_unatt_server'];
         }
 		*/
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_login'] . "' WHERE name='dhcp_unatt_login'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_unatt_login']) . "' WHERE name='dhcp_unatt_login'";
         mysqli_query($dhcp_link,$update_query);
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_pass'] . "' WHERE name='dhcp_unatt_pass'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_unatt_pass']) . "' WHERE name='dhcp_unatt_pass'";
         mysqli_query($dhcp_link,$update_query);
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_filename'] . "' WHERE name='dhcp_unatt_filename'";
+        $update_query = "UPDATE params SET value='" . mysql_real_escape_string($_POST['dhcp_unatt_filename']) . "' WHERE name='dhcp_unatt_filename'";
         mysqli_query($dhcp_link,$update_query);
     }
 	deconnexion_db_dhcp($dhcp_link);
@@ -1461,11 +1461,11 @@ function form_existing_reservation()
     // Recuperation des donnees dans la base SQL
     if ((@$_GET['order'] == "") || (@$_GET['order'] == "ip"))
 	{
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
+        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT '".mysql_real_escape_string((($nb_page-1)*100))."',100";
 		$order="ip";
 	} else
 	{
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".(($nb_page-1)*100).",100";
+        $query = "SELECT * FROM `se3_dhcp` ORDER BY '" . mysql_real_escape_string($_GET['order']) . "' ASC LIMIT '".mysql_real_escape_string((($nb_page-1)*100))."',100";
 		$order=@$_GET['order'];
     }
     $result = mysqli_query($dhcp_link,$query);
@@ -1911,7 +1911,7 @@ function get_network()
 				else
 				{
                     $reseau[$vlan]['ipmin'] = $reseau[$vlan]['network'] + 51;
-                    $update_query = "UPDATE params SET value='" . long2ip($reseau[$vlan]['ipmin']) . "' WHERE name='dhcp_ip_min_" . $_POST['vlan'] . "'";
+                    $update_query = "UPDATE params SET value='" . mysql_real_escape_string(long2ip($reseau[$vlan]['ipmin'])) . "' WHERE name='".mysql_real_escape_string("dhcp_ip_min_" . $_POST['vlan']) . "'";
                     mysqli_query($dhcp_link,$update_query);
                 }
                 $nomvar = "dhcp_masque_" . $vlan;
@@ -2047,10 +2047,10 @@ function add_reservation($ip, $mac, $name, $force)
             if ($error == "")
 			{
                 $dhcp_link=connexion_db_dhcp();  
-                $insert_query = "INSERT INTO `se3_dhcp` (`ip`, `mac`, `name`) VALUES ('$ip', '$mac', '$name')";
+                $insert_query = "INSERT INTO `se3_dhcp` (`ip`, `mac`, `name`) VALUES ('".mysql_real_escape_string($ip)."', '".mysql_real_escape_string($mac)."', '".mysql_real_escape_string($name)."')";
                 mysqli_query($dhcp_link,$insert_query);
 				deconnexion_db_dhcp($dhcp_link);
-                exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+                exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap ".escapeshellarg($name)." ".escapeshellarg($ip)." ".escapeshellarg($mac));
                 if ($ip != $oldip)
 				{
                     $ret = gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
@@ -2109,7 +2109,7 @@ function already_exist($ip, $name, $mac)
         $error.=gettext("Cette adresse mac est d&#233;j&#224; utilis&#233;e : " . $mac) . "\n<br />";
     }
 
-    $query = "SELECT count(*) as NB from se3_dhcp where name='$name'";
+    $query = "SELECT count(*) as NB from se3_dhcp where name='".mysql_real_escape_string($name)."'";
     $result = mysqli_query($dhcp_link,$query);
 	mysqli_data_seek($result,0);
 	$result=mysqli_fetch_row($result);
@@ -2140,7 +2140,7 @@ function suppr_reservation($ip, $mac, $name)
     require_once ("ihm.inc.php");
     $error = "Suppression de l'entr&#233;e pour la machine $name --> $ip<br>";
 	$dhcp_link=connexion_db_dhcp();
-    $suppr_query = "DELETE FROM `se3_dhcp` where `ip` = '$ip' AND `mac` = '$mac' AND  `name` = '$name'";
+    $suppr_query = "DELETE FROM `se3_dhcp` where `ip` = '".mysql_real_escape_string($ip)."' AND `mac` = '".mysql_real_escape_string($mac)."' AND  `name` = '".mysql_real_escape_string($name)."'";
     mysqli_query($dhcp_link,$suppr_query);
 	deconnexion_db_dhcp($dhcp_link);
     return $error;
@@ -2192,9 +2192,9 @@ reboot");
 	fclose($fich);
 
 	// Copie du script sur l'esclave avec scp
-	exec ("/usr/bin/scp $scriptfile root@$ip:/tmp/", $AllOutput, $ReturnValue);
+	exec ("/usr/bin/scp ".escapeshellarg($scriptfile)." ".escapeshellarg("root@".$ip).":/tmp/", $AllOutput, $ReturnValue);
 	// chmod +x du script bash
-	exec ("ssh -l root  $ip 'chmod +x $scriptfile ; $scriptfile'", $AllOutput, $ReturnValue);
+	exec ("ssh -l root  ".escapeshellarg($ip)." 'chmod +x ".escapeshellarg($scriptfile)." ; ".escapeshellarg($scriptfile)."'", $AllOutput, $ReturnValue);
 	if ($ReturnValue==0)
 	{
 		echo "renommage distant en cours....";
@@ -2222,10 +2222,10 @@ function renomme_reservation($ip, $mac, $name)
     if ($error == "")
 	{
         $dhcp_link=connexion_db_dhcp();
-		$update_query = "UPDATE se3_dhcp SET name='$name'  where `ip` = '$ip' AND `mac` = '$mac'";
+		$update_query = "UPDATE se3_dhcp SET name='".mysql_real_escape_string($name)."'  where `ip` = '".mysql_real_escape_string($ip)."' AND `mac` = '".mysql_real_escape_string($mac)."'";
         mysqli_query($dhcp_link,$update_query);
 		deconnexion_db_dhcp($dhcp_link);
-        $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+        $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap ".escapeshellarg($name)." ".escapeshellarg($ip)." ".escapeshellarg($mac));
         return $ret;
     }
 	else
@@ -2260,10 +2260,10 @@ function change_ip_reservation($ip, $mac, $name)
             if ($ret == "")
 			{
                 $dhcp_link=connexion_db_dhcp();
-				$update_query = "UPDATE se3_dhcp SET ip='$ip'  where `name` = '$name' AND `mac` = '$mac'";
+				$update_query = "UPDATE se3_dhcp SET ip='".mysql_real_escape_string($ip)."'  where `name` = '".mysql_real_escape_string($name)."' AND `mac` = '".mysql_real_escape_string($mac)."'";
                 mysqli_query($dhcp_link,$update_query);
 				deconnexion_db_dhcp($dhcp_link);
-                $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
+                $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap ".escapeshellarg($name)." ".escapeshellarg($ip)." ".escapeshellarg($mac));
                 if ($ip != $oldip)
 				{
                     $ret .= gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
@@ -2344,7 +2344,7 @@ function valid_name($nom)
     }
     if ($l > 63)
 	{
-        print gettext("<br><I>le nom $nom ne doit pas d&#233;passer 63 caract&#232;res</I>");
+        print gettext("<br><I>le nom ".htmlspecialchars($nom, ENT_QUOTES, 'UTF-8')." ne doit pas d&#233;passer 63 caract&#232;res</I>");
         return 0;
     }
     for ($i = 0; $i < $l; $i++)
@@ -2352,20 +2352,20 @@ function valid_name($nom)
         $c = substr($nom, $i, 1);
         if (!preg_match("/[a-zA-Z0-9_-]/", $c, $tab_err))
 		{
-            print gettext("<br><I>caract&#232;re $c incorrect dans hostname $nom </I>");
+            print gettext("<br><I>caract&#232;re ".htmlspecialchars($c, ENT_QUOTES, 'UTF-8')." incorrect dans hostname ".htmlspecialchars($nom, ENT_QUOTES, 'UTF-8')." </I>");
             return 0;
         }
     }
     $prem = substr($nom, 0, 1);
     if (!preg_match("/[a-zA-Z0-9]/", $prem, $tab_err))
 	{
-        print gettext("<br><I>le nom $nom doit commencer par une lettre ou un chiffre</I>");
+        print gettext("<br><I>le nom ".htmlspecialchars($nom, ENT_QUOTES, 'UTF-8')." doit commencer par une lettre ou un chiffre</I>");
         return 0;
     }
     $der = substr($nom, $l - 1, 1);
     if (!preg_match("/[a-zA-Z0-9]/", $der, $tab_err))
 	{
-        print gettext("<br><I>le nom $nom doit finir par une lettre ou un chiffre</I>");
+        print gettext("<br><I>le nom ".htmlspecialchars($nom, ENT_QUOTES, 'UTF-8')." doit finir par une lettre ou un chiffre</I>");
         return 0;
     }
     return 1;
@@ -2393,7 +2393,7 @@ function valid_mac($mac)
         $c = substr($mac, $i, 1);
         if (!preg_match("/[A-F0-9:]/", $c, $tab_err))
 		{
-            print gettext("<br><I>caract&#232;re $c incorrect dans adresse mac $mac <I>");
+            print gettext("<br><I>caract&#232;re ".htmlspecialchars($c, ENT_QUOTES, 'UTF-8')." incorrect dans adresse mac ".htmlspecialchars($mac, ENT_QUOTES, 'UTF-8')." <I>");
             return 0;
         }
     }
@@ -2431,7 +2431,7 @@ function format_mac($ch_mac)
         }
         /* verification caracteres valides */
         if (!preg_match("/[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}/", $mac_retour, $tab_err)) {
-            print gettext("<br><I>Caract&#232;res interdits dans $mac_retour</I>");
+            print gettext("<br><I>Caract&#232;res interdits dans ".htmlspecialchars($mac_retour, ENT_QUOTES, 'UTF-8')."</I>");
             return("");
         }
         return($mac_retour);
@@ -2495,7 +2495,7 @@ function traite_tableau($tableau)
         if (!set_ip_in_lan($ip))
 		{
             print("<br>");
-            print gettext("Erreur sur adresse ip : $tab_ligne[0]");
+            print gettext("Erreur sur adresse ip : ".htmlspecialchars($tab_ligne[0], ENT_QUOTES, 'UTF-8'));
             $ligne = $z + 1;
             print(" Ligne n $ligne");
             $erreur = 1;
@@ -2506,7 +2506,7 @@ function traite_tableau($tableau)
         if ($ip == "")
 		{
             print("<br>");
-            print gettext("Erreur sur adresse ip : $tab_ligne[0]");
+            print gettext("Erreur sur adresse ip : ".htmlspecialchars($tab_ligne[0], ENT_QUOTES, 'UTF-8'));
             $ligne = $z + 1;
             print gettext(" Ligne n $ligne");
             $erreur = 1;
@@ -2517,7 +2517,7 @@ function traite_tableau($tableau)
         if (!valid_name($nom))
 		{
             print("<br>");
-            print gettext("Erreur sur hostname : $tab_ligne[1] ");
+            print gettext("Erreur sur hostname : ".htmlspecialchars($tab_ligne[1], ENT_QUOTES, 'UTF-8'));
             $ligne = $z + 1;
             print gettext("Ligne n $ligne");
             $erreur = 1;
@@ -2528,7 +2528,7 @@ function traite_tableau($tableau)
         if (!valid_mac($mac))
 		{
             print("<br>");
-            print gettext("Erreur sur adresse mac : $tab_ligne[2] ");
+            print gettext("Erreur sur adresse mac : ".htmlspecialchars($tab_ligne[2], ENT_QUOTES, 'UTF-8'));
             $ligne = $z + 1;
             print gettext("Ligne n $ligne");
             $erreur = 1;
@@ -2539,7 +2539,7 @@ function traite_tableau($tableau)
         if ($mac == "")
 		{
             print("<br>");
-            print gettext("Erreur sur adresse mac : $tab_ligne[2] ");
+            print gettext("Erreur sur adresse mac : ".htmlspecialchars($tab_ligne[2], ENT_QUOTES, 'UTF-8'));
             $ligne = $z + 1;
             print gettext("Ligne n $ligne");
             $erreur = 1;
@@ -2550,13 +2550,13 @@ function traite_tableau($tableau)
         require_once ("ihm.inc.php");
 		$dhcp_link=connexion_db_dhcp();
         // Recuperation des donnees dans la base SQL
-        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where mac='$mac'");
+        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where mac='".mysql_real_escape_string($mac)."'");
         $v_count = mysqli_num_rows($result);
 		mysqli_free_result($result);
         if ($v_count <> 0)
 		{
             print("<br>");
-            print gettext("Adresse mac $mac d&#233;ja utilis&#233;e ");
+            print gettext("Adresse mac ".htmlspecialchars($mac, ENT_QUOTES, 'UTF-8')." d&#233;ja utilis&#233;e ");
             $ligne = $z + 1;
             print gettext(" Ligne n $ligne");
             $erreur = 1;
@@ -2564,13 +2564,13 @@ function traite_tableau($tableau)
             continue;
         }
 		
-        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where name='$nom'");
+        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where name='".mysql_real_escape_string($nom)."'");
         $v_count = mysqli_num_rows($result);
 		mysqli_free_result($result);
         if ($v_count <> 0)
 		{
             print("<br>");
-            print gettext("Hostname $nom d&#233;ja utilis&#233; ");
+            print gettext("Hostname ".htmlspecialchars($nom, ENT_QUOTES, 'UTF-8')." d&#233;ja utilis&#233; ");
             $ligne = $z + 1;
             print gettext(" Ligne n $ligne");
             $erreur = 1;
@@ -2579,13 +2579,13 @@ function traite_tableau($tableau)
         }
 
         $nominmaj = strtolower($nom);
-        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where name='$nominmaj'");
+        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where name='".mysql_real_escape_string($nominmaj)."'");
         $v_count = mysqli_num_rows($result);
 		mysqli_free_result($result);
         if ($v_count <> 0)
 		{
             print("<br>");
-            print gettext("Hostname $nominmaj d&#233;ja utilis&#233; ");
+            print gettext("Hostname ".htmlspecialchars($nominmaj, ENT_QUOTES, 'UTF-8')." d&#233;ja utilis&#233; ");
             $ligne = $z + 1;
             print gettext(" Ligne n $ligne");
             $erreur = 1;
@@ -2601,7 +2601,7 @@ function traite_tableau($tableau)
         if (!valid_name($nom))
 		{
             print("<br>");
-            print gettext("Nom $nom incorrect ");
+            print gettext("Nom ".htmlspecialchars($nom, ENT_QUOTES, 'UTF-8')." incorrect ");
             $ligne = $z + 1;
             print gettext(" Ligne n $ligne");
             $erreur = 1;
@@ -2681,7 +2681,7 @@ function renomme_domaine($ip, $oldname, $name)
 {
     require_once ("ihm.inc.php");
     $ret = "<br>\n";
-    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh renomme $name $ip $oldname adminse3 $xppass") . "<br>\n";
+    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh renomme ".escapeshellarg($name)." ".escapeshellarg($ip)." ".escapeshellarg($oldname)." adminse3 ".escapeshellarg($xppass))."<br>\n";
     $ret .= "<p align='center' style='color:red;'> Attention : Si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez <br>c:\\netinst\\shutdown.cmd</p>\n";
     return $ret;
 }
@@ -2703,7 +2703,7 @@ function integre_domaine($ip, $mac, $name, $admin, $adminpasswd)
     }
     //doit-on faire verifier l'existence dans le ldap ?
     $ret = "<br>\n";
-    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh rejoint $name $ip $mac $admin $adminpasswd") . "<br>\n";
+    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh rejoint ".escapeshellarg($name)." ".escapeshellarg($ip)." ".escapeshellarg($mac)." ".escapeshellarg($admin)." ".escapeshellarg($adminpasswd)) . "<br>\n";
     $ret .= "<p align='center' style='color:red;'> Attention : si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez <br>c:\\netinst\\shutdown.cmd </p>\n";
     return $ret;
 }

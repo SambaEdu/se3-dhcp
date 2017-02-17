@@ -72,7 +72,7 @@ if (is_admin("system_is_admin",$login)=="Y")
 		$content = '';
 		return;
 	}
-	print "$content\n";
+	print htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
 }
 else
 {

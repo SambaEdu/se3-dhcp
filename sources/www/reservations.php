@@ -112,7 +112,7 @@ echo "</form>";*/
 						$ret = already_exist("ipbidon", strtolower($name[$keys]), "macbidon");
 						if ($ret == "")
 						{
-							exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:22 | grep alive",$arrval,$return_value);
+							exec("/usr/share/se3/sbin/tcpcheck 4 ".escapeshellarg($ip[$keys].":22")." | grep alive",$arrval,$return_value);
 							if ($return_value == "1")
 							{
 								$content .= gettext("<p style='color:red;'>Attention  : Renommage de $oldname[$keys] impossible. La machine est injoignable en ssh :  </p>\n " );
@@ -132,7 +132,7 @@ echo "</form>";*/
 					}
 					elseif ($action_res[$keys] == "reintegrer")
 					{
-						exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
+						exec("/usr/share/se3/sbin/tcpcheck 4 ".escapeshellarg(($ip[$keys].":445")." | grep alive",$arrval,$return_value);
 						if ($return_value == "1")
 						{
 							$content .= gettext("<p style='color:red;'>Attention  : R&#233;int&#233;gration de $oldname[$keys] impossible. La machine est injoignable ou prot&#233;g&#233;e par un pare-feu  :  </p>\n " );
@@ -159,7 +159,7 @@ echo "</form>";*/
 						$ret = already_exist("ipbidon", strtolower($name[$keys]), "macbidon");
 						if ($ret == "")
 						{
-							exec("/usr/share/se3/sbin/tcpcheck 4 $ip[$keys]:445 | grep alive",$arrval,$return_value);
+							exec("/usr/share/se3/sbin/tcpcheck 4 ".escapeshellarg($ip[$keys].":445")." | grep alive",$arrval,$return_value);
 							if ($return_value == "1")
 							{
 								$content .= gettext("<p style='color:red;'>Attention : Renommage de $oldname[$keys] impossible. La machine est injoignable ou prot&#233;g&#233;e par un pare-feu  :  </p>\n " );
@@ -228,7 +228,7 @@ echo "</form>";*/
 //             }
     for($i=0;$i<count($suppr);$i++) {
 		//echo "suppression_computer($suppr[$i])<br />";
-		echo suppression_computer($suppr[$i]);
+		echo htmlspecialchars(suppression_computer($suppr[$i]), ENT_QUOTES, 'UTF-8');
 		//echo "<hr />";
 	}
 	echo "<hr />\n";
