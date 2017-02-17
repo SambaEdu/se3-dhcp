@@ -62,7 +62,7 @@ require_once ("traitement_data.inc.php");
 		}
 
 		// On renvoye le fichier vers le navigateur:
-		echo htmlspecialchars($fw, ENT_QUOTES, 'UTF-8');
+		echo htmlspecialchars($fd, ENT_QUOTES, 'UTF-8');
 		die();
 	}
 

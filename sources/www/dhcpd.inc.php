@@ -2192,9 +2192,9 @@ reboot");
 	fclose($fich);
 
 	// Copie du script sur l'esclave avec scp
-	exec ("/usr/bin/scp ".escapeshellarg($scriptfile)." ".escapeshellarg("root@".$ip).":/tmp/", $AllOutput, $ReturnValue);
+	exec ("/usr/bin/scp ".escapeshellarg($scriptfile)." ".escapeshellarg("root@".$ip.":/tmp/"), $AllOutput, $ReturnValue);
 	// chmod +x du script bash
-	exec ("ssh -l root  ".escapeshellarg($ip)." 'chmod +x ".escapeshellarg($scriptfile)." ; ".escapeshellarg($scriptfile)."'", $AllOutput, $ReturnValue);
+	exec ("ssh -l root  ".escapeshellarg($ip)." \"chmod +x ".escapeshellarg($scriptfile)." ; ".escapeshellarg($scriptfile)."\"", $AllOutput, $ReturnValue);
 	if ($ReturnValue==0)
 	{
 		echo "renommage distant en cours....";
