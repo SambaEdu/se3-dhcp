@@ -7,7 +7,7 @@ se3-dhcp (0.90~1) stable; urgency=low
  -- Laurent Joly <laurentjoly@orange.fr>  Sun, 12 Feb 2017 14:05:30 +0200
 
 
-se3-dhcp (0.80~) stable; urgency=low
+se3-dhcp (0.80) stable; urgency=low
 
   * modification de la detection des imprimantes de la page des reservations
   * suppression des notices et passage en mysqli sur la page des reservations
@@ -16,7 +16,7 @@ se3-dhcp (0.80~) stable; urgency=low
 
  -- Laurent Joly <laurentjoly@orange.fr>  Sat, 11 Feb 2017 22:05:30 +0200
 
-se3-dhcp (0.71~) stable; urgency=low
+se3-dhcp (0.71) stable; urgency=low
 
   * Ajout du mecanisme de boot iPXE
 
