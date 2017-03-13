@@ -1,13 +1,13 @@
-se3-dhcp (0.80~) stable; urgency=low
+se3-dhcp (0.80) stable; urgency=low
 
   * modification de la detection des imprimantes de la page des reservations
   * suppression des notices et passage en mysqli sur la page des reservations
   * correction des balises html <option>
   * correctif pour la suppression des notices php sur la page des reservations
 
- -- Laurent Joly <laurentjoly@orange.fr>  Mon, 14 Nov 2016 14:05:30 +0200
+ -- Laurent Joly <laurentjoly@orange.fr>  Sat, 11 Feb 2017 22:05:30 +0200
 
-se3-dhcp (0.71~) stable; urgency=low
+se3-dhcp (0.71) stable; urgency=low
 
   * Ajout du mecanisme de boot iPXE
 
@@ -152,7 +152,6 @@ se3-dhcp (0.35) stable; urgency=low
 se3-dhcp (0.34) stable; urgency=low
 
   * correction bug suite déclaration des variables dans ldap.inc.php
-    p
 
  -- root <root@localhost.localdomain>  Wed, 11 May 2011 00:01:28 +0200
 
@@ -210,7 +209,6 @@ se3-dhcp (0.26) unstable; urgency=low
 se3-dhcp (0.25) unstable; urgency=low
 
   * ajout possibilité de changer l'ip direct dans la page reservations
-    s
 
  -- root <root@localhost.localdomain>  Fri,  7 May 2010 10:29:25 +0200
 
