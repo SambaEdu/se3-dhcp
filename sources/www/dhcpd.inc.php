@@ -1190,9 +1190,9 @@ function UncheckAll_baux(){
             $content .= "</td>\n";
 
             $content .="<td align='center'>\n";
-            //$content .= "<input type=\"text\" maxlength=\"20\" size=\"20\" value=\"" . $parser["hostname"][$keys] . "\"  name=\"name[$keys]\" />\n";
-			$content .= "" . $parser["hostname"][$keys] . "\n";
-			$content .= "<input type=\"hidden\" maxlength=\"20\" size=\"20\" value=\"" . $parser["hostname"][$keys] . "\"  name=\"name[$keys]\" />\n";
+            $content .= "<input type=\"text\" maxlength=\"20\" size=\"20\" value=\"" . $parser["hostname"][$keys] . "\"  name=\"name[$keys]\" />\n";
+			//$content .= "" . $parser["hostname"][$keys] . "\n";
+			//$content .= "<input type=\"hidden\" maxlength=\"20\" size=\"20\" value=\"" . $parser["hostname"][$keys] . "\"  name=\"name[$keys]\" />\n";
             $content .= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"" . $parser["hostname"][$keys] . "\"  name=\"oldname[$keys]\">\n";
 
             if ((count($parser['liste_noms_en_lease'][$parser["macaddr"][$keys]]) > 1) ||
