@@ -56,7 +56,7 @@ if(isset($genere_csv)) {
 				$fd.="$ip[$i];$cn[$i];$mac[$i]\n";
 			}
 		}
-		echo $fd;
+		echo htmlspecialchars($fd, ENT_QUOTES, 'UTF-8');
 	}
 	die();
 }
@@ -107,7 +107,7 @@ if(isset($suppr_doublons_ldap)) {
 
 	for($i=0;$i<count($suppr);$i++) {
 		//echo "suppression_computer($suppr[$i])<br />";
-		echo suppression_computer($suppr[$i]);
+		echo htmlspecialchars(suppression_computer($suppr[$i]), ENT_QUOTES, 'UTF-8');
 		//echo "<hr />";
 	}
 	echo "<hr />\n";

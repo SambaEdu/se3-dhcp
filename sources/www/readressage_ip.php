@@ -62,7 +62,7 @@ require_once ("traitement_data.inc.php");
 		}
 
 		// On renvoye le fichier vers le navigateur:
-		echo $fd;
+		echo htmlspecialchars($fd, ENT_QUOTES, 'UTF-8');
 		die();
 	}
 
@@ -125,7 +125,7 @@ require_once ("traitement_data.inc.php");
 	<?php
 
 		if(!isset($step)) {
-			echo "<form name='import_fichier' action='".$_SERVER['PHP_SELF']."#premiere_ip' enctype='multipart/form-data' method='post'>\n";
+			echo "<form name='import_fichier' action='".htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."#premiere_ip' enctype='multipart/form-data' method='post'>\n";
 			echo "<p>Adresse reseau: <input type='text' name='ip' value='172.21.1.0' /><br />\n";
 			echo "Nombre de classes de 256 machines: <input type='text' name='nb_classes' value='4' /><br />\n";
 			echo "Laisser <input type='text' name='nb_ip_libres' value='241' /> IP libres en debut de liste (*)<br />\n";
@@ -401,7 +401,7 @@ require_once ("traitement_data.inc.php");
 				echo "<p><i>NOTE:</i> Les liens javascript d'insertion/suppression sont un peu longs &agrave; r&eacute;agir lors du premier clic.<br />Mais cela devient plus fluide pour les clics suivants.</p>\n";
 
 				echo "<div class='my_table'>\n";
-				echo "<form name='import_fichier' action='".$_SERVER['PHP_SELF']."' enctype='multipart/form-data' method='post'>\n";
+				echo "<form name='import_fichier' action='".htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."' enctype='multipart/form-data' method='post'>\n";
 				echo "<input type='hidden' name='step' value='2' />\n";
 
 				echo "<table class='my_table'>\n";
