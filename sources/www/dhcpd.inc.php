@@ -539,9 +539,11 @@ function dhcp_update_config()
 	
     if ((set_ip_in_lan($_POST["$dhcp_min"])) || ($_POST["$dhcp_min"] == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_min"] . "' WHERE name='$dhcp_min'";
-        mysqli_query($dhcp_link,$update_query);
-    }
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+		mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_min"], $dhcp_min);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
+	}
 	else
 	{
         $error["$dhcp_min"] = gettext("Cette addresse n'est pas valide : " . $_POST["$dhcp_min"]);
@@ -549,8 +551,10 @@ function dhcp_update_config()
 
     if ((set_ip_in_lan($_POST["$dhcp_begin"])) || ($_POST["$dhcp_begin"] == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_begin"] . "' WHERE name='$dhcp_begin'";
-        mysqli_query($dhcp_link,$update_query);
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+		mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_begin"], $dhcp_begin);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
     }
 	else
 	{
@@ -560,8 +564,10 @@ function dhcp_update_config()
 
     if ((set_ip_in_lan($_POST["$dhcp_end"]) || ($_POST["$dhcp_end"]) == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_end"] . "' WHERE name='$dhcp_end'";
-        mysqli_query($dhcp_link,$update_query);
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+		mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_end"], $dhcp_end);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
     }
 	else
 	{
@@ -571,8 +577,10 @@ function dhcp_update_config()
 
     if ((set_ip_in_lan($_POST["$dhcp_gateway_vlan"])) || ($_POST["$dhcp_gateway_vlan"] == ""))
 	{
-        $update_query = "UPDATE params SET value='" . $_POST["$dhcp_gateway_vlan"] . "' WHERE name='$dhcp_gateway_vlan'";
-        mysqli_query($dhcp_link,$update_query);
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+		mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_gateway_vlan"], $dhcp_gateway_vlan);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
     }
 	else
 	{
@@ -583,8 +591,10 @@ function dhcp_update_config()
 	{		
 		if ((set_ip_in_lan($_POST["$dhcp_reseau"])) || ($_POST["$dhcp_reseau"] == ""))
 		{
-			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_reseau"] . "' WHERE name='$dhcp_reseau'";
-			mysqli_query($dhcp_link,$update_query);
+			$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_reseau"], $dhcp_reseau);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
 		}
 		else
 		{
@@ -593,8 +603,10 @@ function dhcp_update_config()
 
 		if ((set_ip_in_lan($_POST["$dhcp_masque"])) || ($_POST["$dhcp_masque"] == ""))
 		{
-			$update_query = "UPDATE params SET value='" . $_POST["$dhcp_masque"] . "' WHERE name='$dhcp_masque'";
-			mysqli_query($dhcp_link,$update_query);
+			$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_masque"], $dhcp_masque);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
 		}
 		else
 		{
@@ -603,8 +615,10 @@ function dhcp_update_config()
 	}
 
 //	if (!($_POST["$dhcp_extra_option"]=="")) {
-    $update_query = "UPDATE params SET value='" . $_POST["$dhcp_extra_option"] . "' WHERE name='$dhcp_extra_option'";
-    mysqli_query($dhcp_link,$update_query);
+    $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+	mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_extra_option"], $dhcp_extra_option);
+	mysqli_stmt_execute($update_query);
+	mysqli_stmt_close($update_query);
 //	}
     // Si on est dans la conf des vlan cette partie n'est pas modifiable
 
@@ -612,8 +626,10 @@ function dhcp_update_config()
 	{
         if (set_ip_in_lan($_POST['dhcp_dns_server_prim']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_prim'] . "' WHERE name='dhcp_dns_server_prim'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_dns_server_prim"], $dhcp_dns_server_prim);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -622,8 +638,10 @@ function dhcp_update_config()
 
         if ((set_ip_in_lan($_POST['dhcp_dns_server_sec'])) || ($_POST['dhcp_dns_server_sec'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_dns_server_sec'] . "' WHERE name='dhcp_dns_server_sec'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_dns_server_sec"], $dhcp_dns_server_sec);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -636,8 +654,10 @@ function dhcp_update_config()
             list($wins_ip_1, $wins_ip_2) = preg_split('/,/', $_POST['dhcp_wins']);
             if ((set_ip_in_lan($wins_ip_1)) && (set_ip_in_lan($wins_ip_2)))
 			{
-                $update_query = "UPDATE params SET value='" . $_POST['dhcp_wins'] . "' WHERE name='dhcp_wins'";
-                mysqli_query($dhcp_link,$update_query);
+                $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+				mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_wins"], $dhcp_wins);
+				mysqli_stmt_execute($update_query);
+				mysqli_stmt_close($update_query);
             }
 			else
 			{
@@ -647,8 +667,10 @@ function dhcp_update_config()
 		elseif
 		((set_ip_in_lan($_POST['dhcp_wins'])) || ($_POST['dhcp_wins'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_wins'] . "' WHERE name='dhcp_wins'";
-            mysqli_query($dhcp_link,$update_query);
+			$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_wins"], $dhcp_wins);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -657,8 +679,10 @@ function dhcp_update_config()
 
         if ((set_ip_in_lan($_POST['dhcp_ntp'])) || ($_POST['dhcp_ntp'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_ntp'] . "' WHERE name='dhcp_ntp'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_ntp"], $dhcp_ntp);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -666,8 +690,10 @@ function dhcp_update_config()
         }
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_max_lease']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_max_lease'] . "' WHERE name='dhcp_max_lease'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_max_lease"], $dhcp_max_lease);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -676,8 +702,10 @@ function dhcp_update_config()
 
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_default_lease']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_default_lease'] . "' WHERE name='dhcp_default_lease'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_default_lease"], $dhcp_default_lease);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -685,8 +713,10 @@ function dhcp_update_config()
         }
         if (preg_match("/^eth[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^bond[0-9]+$/", $_POST['dhcp_iface']))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_iface'] . "' WHERE name='dhcp_iface'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_iface"], $dhcp_iface);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
@@ -700,40 +730,43 @@ function dhcp_update_config()
 		{
             $value = "0";
         }
-        $update_query = "UPDATE params SET value='" . $value . "' WHERE name='dhcp_on_boot'";
-        mysqli_query($dhcp_link,$update_query);
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_on_boot'");
+		mysqli_stmt_bind_param($update_query,"i", $value);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
 
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_domain_name'] . "' WHERE name='dhcp_domain_name'";
-        mysqli_query($dhcp_link,$update_query);
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_domain_name'");
+		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_domain_name"]);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
 
         // TFTP SERVER
         if ((set_ip_in_lan($_POST['dhcp_tftp_server'])) || ($_POST['dhcp_tftp_server'] == ""))
 		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_tftp_server'] . "' WHERE name='dhcp_tftp_server'";
-            mysqli_query($dhcp_link,$update_query);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
+			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_tftp_server"], $dhcp_tftp_server);
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
 		else
 		{
             $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_tftp_server'];
         }
-        // unatt
-		/*
-        if ((set_ip_in_lan($_POST['dhcp_unatt_server'])) || ($_POST['dhcp_unatt_server'] == ""))
-		{
-            $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_server'] . "' WHERE name='dhcp_unatt_server'";
-            mysqli_query($dhcp_link,$update_query);
-        }
-		else
-		{
-            $error["dhcp_tftp_server"] = gettext("Cette entr&#233;e n'est pas valide :") . $_POST['dhcp_unatt_server'];
-        }
-		*/
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_login'] . "' WHERE name='dhcp_unatt_login'";
-        mysqli_query($dhcp_link,$update_query);
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_pass'] . "' WHERE name='dhcp_unatt_pass'";
-        mysqli_query($dhcp_link,$update_query);
-        $update_query = "UPDATE params SET value='" . $_POST['dhcp_unatt_filename'] . "' WHERE name='dhcp_unatt_filename'";
-        mysqli_query($dhcp_link,$update_query);
+
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_unatt_login'");
+		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_unatt_login"]);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
+		
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_unatt_pass'");
+		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_unatt_pass"]);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
+		
+        $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_unatt_filename'");
+		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_unatt_filename"]);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
     }
 	deconnexion_db_dhcp($dhcp_link);
     return $error;
@@ -1459,16 +1492,34 @@ function form_existing_reservation()
 		$nb_page=$nb_pages_max;
    
     // Recuperation des donnees dans la base SQL
-    if ((@$_GET['order'] == "") || (@$_GET['order'] == "ip"))
+    if (isset($_GET['order']))
 	{
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
+		switch ($_GET['order'])
+		{
+			case "ip":
+				$query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
+				$order="ip";
+				break;
+			case "mac":
+				$query = "SELECT * FROM `se3_dhcp` ORDER BY mac ASC LIMIT ".(($nb_page-1)*100).",100";
+				$order="ip";
+				break;
+			case "name":
+				$query = "SELECT * FROM `se3_dhcp` ORDER BY name ASC LIMIT ".(($nb_page-1)*100).",100";
+				$order="ip";
+				break;
+			default:
+				$query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
+				$order="ip";
+				break;
+		}
+	}
+	else
+	{
+		$query = "SELECT * FROM `se3_dhcp` ORDER BY INET_ATON(IP) ASC LIMIT ".(($nb_page-1)*100).",100";
 		$order="ip";
-	} else
-	{
-        $query = "SELECT * FROM `se3_dhcp` ORDER BY " . $_GET['order'] . " ASC LIMIT ".(($nb_page-1)*100).",100";
-		$order=@$_GET['order'];
-    }
-    $result = mysqli_query($dhcp_link,$query);
+	}
+	$result = mysqli_query($dhcp_link,$query);
     
     //recup liste ip imprimantes
     $liste_imprimantes=search_imprimantes("printer-name=*","printers");
@@ -1885,8 +1936,10 @@ function get_network()
 		else
 		{
             $reseau['ipmin'] = $reseau['network'] + 51;
-            $update_query = "UPDATE params SET value='" . long2ip($reseau['ipmin']) . "' WHERE name='dhcp_ip_min'";
-            mysqli_query($dhcp_link,$update_query);
+			$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_ip_min'");
+			mysqli_stmt_bind_param($update_query,"s", long2ip($reseau['ipmin']));
+			mysqli_stmt_execute($update_query);
+			mysqli_stmt_close($update_query);
         }
         $reseau['mask'] = ip2long($ifconfig['mask']);
         $reseau['broadcast'] = ip2long($ifconfig['broadcast']);
@@ -1911,8 +1964,10 @@ function get_network()
 				else
 				{
                     $reseau[$vlan]['ipmin'] = $reseau[$vlan]['network'] + 51;
-                    $update_query = "UPDATE params SET value='" . long2ip($reseau[$vlan]['ipmin']) . "' WHERE name='dhcp_ip_min_" . $_POST['vlan'] . "'";
-                    mysqli_query($dhcp_link,$update_query);
+					$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_ip_min_" . $_POST['vlan'] . "'");
+					mysqli_stmt_bind_param($update_query,"s", long2ip($reseau['ipmin']));
+					mysqli_stmt_execute($update_query);
+					mysqli_stmt_close($update_query);
                 }
                 $nomvar = "dhcp_masque_" . $vlan;
                 $reseau[$vlan]['mask'] = ip2long($$nomvar);
@@ -1943,12 +1998,15 @@ function is_recorded_in_dhcp_database($ip, $mac, $hostname)
 {
     require_once ("ihm.inc.php");
     // Recuperation des donnees dans la base SQL
-    $query = "SELECT count(*) as NB from se3_dhcp where ip='$ip' and mac='$mac' and name='$hostname' GROUP BY mac ASC";
     $dhcp_link=connexion_db_dhcp();
-	$result = mysqli_query($dhcp_link,$query);
-	mysqli_data_seek($result,0);
-	$result=mysqli_fetch_row($result);
-	$nb_total = $result[0]+0;
+	
+	$query = mysqli_prepare($dhcp_link, "SELECT count(*) as NB from se3_dhcp where ip=? and mac=? and name=? GROUP BY mac ASC");
+	mysqli_stmt_bind_param($query,"sss", $ip, $mac, $hostname);
+	mysqli_stmt_execute($query);
+	mysqli_stmt_bind_result($query,$value);
+	mysqli_stmt_fetch($query);
+	$nb_total=$value+0;
+	mysqli_stmt_close($query);
     if ($nb_total==0)
 	{
         return FALSE;
@@ -1971,12 +2029,14 @@ function is_recorded_in_dhcp_database($ip, $mac, $hostname)
 function registred($mac)
 {
     require_once ("ihm.inc.php");
-    $query = "SELECT count(*) as NB FROM `se3_dhcp` WHERE mac='$mac' GROUP BY mac";
     $dhcp_link=connexion_db_dhcp();
-	$result = mysqli_query($dhcp_link,$query);
-	mysqli_data_seek($result,0);
-	$result=mysqli_fetch_row($result);
-	$nb_total = $result[0]+0;
+	$query = mysqli_prepare($dhcp_link, "SELECT count(*) as NB from se3_dhcp where mac=? GROUP BY mac ASC");
+	mysqli_stmt_bind_param($query,"s", $mac);
+	mysqli_stmt_execute($query);
+	mysqli_stmt_bind_result($query,$value);
+	mysqli_stmt_fetch($query);
+	$nb_total=$value+0;
+	mysqli_stmt_close($query);
     if ($nb_total==0)
 	{
         return FALSE;
@@ -1999,12 +2059,14 @@ function registred($mac)
 function reservation($ip)
 {
     require_once ("ihm.inc.php");
-    $query = "SELECT count(*) as NB FROM `se3_dhcp` WHERE ip='$ip' GROUP BY mac";
-    $dhcp_link=connexion_db_dhcp();
-	$result = mysqli_query($dhcp_link,$query);
-	mysqli_data_seek($result,0);
-	$result=mysqli_fetch_row($result);
-	$nb_total = $result[0]+0;
+	$dhcp_link=connexion_db_dhcp();
+	$query = mysqli_prepare($dhcp_link, "SELECT count(*) as NB from se3_dhcp where ip=? GROUP BY mac ASC");
+	mysqli_stmt_bind_param($query,"s", $ip);
+	mysqli_stmt_execute($query);
+	mysqli_stmt_bind_result($query,$value);
+	mysqli_stmt_fetch($query);
+	$nb_total=$value+0;
+	mysqli_stmt_close($query);
     if ($nb_total==0)
 	{
         return FALSE;
@@ -2047,8 +2109,10 @@ function add_reservation($ip, $mac, $name, $force)
             if ($error == "")
 			{
                 $dhcp_link=connexion_db_dhcp();  
-                $insert_query = "INSERT INTO `se3_dhcp` (`ip`, `mac`, `name`) VALUES ('$ip', '$mac', '$name')";
-                mysqli_query($dhcp_link,$insert_query);
+				$update_query = mysqli_prepare($dhcp_link, "INSERT INTO `se3_dhcp` (`ip`, `mac`, `name`) VALUES (?, ?, ?)");
+				mysqli_stmt_bind_param($update_query,"sss", $ip, $mac, $name);
+				mysqli_stmt_execute($update_query);
+				mysqli_stmt_close($update_query);
 				deconnexion_db_dhcp($dhcp_link);
                 exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
                 if ($ip != $oldip)
@@ -2079,12 +2143,13 @@ function already_exist($ip, $name, $mac)
     require_once ("ihm.inc.php");
     // Recuperation des donnees dans la base SQL
 	$dhcp_link=connexion_db_dhcp();
-    $query = "SELECT count(*) as NB from se3_dhcp where ip='$ip'";
-    $result = mysqli_query($dhcp_link,$query);
-	mysqli_data_seek($result,0);
-	$result=mysqli_fetch_row($result);
-	$nb_total = $result[0]+0;
-	
+	$query = mysqli_prepare($dhcp_link, "SELECT count(*) as NB from se3_dhcp where ip=?");
+	mysqli_stmt_bind_param($query,"s", $ip);
+	mysqli_stmt_execute($query);
+	mysqli_stmt_bind_result($query,$value);
+	mysqli_stmt_fetch($query);
+	$nb_total=$value+0;
+	mysqli_stmt_close($query);
     if ($nb_total == 0)
 	{
         $error = "";
@@ -2094,12 +2159,13 @@ function already_exist($ip, $name, $mac)
         $error = gettext("Cette adresse ip est d&#233;j&#224; utilis&#233;e : " . $ip) . "\n<br />";
     }
 
-    $query = "SELECT count(*) as NB from se3_dhcp where mac='$mac'";
-    $result = mysqli_query($dhcp_link,$query);
-	mysqli_data_seek($result,0);
-	$result=mysqli_fetch_row($result);
-	$nb_total = $result[0]+0;
-	
+	$query = mysqli_prepare($dhcp_link, "SELECT count(*) as NB from se3_dhcp where mac=?");
+	mysqli_stmt_bind_param($query,"s", $mac);
+	mysqli_stmt_execute($query);
+	mysqli_stmt_bind_result($query,$value);
+	mysqli_stmt_fetch($query);
+	$nb_total=$value+0;
+	mysqli_stmt_close($query);
     if ($nb_total == 0)
 	{
         $error.="";
@@ -2109,12 +2175,13 @@ function already_exist($ip, $name, $mac)
         $error.=gettext("Cette adresse mac est d&#233;j&#224; utilis&#233;e : " . $mac) . "\n<br />";
     }
 
-    $query = "SELECT count(*) as NB from se3_dhcp where name='$name'";
-    $result = mysqli_query($dhcp_link,$query);
-	mysqli_data_seek($result,0);
-	$result=mysqli_fetch_row($result);
-	$nb_total = $result[0]+0;
-	
+	$query = mysqli_prepare($dhcp_link, "SELECT count(*) as NB from se3_dhcp where name=?");
+	mysqli_stmt_bind_param($query,"s", $name);
+	mysqli_stmt_execute($query);
+	mysqli_stmt_bind_result($query,$value);
+	mysqli_stmt_fetch($query);
+	$nb_total=$value+0;
+	mysqli_stmt_close($query);	
     if ($nb_total == 0)
 	{
         $error.="";
@@ -2140,8 +2207,10 @@ function suppr_reservation($ip, $mac, $name)
     require_once ("ihm.inc.php");
     $error = "Suppression de l'entr&#233;e pour la machine $name --> $ip<br>";
 	$dhcp_link=connexion_db_dhcp();
-    $suppr_query = "DELETE FROM `se3_dhcp` where `ip` = '$ip' AND `mac` = '$mac' AND  `name` = '$name'";
-    mysqli_query($dhcp_link,$suppr_query);
+	$delete_query = mysqli_prepare($dhcp_link, "DELETE FROM `se3_dhcp` where `ip`=? AND `mac`=? AND `name`=?");
+	mysqli_stmt_bind_param($delete_query,"sss", $ip, $mac, $name);
+	mysqli_stmt_execute($delete_query);
+	mysqli_stmt_close($delete_query);
 	deconnexion_db_dhcp($dhcp_link);
     return $error;
 }
@@ -2222,8 +2291,10 @@ function renomme_reservation($ip, $mac, $name)
     if ($error == "")
 	{
         $dhcp_link=connexion_db_dhcp();
-		$update_query = "UPDATE se3_dhcp SET name='$name'  where `ip` = '$ip' AND `mac` = '$mac'";
-        mysqli_query($dhcp_link,$update_query);
+		$update_query = mysqli_prepare($dhcp_link, "UPDATE se3_dhcp SET name=? where `ip`=? AND `mac`=?");
+		mysqli_stmt_bind_param($update_query,"sss", $name, $ip, $mac);
+		mysqli_stmt_execute($update_query);
+		mysqli_stmt_close($update_query);
 		deconnexion_db_dhcp($dhcp_link);
         $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
         return $ret;
@@ -2260,8 +2331,10 @@ function change_ip_reservation($ip, $mac, $name)
             if ($ret == "")
 			{
                 $dhcp_link=connexion_db_dhcp();
-				$update_query = "UPDATE se3_dhcp SET ip='$ip'  where `name` = '$name' AND `mac` = '$mac'";
-                mysqli_query($dhcp_link,$update_query);
+				$update_query = mysqli_prepare($dhcp_link, "UPDATE se3_dhcp SET ip=?  where `name`=? AND `mac`=?");
+				mysqli_stmt_bind_param($update_query,"sss", $ip, $name, $mac);
+				mysqli_stmt_execute($update_query);
+				mysqli_stmt_close($update_query);
 				deconnexion_db_dhcp($dhcp_link);
                 $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/integreDomaine.sh ldap $name $ip $mac");
                 if ($ip != $oldip)
@@ -2550,9 +2623,12 @@ function traite_tableau($tableau)
         require_once ("ihm.inc.php");
 		$dhcp_link=connexion_db_dhcp();
         // Recuperation des donnees dans la base SQL
-        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where mac='$mac'");
-        $v_count = mysqli_num_rows($result);
-		mysqli_free_result($result);
+		$query = mysqli_prepare($link_clamav, "SELECT * from se3_dhcp where mac=?");
+		mysqli_stmt_bind_param($query,"s", $mac);
+		mysqli_stmt_execute($query);
+		mysqli_stmt_store_result($query);
+		$v_count=mysqli_stmt_num_rows($query);
+		mysqli_stmt_close($query);
         if ($v_count <> 0)
 		{
             print("<br>");
@@ -2564,9 +2640,12 @@ function traite_tableau($tableau)
             continue;
         }
 		
-        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where name='$nom'");
-        $v_count = mysqli_num_rows($result);
-		mysqli_free_result($result);
+        $query = mysqli_prepare($link_clamav, "SELECT * from se3_dhcp where name=?");
+		mysqli_stmt_bind_param($query,"s", $name);
+		mysqli_stmt_execute($query);
+		mysqli_stmt_store_result($query);
+		$v_count=mysqli_stmt_num_rows($query);
+		mysqli_stmt_close($query);
         if ($v_count <> 0)
 		{
             print("<br>");
@@ -2579,9 +2658,12 @@ function traite_tableau($tableau)
         }
 
         $nominmaj = strtolower($nom);
-        $result = mysqli_query($dhcp_link,"SELECT * from se3_dhcp where name='$nominmaj'");
-        $v_count = mysqli_num_rows($result);
-		mysqli_free_result($result);
+		$query = mysqli_prepare($link_clamav, "SELECT * from se3_dhcp where name=?");
+		mysqli_stmt_bind_param($query,"s", $nominmaj);
+		mysqli_stmt_execute($query);
+		mysqli_stmt_store_result($query);
+		$v_count=mysqli_stmt_num_rows($query);
+		mysqli_stmt_close($query);
         if ($v_count <> 0)
 		{
             print("<br>");
