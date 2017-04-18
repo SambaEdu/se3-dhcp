@@ -9,7 +9,6 @@ se3-dhcp (0.90~6) stable; urgency=low
 
  -- Laurent Joly <laurentjoly@orange.fr>  Mon, 17 Apr 2017 23:47:30 +0200
 
-
 se3-dhcp (0.80) stable; urgency=low
 
   * modification de la detection des imprimantes de la page des reservations
