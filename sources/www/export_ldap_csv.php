@@ -8,7 +8,7 @@
    
    * @Projet LCS / SambaEdu
 
-   * @auteurs - Philippe Chadefaux (Plouf)	
+   * @auteurs - Laurent Joly
 
    * @note
    
@@ -23,6 +23,7 @@
    * file: export_csv.php
 */
 
+
 // loading libs and init
 @session_start();
 require_once "functions.inc.php";
@@ -34,23 +35,11 @@ require_once "dhcpd.inc.php";
 
 $jour=date("d-n-y");
 header("Content-Type: application/csv-tab-delimited-table");
-header("Content-disposition: filename=inventaire-$jour.csv");
+header("Content-disposition: filename=se3_dhcp_".strftime("%Y%m%d-%H%M%S").".csv");
 
 if (is_admin("system_is_admin",$login)=="Y")
 {
-	$link=connexion_db_dhcp();
-	$query = "select * from se3_dhcp";
-    $result = mysqli_query($link,$query);
-	
-	if (mysqli_num_rows($result))
-	{
-		while ($row = mysqli_fetch_assoc($result))
-		{
-			echo $row['ip'].";".$row['name'].";".$row['mac']."\n";
-		}
-	}
-	mysqli_free_result($result);
-	deconnexion_db_dhcp($link);
+	search_doublons_mac('y');
 }
 else
 {

@@ -24,6 +24,16 @@
 
 // HTMLPurifier
 require_once ("traitement_data.inc.php");
+include "entete.inc.php";
+require_once "functions.inc.php";
+include "ldap.inc.php";
+include "ihm.inc.php";
+
+
+if (!is_admin("se3_is_admin",$login)=="Y")  {
+	echo "<p>Vous n'&#234;tes pas autoris&#233; &#224; acc&#233;der &#224; cette page.</p>\n";
+	die("</body></html>\n");
+}
 
 	$step=isset($_POST['step']) ? $_POST['step'] : NULL;
 	//$tri_nom_netbios=isset($_POST['tri_nom_netbios']) ? $_POST['tri_nom_netbios'] : "n";
@@ -67,7 +77,6 @@ require_once ("traitement_data.inc.php");
 	}
 
 	// Pour avoir la barre bleu en haut
-	include "entete.inc.php";
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
