@@ -626,8 +626,8 @@ function dhcp_update_config()
 	{
         if (set_ip_in_lan($_POST['dhcp_dns_server_prim']))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_dns_server_prim"], $dhcp_dns_server_prim);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_dns_server_prim'");
+			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_dns_server_prim"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -638,8 +638,8 @@ function dhcp_update_config()
 
         if ((set_ip_in_lan($_POST['dhcp_dns_server_sec'])) || ($_POST['dhcp_dns_server_sec'] == ""))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_dns_server_sec"], $dhcp_dns_server_sec);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_dns_server_sec'");
+			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_dns_server_sec"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -654,8 +654,8 @@ function dhcp_update_config()
             list($wins_ip_1, $wins_ip_2) = preg_split('/,/', $_POST['dhcp_wins']);
             if ((set_ip_in_lan($wins_ip_1)) && (set_ip_in_lan($wins_ip_2)))
 			{
-                $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-				mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_wins"], $dhcp_wins);
+                $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_wins'");
+				mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_wins"]);
 				mysqli_stmt_execute($update_query);
 				mysqli_stmt_close($update_query);
             }
@@ -667,8 +667,8 @@ function dhcp_update_config()
 		elseif
 		((set_ip_in_lan($_POST['dhcp_wins'])) || ($_POST['dhcp_wins'] == ""))
 		{
-			$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_wins"], $dhcp_wins);
+			$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_wins'");
+			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_wins"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -679,8 +679,8 @@ function dhcp_update_config()
 
         if ((set_ip_in_lan($_POST['dhcp_ntp'])) || ($_POST['dhcp_ntp'] == ""))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_ntp"], $dhcp_ntp);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_ntp'");
+			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_ntp"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -690,8 +690,8 @@ function dhcp_update_config()
         }
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_max_lease']))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_max_lease"], $dhcp_max_lease);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_max_lease'");
+			mysqli_stmt_bind_param($update_query,"i", $_POST["dhcp_max_lease"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -702,8 +702,8 @@ function dhcp_update_config()
 
         if (preg_match("/^[0-9]+$/", $_POST['dhcp_default_lease']))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_default_lease"], $dhcp_default_lease);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_default_lease'");
+			mysqli_stmt_bind_param($update_query,"i", $_POST["dhcp_default_lease"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -713,8 +713,8 @@ function dhcp_update_config()
         }
         if (preg_match("/^eth[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^bond[0-9]+$/", $_POST['dhcp_iface']))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_iface"], $dhcp_iface);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_iface'");
+			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_iface"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -722,7 +722,7 @@ function dhcp_update_config()
 		{
             $error["dhcp_iface"] = gettext("Ce n'est pas une interface valide : " . $_POST['dhcp_iface']);
         }
-        if ($_POST['dhcp_on_boot'])
+        if (@$_POST['dhcp_on_boot'])
 		{
             $value = "1";
         }
@@ -736,15 +736,15 @@ function dhcp_update_config()
 		mysqli_stmt_close($update_query);
 
         $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_domain_name'");
-		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_domain_name"]);
+		mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_domain_name"]);
 		mysqli_stmt_execute($update_query);
 		mysqli_stmt_close($update_query);
 
         // TFTP SERVER
         if ((set_ip_in_lan($_POST['dhcp_tftp_server'])) || ($_POST['dhcp_tftp_server'] == ""))
 		{
-            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name=?");
-			mysqli_stmt_bind_param($update_query,"ss", $_POST["$dhcp_tftp_server"], $dhcp_tftp_server);
+            $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_tftp_server'");
+			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_tftp_server"]);
 			mysqli_stmt_execute($update_query);
 			mysqli_stmt_close($update_query);
         }
@@ -754,17 +754,17 @@ function dhcp_update_config()
         }
 
         $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_unatt_login'");
-		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_unatt_login"]);
+		mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_unatt_login"]);
 		mysqli_stmt_execute($update_query);
 		mysqli_stmt_close($update_query);
 		
         $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_unatt_pass'");
-		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_unatt_pass"]);
+		mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_unatt_pass"]);
 		mysqli_stmt_execute($update_query);
 		mysqli_stmt_close($update_query);
 		
         $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_unatt_filename'");
-		mysqli_stmt_bind_param($update_query,"s", $_POST["$dhcp_unatt_filename"]);
+		mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_unatt_filename"]);
 		mysqli_stmt_execute($update_query);
 		mysqli_stmt_close($update_query);
     }
@@ -2722,7 +2722,7 @@ function dhcp_vlan_test()
     if ($dhcp_vlan == "")
 	{
         $dhcp_link=connexion_db_dhcp();
-		mysqli_query("INSERT into params set id='NULL', name='dhcp_vlan', value='0', srv_id='0',descr='Nombre de vlan',cat='7'");
+		mysqli_query($dhcp_link,"INSERT into params set id='NULL', name='dhcp_vlan', value='0', srv_id='0',descr='Nombre de vlan',cat='7'");
 		deconnexion_db_dhcp($dhcp_link);
         return 0;
     }
@@ -2746,7 +2746,7 @@ function dhcp_vlan_champ($nom_champ)
     if ($$nom_champ == "")
 	{
         $dhcp_link=connexion_db_dhcp();
-		mysqli_query("INSERT into params set id='NULL', name='$nom_champ', value='', srv_id='',descr='',cat='7'");
+		mysqli_query($dhcp_link,"INSERT into params set id='NULL', name='$nom_champ', value='', srv_id='',descr='',cat='7'");
 		deconnexion_db_dhcp($dhcp_link);
     }
 }
