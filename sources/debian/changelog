@@ -1,4 +1,4 @@
-se3-dhcp (0.90~6) stable; urgency=low
+se3-dhcp (0.90) stable; urgency=low
 
   * correction erreur affichage reservation
   * nouvelle page export dhcp en csv
