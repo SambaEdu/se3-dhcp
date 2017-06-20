@@ -34,7 +34,7 @@ my $action = $ARGV[0];
 ########################################
 ##### If ARG is "status" ###############
 if ($action eq "state") {
-	system ("/etc/init.d/isc-dhcp-server status > /dev/null");
+	system ("service isc-dhcp-server status > /dev/null");
 	if ( $? == 0  )
     {print "1";} else {print "0
   ";};
@@ -43,7 +43,7 @@ if ($action eq "state") {
 ########################################
 ##### If ARG is "stop" ###############
 if ($action eq "stop") {
-	`/etc/init.d/isc-dhcp-server stop`;
+	`service isc-dhcp-server stop`;
 	exit 0;
 }
 
@@ -460,7 +460,7 @@ while (@result = $requete->fetchrow_array())
 close FILE;
 
 print "restart dhcpd-server\n";
-system("/etc/init.d/isc-dhcp-server restart");
+system("service isc-dhcp-server restart");
 
 
 $proxy = `grep \"http_proxy=\" /etc/profile | cut -d\\\" -f2 | cut -d/ -f3`;

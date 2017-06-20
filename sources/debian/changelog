@@ -1,9 +1,10 @@
-se3-dhcp (0.95~1) stable; urgency=low
+se3-dhcp (0.95~2) stable; urgency=low
 
   * Preversion avant version finale
   * Correction d'une erreur sur affichage reservation
   * Creation d'une page de recherche de reservation
   * Modification du menu dhcp
+  * Suppression des /etc/init.d
 
  -- Laurent Joly <laurentjoly@orange.fr>  Sat, 22 Apr 2017 23:47:30 +0200
 
