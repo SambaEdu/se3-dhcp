@@ -110,7 +110,7 @@ if (isset($_POST["search_nbrows"]))
 }
 else
 {
-	$nbrows=5;
+	$nbrows=10;
 }
 
 //recup liste ip imprimantes
@@ -132,7 +132,8 @@ mysqli_stmt_execute($search_query);
 mysqli_stmt_bind_result($search_query,$res_ip,$res_mac,$res_name);
 mysqli_stmt_store_result($search_query);
 $num_rows=mysqli_stmt_num_rows($search_query);
-$content="<table border='1' width='90%'>";
+$content = "<form name=\"lease_form\" method=\"post\" action=\"\">\n";
+$content .="<table border='1' width='90%'>";
 $content .="<tr class=\"menuheader\"><td align=\"center\"><b>Adresse IP</b></td>";
 $content .= "<td align=\"center\"><b>Adresse MAC</b></td>";
 $content .="<td align=\"center\"><b>Nom NETBIOS</b></td>";
@@ -141,12 +142,18 @@ $content .="<td align=\"center\"><b>Action</b></td>";
 $content .= "</tr>\n";
 if ($num_rows!=0)
 {
+	$clef=0;
 	while (mysqli_stmt_fetch($search_query))
 	{
 		$listaction ="<OPTION value='none'>Action...</OPTION>\n";
 		$listaction .= "<OPTION value=\"newip\">Changer l'adresse ip</OPTION>\n";
 		$listaction .= "<OPTION value=\"supprimer\">Supprimer la reservation</OPTION>\n";
-		$content.= "<tr><td>".$res_ip."</td><td>".$res_mac."</td><td>".$res_name;
+		$content.= "<tr>\n";
+		$content.= "<td align='center'><input type=\"text\" maxlength=\"15\" SIZE=\"15\" value=\"".$res_ip."\"  name=\"ip[$clef]\"></td>\n";
+		$content.= "<td align='center'><input type=\"text\" maxlength=\"17\" SIZE=\"17\" value=\"".strtolower($res_mac)."\"  name=\"mac[$clef]\" readonly></td>\n";
+		$content.= "<td align='center'>";
+		$content.= "<input type=\"text\" maxlength=\"20\" SIZE=\"20\" value=\"".$res_name."\"  name=\"name[$clef]\">";
+		$content.= "<input type=\"hidden\" maxlength=\"20\" SIZE=\"20\" value=\"".$res_name."\"  name=\"oldname[$clef]\">";
 		for ($loopp=0; $loopp < count($liste_imprimantes); $loopp++)
 		{
 			$printer_uri = $liste_imprimantes[$loopp]['printer-uri'];
@@ -192,7 +199,7 @@ if ($num_rows!=0)
 		{
 			$content.="<br><FONT color='blue'>Imprimante ".$printer_name."</FONT>\n"; 
 		}
-		$content.="</td>";
+		$content.="</td>\n";
 		$content.="<td align='center'>";
 		// Est-ce que cette machine est enregistree ?
 		$parc = search_parcs($res_name);
@@ -229,20 +236,35 @@ if ($num_rows!=0)
 			}
 		}
 		$content.="</td>";
-		$content.="<td align='center'><select name='action'>".$listaction."</select></td>";
+		$content.="<td align='center'><select name='action_res[$clef]'>".$listaction."</select></td>";
 		$content.="</tr>";
+		$clef++;
 	}
 }
 mysqli_stmt_close($search_query);
 deconnexion_db_dhcp($dhcp_link);
-$content.="</table>";
+$content .="<tr class=\"menuheader\"><td align=\"center\"><b>Adresse IP</b></td>";
+$content .= "<td align=\"center\"><b>Adresse MAC</b></td>";
+$content .="<td align=\"center\"><b>Nom NETBIOS</b></td>";
+$content .="<td align=\"center\"><b>Parc(s)</b></td>";
+$content .="<td align=\"center\"><b>Action</b></td>";
+$content .= "</tr>\n";
+$content .= "</table><br>\n";
+$content .= "<input type='hidden' name='search_name_id' value='$search_name_id'>\n";
+$content .= "<input type='hidden' name='search_name' value='$search_name_aff'>\n";
+$content .= "<input type='hidden' name='search_ip_id' value='$search_ip_id'>\n";
+$content .= "<input type='hidden' name='search_ip' value='$search_ip_aff'>\n";
+$content .= "<input type='hidden' name='search_nbrows' value='$nbrows'>\n";
+$content .= "<input type='hidden' name='action' value='valid'>\n";
+$content .= "<input type=\"submit\" name=\"button\" value=\"" . gettext("Valider les modifications") . "\">\n";
+$content .= "</form>";
 
 ?>
 
 <form name="search_dhcp" method="post" action="">
-<table>
+<table border="1" align="center">
 <tr>
-	<td width="200">Nom de la machine</td>
+	<td width="300">Nom de la machine</td>
 	<td width="200" align='center'>
 		<select name="search_name_id">
 		<option value="0" <?php if ($search_name_id==0) echo "selected"; ?>>exactement</option>
@@ -266,7 +288,20 @@ $content.="</table>";
 	<td align='center'><input type="text" maxlength="50" size="15" name="search_ip" value="<?php echo $search_ip_aff; ?>"></td>
 </tr>
 <tr>
-<td colspan='3'>
+<tr>
+	<td>Nombre de r&#233;sultats affich&#233;s</td>
+	<td align='center' colspan='2'>
+		<select name="search_nbrows">
+		<option value="10" <?php if ($nbrows==10) echo "selected"; ?>>10</option>
+		<option value="25" <?php if ($nbrows==25) echo "selected"; ?>>25</option>
+		<option value="50" <?php if ($nbrows==50) echo "selected"; ?>>50</option>
+		<option value="75" <?php if ($nbrows==75) echo "selected"; ?>>75</option>
+		<option value="100" <?php if ($nbrows==100) echo "selected"; ?>>100</option>
+		</select>
+	</td>
+</tr>
+<tr>
+<td colspan='3' align='center'>
 <input type="submit" name="button" value="Valider">
 </td>
 </tr>
