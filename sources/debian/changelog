@@ -1,4 +1,4 @@
-se3-dhcp (0.95~2) stable; urgency=low
+se3-dhcp (0.95~3) stable; urgency=low
 
   * Preversion avant version finale
   * Correction d'une erreur sur affichage reservation
