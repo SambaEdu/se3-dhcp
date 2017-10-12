@@ -1965,7 +1965,7 @@ function get_network()
 				{
                     $reseau[$vlan]['ipmin'] = $reseau[$vlan]['network'] + 51;
 					$update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_ip_min_" . $_POST['vlan'] . "'");
-					mysqli_stmt_bind_param($update_query,"s", long2ip($reseau['ipmin']));
+					mysqli_stmt_bind_param($update_query,"s", long2ip($reseau[$vlan]['ipmin']));
 					mysqli_stmt_execute($update_query);
 					mysqli_stmt_close($update_query);
                 }
