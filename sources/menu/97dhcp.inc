@@ -26,6 +26,7 @@ $liens1 = array(array(
  "Configuration", "dhcp/config.php","system_is_admin",3,
  "Gestion des baux", "dhcp/baux.php","system_is_admin",3,
  "R&#233;servations actives", "dhcp/reservations.php","system_is_admin",3,
+ "Recherche de r&#233;servations", "dhcp/recherche.php","system_is_admin",3,
  "Import - Export", "dhcp/import.php","system_is_admin",3,
 ));
 

@@ -1,3 +1,14 @@
+se3-dhcp (0.95) stable; urgency=low
+
+  * Preversion avant version finale
+  * Correction d'une erreur sur affichage reservation
+  * Correction d'une erreur dans la gestion des vlan
+  * Creation d'une page de recherche de reservation
+  * Modification du menu dhcp
+  * Suppression des /etc/init.d
+
+ -- Laurent Joly <laurentjoly@orange.fr>  Thu, 12 Oct 2017 16:47:30 +0200
+
 se3-dhcp (0.90) stable; urgency=low
 
   * correction erreur affichage reservation

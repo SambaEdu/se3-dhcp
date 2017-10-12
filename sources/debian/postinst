@@ -246,7 +246,7 @@ chmod 440 /etc/sudoers.d/sudoers-se3dhcp
 # if [  ! "`cat /etc/sudoers | grep SE3DHCP`" ]; then
 # sed -i 's/^\(www-se3.*\)$/\1,NOPASSWD:SE3DHCP/'  /etc/sudoers
 # sed -i 's|^\(# Cmnd alias specification.*\)$|\1\nCmnd_Alias SE3DHCP=/usr/share/se3/scripts/makedhcpdconf,/usr/share/se3/scripts/move_dhcp_leases.sh|' /etc/sudoers
-# /etc/init.d/sudo restart
+# service sudo restart
 # else
 # 	# La ligne Cmnd_Alias SE3DHCP existe déjà (avec au moins une commande 
 # 	if [ ! "$(grep "/usr/share/se3/scripts/move_dhcp_leases.sh" /etc/sudoers)" ]; then

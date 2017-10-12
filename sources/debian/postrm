@@ -41,7 +41,7 @@ echo "INSERT INTO params VALUES ('', 'dhcp', '0', 0, 'Activation du dhcp', 6)" |
 if [ "`cat /etc/sudoers | grep SE3DHCP`" ]; then
 sed -i 's/^\(www-se3.*\),NOPASSWD:SE3DHCP\(.*\)$/\1\2/'  /etc/sudoers
 sed -i '/^Cmnd_Alias SE3DHCP.*$/d' /etc/sudoers
-/etc/init.d/sudo restart
+service sudo restart
 fi
 #####
 
