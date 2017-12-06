@@ -267,6 +267,7 @@ print FILE "authoritative;\n";
 if (! $DOMAIN_NAME=="")
 {
 	print FILE "option domain-name \"$DOMAIN_NAME\";  \n";
+	print FILE "option domain-search \"$DOMAIN_NAME\";  \n";
 }
 if (! $SERVEUR_DNS_PRIMARY=="")
 {
