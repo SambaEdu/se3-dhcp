@@ -1,3 +1,9 @@
+se3-dhcp (0.96~) UNRELEASED; urgency=medium
+
+  * Utilisation de se3sysprep.sh pour les actions à distance
+
+ -- Denis Bonnenfant <denis.bonnenfant@sambaedu.org>  Thu, 08 Feb 2018 17:05:58 +0100
+
 se3-dhcp (0.95) stable; urgency=low
 
   * Preversion avant version finale
