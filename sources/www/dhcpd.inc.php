@@ -2114,7 +2114,7 @@ function add_reservation($ip, $mac, $name, $force)
 				mysqli_stmt_execute($update_query);
 				mysqli_stmt_close($update_query);
 				deconnexion_db_dhcp($dhcp_link);
-                exec("/usr/bin/sudo /usr/share/se3/scripts/se3sysprep.sh ldap $name $ip $mac 2>&1");
+                exec("/usr/bin/sudo /usr/share/se3/scripts/sysprep.sh ldap $name $ip $mac 2>&1");
                 if ($ip != $oldip)
 				{
                     $ret = gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
@@ -2296,7 +2296,7 @@ function renomme_reservation($ip, $mac, $name)
 		mysqli_stmt_execute($update_query);
 		mysqli_stmt_close($update_query);
 		deconnexion_db_dhcp($dhcp_link);
-        $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/se3sysprep.sh ldap $name $ip $mac");
+        $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/sysprep.sh ldap $name $ip $mac");
         return $ret;
     }
 	else
@@ -2336,7 +2336,7 @@ function change_ip_reservation($ip, $mac, $name)
 				mysqli_stmt_execute($update_query);
 				mysqli_stmt_close($update_query);
 				deconnexion_db_dhcp($dhcp_link);
-                $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/se3sysprep.sh ldap $name $ip $mac");
+                $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/sysprep.sh ldap $name $ip $mac");
                 if ($ip != $oldip)
 				{
                     $ret .= gettext("<FONT color='red'> Attention : </FONT>l'adresse choisie pour cette machine est d&#233;j&#224; prise ou elle se situe dans la plage dynamique $name --> $oldip,recherche d'une adresse libre...<br>"); 
@@ -2763,7 +2763,7 @@ function renomme_domaine($ip, $oldname, $name)
 {
     require_once ("ihm.inc.php");
     $ret = "<br>\n";
-    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/se3sysprep.sh renomme $name $ip $oldname adminse3 $xppass 2>&1") . "<br>\n";
+    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/sysprep.sh renomme $name $ip $oldname adminse3 $xppass 2>&1") . "<br>\n";
     $ret .= "<p align='center' style='color:red;'> Attention : Si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez <br>c:\\netinst\\shutdown.cmd</p>\n";
     return $ret;
 }
@@ -2785,7 +2785,7 @@ function integre_domaine($ip, $mac, $name, $admin, $adminpasswd)
     }
     //doit-on faire verifier l'existence dans le ldap ?
     $ret = "<br>\n";
-    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/se3sysprep.sh rejoint $name $ip $mac $admin $adminpasswd 2>&1") . "<br>\n";
+    $ret .= exec("/usr/bin/sudo /usr/share/se3/scripts/sysprep.sh rejoint $name $ip $mac $admin $adminpasswd 2>&1") . "<br>\n";
     $ret .= "<p align='center' style='color:red;'> Attention : si l'emetteur ne reboote pas tout seul en administrateur local, ouvrez une session administrateur local et lancez <br>c:\\netinst\\shutdown.cmd </p>\n";
     return $ret;
 }
