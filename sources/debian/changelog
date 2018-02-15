@@ -1,4 +1,4 @@
-se3-dhcp (0.96~1) UNRELEASED; urgency=medium
+se3-dhcp (0.96) UNRELEASED; urgency=medium
 
   * Utilisation de se3sysprep.sh pour les actions à distance
 
