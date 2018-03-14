@@ -1,3 +1,9 @@
+se3-dhcp (0.97) UNRELEASED; urgency=medium
+
+  * Ajout dep sur sambaedu-client pour actions distantes sur les postes
+
+ -- Franck Molle <franck.molle@sambaedu.org>  Wed, 14 Mar 2018 23:42:25 +0100
+
 se3-dhcp (0.96) UNRELEASED; urgency=medium
 
   * Utilisation de se3sysprep.sh pour les actions à distance

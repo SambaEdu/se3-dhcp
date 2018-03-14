@@ -7,7 +7,7 @@ Standards-Version: 3.6.1
 
 Package: se3-dhcp
 Architecture: all
-Depends: se3 (>=3.0.7), isc-dhcp-server
+Depends: se3 (>=3.0.7), isc-dhcp-server, sambaedu-client-windows
 Description: A dhcp interface for se3 server
  This package add an se3 interface administration for isc-dhcp-server
  Administration interface can manage dhcp reservation
