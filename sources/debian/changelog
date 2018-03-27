@@ -1,8 +1,12 @@
-se3-dhcp (0.97) UNRELEASED; urgency=medium
+se3-dhcp (0.97ubuntu1) UNRELEASED; urgency=medium
 
+  [ Franck Molle ]
   * Ajout dep sur sambaedu-client pour actions distantes sur les postes
 
- -- Franck Molle <franck.molle@sambaedu.org>  Wed, 14 Mar 2018 23:42:25 +0100
+  [ Denis Bonnenfant ]
+  * ajout possibilite interfaces br* et vlan* 
+
+ -- Denis Bonnenfant <denis.bonnenfant@sambaedu.org>  Tue, 27 Mar 2018 17:28:28 +0200
 
 se3-dhcp (0.96) UNRELEASED; urgency=medium
 

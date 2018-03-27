@@ -711,7 +711,8 @@ function dhcp_update_config()
 		{
             $error["dhcp_default_lease"] = gettext("Ce n'est pas un nombre valide : " . $_POST['dhcp_default_lease']);
         }
-        if (preg_match("/^eth[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^bond[0-9]+$/", $_POST['dhcp_iface']))
+        if (preg_match("/^eth[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^bond[0-9]+$/", $_POST['dhcp_iface']) ||
+		|| preg_match("/^br[0-9]+$/", $_POST['dhcp_iface']) || preg_match("/^vlan[0-9]+$/", $_POST['dhcp_iface']))
 		{
             $update_query = mysqli_prepare($dhcp_link, "UPDATE params SET value=? WHERE name='dhcp_iface'");
 			mysqli_stmt_bind_param($update_query,"s", $_POST["dhcp_iface"]);
