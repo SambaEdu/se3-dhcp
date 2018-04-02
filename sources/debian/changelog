@@ -1,4 +1,4 @@
-se3-dhcp (0.97) UNRELEASED; urgency=medium
+se3-dhcp (0.97.1) UNRELEASED; urgency=medium
 
   [ Franck Molle ]
   * Ajout dep sur sambaedu-client pour actions distantes sur les postes
