@@ -319,6 +319,8 @@ if (! $unatt_filename =="")
        print FILE " }\n";
 }
 
+#ltsp-nom-netbios
+        print FILE "use-host-decl-names on;\n";
 
 
 if (! $unatt_login =="")
